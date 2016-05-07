@@ -25,3 +25,15 @@ class TestExperiment(unittest.TestCase):
     def test_construction__many_images(self):
         exp = Experiment("1 2 3 4 5 TestImage.jpg\n1 2 3 4 5 TestImage.jpg")
         self.assertEqual(2, len(exp.images))
+
+    def test_construction__empty_lines(self):
+        exp = Experiment("1 2 3 4 5 TestImage.jpg\n1 2 3 4 5 TestImage.jpg\n")
+        self.assertEqual(2, len(exp.images))
+
+    def test_construction__comment_line(self):
+        exp = Experiment("#Comment\n1 2 3 4 5 TestImage.jpg")
+        self.assertEqual(1, len(exp.images))
+
+    def test_construction__inline_comment(self):
+        exp = Experiment("1 2 3 4 5 TestImage.jpg #Comment")
+        self.assertEqual(1, len(exp.images))
