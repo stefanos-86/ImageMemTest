@@ -1,8 +1,8 @@
+import argparse
 import Tkinter as tk
-from PIL import ImageTk, Image
 
 
-class ImageMemoryTest():
+class ImageMemoryTestRunner():
     def __init__(self):
         window = tk.Tk()
         window.title("ImageMemoryTest")
@@ -21,14 +21,9 @@ class ImageMemoryTest():
 
 
 def main_loop():
-    imt = ImageMemoryTest()
+    imt = ImageMemoryTestRunner()
     imt.start()
 
-
-   # path = "TulipanoJPEG100.jpg"
-
-    # Creates a Tkinter-compatible photo image, which can be used everywhere Tkinter expects an image object.
-  #  img = ImageTk.PhotoImage(Image.open(path))
 
     # The Label widget is a standard Tkinter widget used to display a text or image on the screen.
   #  panel = tk.Label(window, image=img)
