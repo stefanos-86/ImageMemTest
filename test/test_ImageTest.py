@@ -21,3 +21,6 @@ class TestImageTest(unittest.TestCase):
         self.assertTrue("TestImage.jpg" in img.file_path)
 
         self.assertIsNotNone(img.tk_image)
+
+    def test_construction__no_image_file(self):
+        self.assertRaises(IOError, TrialImage, 1, 2, 3, 4, 5, "Does not exists.jpeg")
