@@ -17,6 +17,10 @@ class ImageMemoryTestRunner():
         self.window = window
         self.experiment = Experiment.from_file(os.path.abspath(experiment_file))
 
+        for image in self.experiment.images:
+            panel = tk.Label(window, image=image.tk_image)
+            panel.place(x=image.centre_x , y=image.centre_y)
+
     def quit_on_esc(self, event):
         self.window.quit()
 
@@ -37,21 +41,11 @@ def parse_command_line():
     return args.experimentFile
 
 
-    # The Label widget is a standard Tkinter widget used to display a text or image on the screen.
-  #  panel = tk.Label(window, image=img)
-
    # def hideImage():
    #     panel.pack_forget()
 
-    # The Pack geometry manager packs widgets in rows or columns.
-   # panel.pack(side="bottom", fill="both", expand="yes")
-
     #window.after(2000, hideImage)
     #window.after(3000, hideImage)
-
-    # Start the GUI
-
-
 
 if __name__ == "__main__":
     main_loop()
