@@ -1,13 +1,16 @@
 import re
+import os
 
 from TrialImage import TrialImage
+
 
 class Experiment:
     image_line = re.compile("([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+) +(.+)")
 
-    def __init__(self, experiment_description):
+    def __init__(self, experiment_description, file_path):
         self.images = []
         self.text_description = experiment_description
+        self.path = file_path
 
         self._parse_experiment_description()
 
@@ -33,5 +36,12 @@ class Experiment:
                 duration = int(elements.group(5))
                 path = str(elements.group(6))
 
-                self.images.append(TrialImage(width, heigth, centre_x, centre_y, duration, path))
+                base_directory = os.path.dirname(self.path)
+                real_image_path = os.path.join(base_directory, path)
+                self.images.append(TrialImage(width, heigth, centre_x, centre_y, duration, real_image_path))
 
+    @staticmethod
+    def from_file(file_path):
+        with open(file_path) as actual_file:
+            experiment_description = actual_file.read()
+            return Experiment(experiment_description, file_path)

@@ -1,9 +1,12 @@
 import argparse
 import Tkinter as tk
+import os
+
+from Experiment import Experiment
 
 
 class ImageMemoryTestRunner():
-    def __init__(self):
+    def __init__(self, experiment_file):
         window = tk.Tk()
         window.title("ImageMemoryTest")
         window.attributes("-fullscreen", True)
@@ -12,6 +15,7 @@ class ImageMemoryTestRunner():
         window.bind("<Escape>", self.quit_on_esc)
 
         self.window = window
+        self.experiment = Experiment.from_file(os.path.abspath(experiment_file))
 
     def quit_on_esc(self, event):
         self.window.quit()
@@ -20,9 +24,17 @@ class ImageMemoryTestRunner():
         self.window.mainloop()
 
 
+
 def main_loop():
-    imt = ImageMemoryTestRunner()
+    experiment_file = parse_command_line()
+    imt = ImageMemoryTestRunner(experiment_file)
     imt.start()
+
+def parse_command_line():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--experimentFile', help='path to the file with the experiment description', required=True)
+    args = parser.parse_args()
+    return args.experimentFile
 
 
     # The Label widget is a standard Tkinter widget used to display a text or image on the screen.
