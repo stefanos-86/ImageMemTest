@@ -19,3 +19,8 @@ class TrialImage:
         image = Image.open(self.file_path)
         image = image.resize((self.height, self.width), Image.ANTIALIAS)
         self.tk_image = ImageTk.PhotoImage(image)
+
+    def placement_position(self):
+        left =  self.centre_x - self.width / 2
+        top = self.centre_y - self.height / 2
+        return left, top

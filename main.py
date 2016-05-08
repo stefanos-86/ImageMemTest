@@ -19,7 +19,8 @@ class ImageMemoryTestRunner():
 
         for image in self.experiment.images:
             panel = tk.Label(window, image=image.tk_image)
-            panel.place(x=image.centre_x , y=image.centre_y) # TODO: correggere per la dimensione dell'immagine... che ancora non so.
+            left, top = image.placement_position()
+            panel.place(x=left , y=top)
 
     def quit_on_esc(self, event):
         self.window.quit()

@@ -24,3 +24,10 @@ class TestImageTest(unittest.TestCase):
 
     def test_construction__no_image_file(self):
         self.assertRaises(IOError, TrialImage, 1, 2, 3, 4, 5, "Does not exists.jpeg")
+
+    def test_placement_posizion(self):
+        img = TrialImage(10, 20, 5, 5, 5, "TestImage.jpg")
+        left, top = img.placement_position()
+
+        self.assertEqual(left, 0)
+        self.assertEqual(top, -5)
