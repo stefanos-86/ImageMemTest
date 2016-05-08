@@ -14,7 +14,7 @@ class TestImageTest(unittest.TestCase):
     def test_construction(self):
         img = TrialImage(1, 2, 3, 4, 5, "TestImage.jpg")
         self.assertEqual(1, img.width)
-        self.assertEqual(2, img.heigth)
+        self.assertEqual(2, img.height)
         self.assertEqual(3, img.centre_x)
         self.assertEqual(4, img.centre_y)
         self.assertEqual(5, img.duration)

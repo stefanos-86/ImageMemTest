@@ -19,7 +19,7 @@ class TestExperiment(unittest.TestCase):
 
         img = exp.images[0]
         self.assertEqual(1, img.width)
-        self.assertEqual(2, img.heigth)
+        self.assertEqual(2, img.height)
         self.assertEqual(3, img.centre_x)
         self.assertEqual(4, img.centre_y)
         self.assertEqual(5, img.duration)
@@ -39,4 +39,8 @@ class TestExperiment(unittest.TestCase):
 
     def test_construction__inline_comment(self):
         exp = Experiment("1 2 3 4 5 TestImage.jpg #Comment", TestExperiment.test_path)
+        self.assertEqual(1, len(exp.images))
+
+    def test_construction__leading_spaces(self):
+        exp = Experiment("  1 2 3 4 5 TestImage.jpg", TestExperiment.test_path)
         self.assertEqual(1, len(exp.images))

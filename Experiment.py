@@ -5,7 +5,7 @@ from TrialImage import TrialImage
 
 
 class Experiment:
-    image_line = re.compile("([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+) +(.+)")
+    image_line = re.compile(" *([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+) +(.+)")
 
     def __init__(self, experiment_description, file_path):
         self.images = []
@@ -30,7 +30,7 @@ class Experiment:
                     raise Exception("Unrecognized experiment line [" + str(line) + "]")
 
                 width = int(elements.group(1))
-                heigth = int(elements.group(2))
+                height = int(elements.group(2))
                 centre_x = int(elements.group(3))
                 centre_y = int(elements.group(4))
                 duration = int(elements.group(5))
@@ -38,7 +38,7 @@ class Experiment:
 
                 base_directory = os.path.dirname(self.path)
                 real_image_path = os.path.join(base_directory, path)
-                self.images.append(TrialImage(width, heigth, centre_x, centre_y, duration, real_image_path))
+                self.images.append(TrialImage(width, height, centre_x, centre_y, duration, real_image_path))
 
     @staticmethod
     def from_file(file_path):
