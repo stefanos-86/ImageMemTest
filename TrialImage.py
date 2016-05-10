@@ -20,7 +20,16 @@ class TrialImage:
         image = image.resize((self.height, self.width), Image.ANTIALIAS)
         self.tk_image = ImageTk.PhotoImage(image)
 
+        self.tk_panel = None  # To be filled when a panel is created.
+
     def placement_position(self):
         left =  self.centre_x - self.width / 2
         top = self.centre_y - self.height / 2
         return left, top
+
+    def emplace(self):
+        left, top = self.placement_position()
+        self.tk_panel.place(x=left, y=top)
+
+    def remove(self):
+        self.tk_panel.place_forget()
