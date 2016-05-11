@@ -1,0 +1,10 @@
+drag and drop
+http://stackoverflow.com/questions/6740855/board-drawing-code-to-move-an-oval/6789351#6789351
+
+Posizione assoluta
+http://zetcode.com/gui/tkinter/layout/
+
+Per fare una relase:
+- copia tutto su windows
+- C:\Python27\scripts\cxfreeze main.py
+- Manda la cartella "dist" (eventualmente copia i file di test e la licenza dentro).
