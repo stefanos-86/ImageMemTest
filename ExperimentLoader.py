@@ -17,7 +17,6 @@ class ExperimentLoader:
             for line in input_file:
                 line_counter += 1
                 filtered_line = self._remove_comments(line)
-                print filtered_line
                 if filtered_line != "":
                     try:
                         new_event = eval(filtered_line)  # TODO: filter code, or an attack becomes possible! Warn the user!
@@ -43,3 +42,4 @@ class ExperimentLoader:
         print ""
         print line
         print problem
+        # TODO: this is not good when launching with a double click.
