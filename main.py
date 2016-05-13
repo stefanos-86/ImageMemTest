@@ -5,6 +5,7 @@ import os
 from Experiment import Experiment
 
 #Includes above this line may be useless.
+from Events import BackgroundColorEvent
 from GuiFacade import GuiFacade;
 
 
@@ -39,7 +40,8 @@ def parse_command_line(): #To be deprecated
 
 def main():
     gui = GuiFacade()
-    gui.background_color(0,0,0)
+    bg_color = BackgroundColorEvent(gui, (255,0,0))
+    bg_color.register(gui)
     gui.main_loop()
 
 if __name__ == "__main__":
