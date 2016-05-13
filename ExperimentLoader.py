@@ -14,7 +14,15 @@ class ExperimentLoader:
         events = []
         with open(filename, "r") as input_file:
             for line in input_file:
-                events.append( eval(line) )  # TODO: filter code, or an attack becomes possible! Warn the user!
-                # TODO filter comments
+                filtered_line = self._remove_comments(line)
+                if filtered_line != "":
+                    events.append( eval(filtered_line) )  # TODO: filter code, or an attack becomes possible! Warn the user!
                 # TODO: find a a way to kick the GUI out of the constructors!
         return events
+
+    def _remove_comments(self, line):
+        comment_start = line.find("#")  # TODO: not perfect: the user can't use # in strings in the file.
+        if comment_start == -1:
+            return line  # not a comment
+
+        return line[:comment_start]

@@ -1,3 +1,4 @@
 ChangeBackgroundColor(gui, (255, 0, 0))
-PressKeyToContinue(gui, "a")
+PressKeyToContinue(gui, "a")             # The system waits until the user hits 'a'
 ChangeBackgroundColor(gui, (0, 0, 255))
+# At the end, press ESC to close.
