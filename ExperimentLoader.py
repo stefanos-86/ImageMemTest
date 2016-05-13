@@ -12,16 +12,23 @@ from Events import *  # Pull everything in so that it is in the "scope" of eval(
 class ExperimentLoader:
     def load(self, filename, gui):  # Gui must be a local so that eval finds it when it runs the code...
         events = []
+        line_counter = 0
         with open(filename, "r") as input_file:
             for line in input_file:
-                print line,
+                line_counter += 1
                 filtered_line = self._remove_comments(line)
+                print filtered_line
                 if filtered_line != "":
-                    new_event = eval(filtered_line)  # TODO: filter code, or an attack becomes possible! Warn the user!
+                    try:
+                        new_event = eval(filtered_line)  # TODO: filter code, or an attack becomes possible! Warn the user!
+                    except Exception as problem:
+                        self._friendly_error_message(filename, line, line_counter, problem)
+                        return
+
                     new_event.attach_gui(gui)
                     events.append(new_event)
                 # TODO: find a a way to kick the GUI out of the constructors!
-                # TODO: syntax errors... are not the best.
+                # TODO: syntax errors... are not the best. Moreover, params have to be verified at object constructions.
         return events
 
     def _remove_comments(self, line):
@@ -30,3 +37,9 @@ class ExperimentLoader:
             return line  # not a comment
 
         return line[:comment_start]
+
+    def _friendly_error_message(self, filename, line, lineno, problem):
+        print "Error in file " + filename + " at line " + str(lineno) + ": "
+        print ""
+        print line
+        print problem

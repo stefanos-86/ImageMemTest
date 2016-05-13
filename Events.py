@@ -42,9 +42,9 @@ class OnKeyEvent(Event):
 
 class ChangeBackgroundColor(DelayedEvent):
     """ Orders the gui to change the background color. """
-    def __init__(self,rgb_triplet):
+    def __init__(self,r, g, b):
         super(ChangeBackgroundColor, self).__init__(0)  # 0 delay: this is immediate.
-        self.rgb_triplet = rgb_triplet
+        self.rgb_triplet = (r, g, b)
 
     def happen(self):
         r, g, b = self.rgb_triplet

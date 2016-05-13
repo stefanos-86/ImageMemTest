@@ -46,9 +46,10 @@ def main():
     loader = ExperimentLoader()
     events = loader.load(os.path.join("Demo", "ChangeColorOnKeyPress.txt"), gui)
 
-    scheduler = Scheduler(events, gui)
+    if events is not None:
+        scheduler = Scheduler(events, gui)
 
-    gui.main_loop()
+        gui.main_loop()
 
 if __name__ == "__main__":
     main()
