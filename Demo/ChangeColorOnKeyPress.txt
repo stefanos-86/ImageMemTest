@@ -1,0 +1,3 @@
+BackgroundColorEvent(gui, (255, 0, 0))
+PressAKeyToContinueEvent(gui, "a")
+BackgroundColorEvent(gui, (0, 0, 255))
