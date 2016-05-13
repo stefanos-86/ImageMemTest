@@ -5,8 +5,8 @@ import os
 from Experiment import Experiment
 
 #Includes above this line may be useless.
-from Events import BackgroundColorEvent
-from Events import PressAKeyToContinueEvent
+from Events import ChangeBackgroundColor
+from Events import PressKeyToContinue
 from Events import Scheduler
 from GuiFacade import GuiFacade
 from ExperimentLoader import ExperimentLoader
@@ -43,10 +43,10 @@ def parse_command_line():
 
 def main():
     gui = GuiFacade()
-    #bg_color1 = BackgroundColorEvent(gui, (255, 0, 0))
-    #pause_on_key_a = PressAKeyToContinueEvent(gui, "a")
-    #pause_on_key_b = PressAKeyToContinueEvent(gui, "b")
-    #bg_color2 = BackgroundColorEvent(gui, (0, 0, 255))
+    #bg_color1 = ChangeBackgroundColor(gui, (255, 0, 0))
+    #pause_on_key_a = PressKeyToContinue(gui, "a")
+    #pause_on_key_b = PressKeyToContinue(gui, "b")
+    #bg_color2 = ChangeBackgroundColor(gui, (0, 0, 255))
     #events = [bg_color1, pause_on_key_a, pause_on_key_b, bg_color2]
 
     loader = ExperimentLoader()

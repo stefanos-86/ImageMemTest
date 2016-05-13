@@ -35,10 +35,10 @@ class OnKeyEvent(Event):
         self.gui.free_key(self.key)
 
 
-class BackgroundColorEvent(DelayedEvent):
+class ChangeBackgroundColor(DelayedEvent):
     """ Orders the gui to change the background color. """
     def __init__(self, gui, rgb_triplet):
-        super(BackgroundColorEvent, self).__init__(gui, 0)  # 0 Deleay: this is immediate.
+        super(ChangeBackgroundColor, self).__init__(gui, 0)  # 0 Deleay: this is immediate.
         self.rgb_triplet = rgb_triplet
 
     def happen(self):
@@ -46,10 +46,10 @@ class BackgroundColorEvent(DelayedEvent):
         self.gui.background_color(r, g, b)
 
 
-class PressAKeyToContinueEvent(OnKeyEvent):
+class PressKeyToContinue(OnKeyEvent):
     """ Does nothing until the user press the specified key. """
     def __init__(self, gui, key_to_wait):
-        super(PressAKeyToContinueEvent, self).__init__(gui, key_to_wait)
+        super(PressKeyToContinue, self).__init__(gui, key_to_wait)
 
     def happen(self):
         self._remove_key_binding()
