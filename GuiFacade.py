@@ -29,5 +29,8 @@ class GuiFacade:
     def bind_key(self, key, what_callback):
         self.window.bind(key, what_callback)
 
+    def free_key(self, key):
+        self.window.unbind(key)
+
     def _color_rgb_to_hex(self, r, g, b):
         return '#%02x%02x%02x' % (r, g, b)

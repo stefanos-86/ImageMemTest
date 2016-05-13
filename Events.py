@@ -39,6 +39,9 @@ class PressAKeyToContinueEvent(Event):
         print "derivato "
         return True
 
+    def happen(self):
+        self.gui.free_key(self.key_to_wait)
+
 
 
 class Scheduler():
@@ -61,23 +64,20 @@ class Scheduler():
         kevent = self._current_event().onKey()
         print kevent
         if kevent:  # Apply polimorphism here...
-            self.gui.bind_key(self._current_event().key_to_wait, self.do_key_event)
+            self.gui.bind_key(self._current_event().key_to_wait, self.do_event)
             print "on key"
         else:
             self.gui.register_event(0, self.do_event)
             print "registered"
 
-    def do_event(self):
+    def do_event(self, event_from_gui=None):
         print "--------do"
         self._current_event().happen()  # Perform the scheduled action.
+
         self.event_iterator += 1        # Advance to the next.
 
         self.schedule_event()  # Put another one in the pipe.
 
-    def do_key_event(self, event_from_gui):
-        self.event_iterator += 1  # Advance to the next.
-
-        self.schedule_event()  # Put another one in the pipe.
 
     def _current_event(self):
         return self.events[self.event_iterator]
