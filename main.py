@@ -6,7 +6,9 @@ from Experiment import Experiment
 
 #Includes above this line may be useless.
 from Events import BackgroundColorEvent
-from GuiFacade import GuiFacade;
+from Events import PressAKeyToContinueEvent
+from Events import Scheduler
+from GuiFacade import GuiFacade
 
 
 class ImageMemoryTestRunner(): #Deprecated
@@ -40,8 +42,13 @@ def parse_command_line(): #To be deprecated
 
 def main():
     gui = GuiFacade()
-    bg_color = BackgroundColorEvent(gui, (255,0,0))
-    bg_color.register(gui)
+    bg_color1 = BackgroundColorEvent(gui, (255, 0, 0))
+    pause_on_key = PressAKeyToContinueEvent(gui, "a")
+    bg_color2 = BackgroundColorEvent(gui, (0, 0, 255))
+    events = [bg_color1, pause_on_key, bg_color2]
+
+    scheduler = Scheduler(events, gui)
+
     gui.main_loop()
 
 if __name__ == "__main__":

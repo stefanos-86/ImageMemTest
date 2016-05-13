@@ -9,9 +9,9 @@ class GuiFacade:
         window.title("ImageMemoryTest")
         window.attributes("-fullscreen", True)
 
-        window.bind("<Escape>", self.quit_on_esc)
-
         self.window = window
+
+        self.bind_key("<Escape>", self.quit_on_esc)
 
     def quit_on_esc(self, event):
         self.window.quit()
@@ -25,6 +25,9 @@ class GuiFacade:
 
     def register_event(self, when_milliseconds, what_callback):
         self.window.after(when_milliseconds, what_callback)
+
+    def bind_key(self, key, what_callback):
+        self.window.bind(key, what_callback)
 
     def _color_rgb_to_hex(self, r, g, b):
         return '#%02x%02x%02x' % (r, g, b)
