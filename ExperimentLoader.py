@@ -14,10 +14,14 @@ class ExperimentLoader:
         events = []
         with open(filename, "r") as input_file:
             for line in input_file:
+                print line,
                 filtered_line = self._remove_comments(line)
                 if filtered_line != "":
-                    events.append( eval(filtered_line) )  # TODO: filter code, or an attack becomes possible! Warn the user!
+                    new_event = eval(filtered_line)  # TODO: filter code, or an attack becomes possible! Warn the user!
+                    new_event.attach_gui(gui)
+                    events.append(new_event)
                 # TODO: find a a way to kick the GUI out of the constructors!
+                # TODO: syntax errors... are not the best.
         return events
 
     def _remove_comments(self, line):

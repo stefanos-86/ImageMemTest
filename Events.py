@@ -3,8 +3,13 @@
 
 class Event(object):
     """ Base of all the events, and also the no-op events."""
-    def __init__(self, gui):
-        self.gui = gui  # All the events have to register with and manipulate the GUI.
+    def __init__(self):
+        self.gui = None  # All the events have to register with and manipulate the GUI.
+                         # But it can't be in the constructor signature because I don't want the client
+                         # to bother with such details.
+
+    def attach_gui(self, gui):
+        self.gui = gui
 
     def happen(self):
         """ Does nothing. """
@@ -13,8 +18,8 @@ class Event(object):
 
 class DelayedEvent(Event):
     """ This event has to be scheduled after a certain time. """
-    def __init__(self, gui, delay):
-        super(DelayedEvent, self).__init__(gui)
+    def __init__(self, delay):
+        super(DelayedEvent, self).__init__()
         self.delay = delay
 
     def register(self, back_to_scheduler):
@@ -23,8 +28,8 @@ class DelayedEvent(Event):
 
 class OnKeyEvent(Event):
     """ This event waits for a key press. """
-    def __init__(self, gui, key):
-        super(OnKeyEvent, self).__init__(gui)
+    def __init__(self, key):
+        super(OnKeyEvent, self).__init__()
         self.key = key
 
     def register(self, back_to_scheduler):
@@ -37,8 +42,8 @@ class OnKeyEvent(Event):
 
 class ChangeBackgroundColor(DelayedEvent):
     """ Orders the gui to change the background color. """
-    def __init__(self, gui, rgb_triplet):
-        super(ChangeBackgroundColor, self).__init__(gui, 0)  # 0 Deleay: this is immediate.
+    def __init__(self,rgb_triplet):
+        super(ChangeBackgroundColor, self).__init__(0)  # 0 delay: this is immediate.
         self.rgb_triplet = rgb_triplet
 
     def happen(self):
@@ -48,8 +53,8 @@ class ChangeBackgroundColor(DelayedEvent):
 
 class PressKeyToContinue(OnKeyEvent):
     """ Does nothing until the user press the specified key. """
-    def __init__(self, gui, key_to_wait):
-        super(PressKeyToContinue, self).__init__(gui, key_to_wait)
+    def __init__(self, key_to_wait):
+        super(PressKeyToContinue, self).__init__(key_to_wait)
 
     def happen(self):
         self._remove_key_binding()

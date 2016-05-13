@@ -43,12 +43,6 @@ def parse_command_line():
 
 def main():
     gui = GuiFacade()
-    #bg_color1 = ChangeBackgroundColor(gui, (255, 0, 0))
-    #pause_on_key_a = PressKeyToContinue(gui, "a")
-    #pause_on_key_b = PressKeyToContinue(gui, "b")
-    #bg_color2 = ChangeBackgroundColor(gui, (0, 0, 255))
-    #events = [bg_color1, pause_on_key_a, pause_on_key_b, bg_color2]
-
     loader = ExperimentLoader()
     events = loader.load(os.path.join("Demo", "ChangeColorOnKeyPress.txt"), gui)
 
