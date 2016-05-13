@@ -39,6 +39,7 @@ def parse_command_line(): #To be deprecated
 
 def main():
     gui = GuiFacade()
+    gui.background_color(0,0,0)
     gui.main_loop()
 
 if __name__ == "__main__":

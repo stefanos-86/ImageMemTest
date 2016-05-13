@@ -8,7 +8,6 @@ class GuiFacade:
         window = tk.Tk()
         window.title("ImageMemoryTest")
         window.attributes("-fullscreen", True)
-        window.configure(background='white')
 
         window.bind("<Escape>", self.quit_on_esc)
 
@@ -19,3 +18,10 @@ class GuiFacade:
 
     def main_loop(self):
         self.window.mainloop()
+
+    def background_color(self, r, g, b):
+        background_color = self._color_rgb_to_hex(r, g, b)
+        self.window.configure(background=background_color)
+
+    def _color_rgb_to_hex(self, r, g, b):
+        return '#%02x%02x%02x' % (r, g, b)
