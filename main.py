@@ -1,18 +1,16 @@
 import argparse
-import Tkinter as tk
+
 import os
 
 from Experiment import Experiment
 
+#Includes above this line may be useless.
+from GuiFacade import GuiFacade;
 
-class ImageMemoryTestRunner():
+
+class ImageMemoryTestRunner(): #Deprecated
     def __init__(self, experiment_file):
-        window = tk.Tk()
-        window.title("ImageMemoryTest")
-        window.attributes("-fullscreen", True)
-        window.configure(background='white')
 
-        window.bind("<Escape>", self.quit_on_esc)
 
         self.window = window
         self.experiment = Experiment.from_file(os.path.abspath(experiment_file))
@@ -26,24 +24,22 @@ class ImageMemoryTestRunner():
             window.after(event_time_milliseconds, image.remove)
 
 
-    def quit_on_esc(self, event):
-        self.window.quit()
-
-    def start(self):
-        self.window.mainloop()
 
 
-
-def main_loop():
+def main_loop(): # Unused, to be replaced by main()
     experiment_file = parse_command_line()
     imt = ImageMemoryTestRunner(experiment_file)
     imt.start()
 
-def parse_command_line():
+def parse_command_line(): #To be deprecated
     parser = argparse.ArgumentParser()
     parser.add_argument('--experimentFile', help='path to the file with the experiment description', required=True)
     args = parser.parse_args()
     return args.experimentFile
 
+def main():
+    gui = GuiFacade()
+    gui.main_loop()
+
 if __name__ == "__main__":
-    main_loop()
+    main()
