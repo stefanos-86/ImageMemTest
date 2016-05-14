@@ -33,3 +33,12 @@ REQUIREMENTS
 PRIOR ART
 SuperLab della Noldus (proiettore avanzato, tipo powerpoint ma "lab grade").
 Ethovision è il video tracker.
+
+
+Usa questo codice per caricare un'immagine.
+            panel = tk.Label(window, image=image.tk_image)
+            image.tk_panel = panel
+            window.after(event_time_milliseconds, image.emplace)
+            event_time_milliseconds += image.duration * 1000
+            window.after(event_time_milliseconds, image.remove)
+L'evento "mostra un'immagine" può registrare 3 callback. Mostra, rimuovi e il ritorno allo scheduler.
