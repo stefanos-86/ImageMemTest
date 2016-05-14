@@ -58,6 +58,33 @@ class DelayedEventTest(unittest.TestCase):
         self.assertEquals(mock_callback, gui.callback)
 
 
+class OnKeyEventTest(unittest.TestCase):
+    def test_construction(self):
+        key = "x"
+        event = OnKeyEvent(key)
+        self.assertEquals(key, event.key)
+
+    def test_construction__special_binding(self):
+        key = "<Return>"
+        event = OnKeyEvent(key)
+        self.assertEquals(key, event.key)
+
+    def test_construction__nonsensical_key(self):
+        key = 3874.83
+        self.assertRaises(Exception, OnKeyEvent, key)
+
+    def test_construction__too_many_keys(self):
+        key = "ab"
+        self.assertRaises(Exception, OnKeyEvent, key)
+
+    def test_construction__incorrect_space(self):
+        key = " "
+        self.assertRaises(Exception, OnKeyEvent, key)
+
+    def test_construction__unsupported_special_bind(self):
+        key = "<rubbish>"
+        self.assertRaises(Exception, OnKeyEvent, key)
+
 
 
 

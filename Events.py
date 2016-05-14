@@ -19,8 +19,8 @@ class DelayedEvent(Event):
     def __init__(self, delay_milliseconds):
         super(DelayedEvent, self).__init__()
 
-        assert isinstance(delay_milliseconds, (int, long)), "Delay must be integer."
-        assert delay_milliseconds > 0, "Delay must be 0 or positive."
+        assert isinstance(delay_milliseconds, (int, long)), "Delay must be integer -> " + str(delay_milliseconds)
+        assert delay_milliseconds > 0, "Delay must be 0 or positive -> " + str(delay_milliseconds)
 
         self.delay = delay_milliseconds
 
@@ -32,7 +32,23 @@ class OnKeyEvent(Event):
     """ This event waits for a key press. """
     def __init__(self, key):
         super(OnKeyEvent, self).__init__()
+        self._validate_key(key)
         self.key = key
+
+    def _validate_key(self, key):
+        supported_special_bindings = "<space> <Return> <Key>"
+
+        assert isinstance(key, basestring), "Key must be a string (like \"a\", with the quotes) -> " + str(key)
+
+        key_length = len(key)
+        if key_length > 1 and "<" in key:
+            assert key in supported_special_bindings, "Invalid special key -> [" + key + "]" \
+                                                       " - available: " + supported_special_bindings
+        else:
+            assert len(key) == 1, "Normal key must be one symbol (like \"a\") -> [" + key + "]"
+
+        assert key != " ", "Use \"<space>\", not a literal blank char."
+
 
     def register(self, back_to_scheduler):
         self.gui.bind_key(self.key, back_to_scheduler)
