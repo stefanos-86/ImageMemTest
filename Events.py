@@ -27,6 +27,10 @@ class DelayedEvent(Event):
     def register(self, back_to_scheduler):
         self.gui.register_event(self.delay, back_to_scheduler)
 
+    def _remove_key_binding(self):
+        """ Some events may need to remove the key binding at the end of happen(). """
+        self.gui.free_key(self.key)
+
 
 class OnKeyEvent(Event):
     """ This event waits for a key press. """
@@ -46,16 +50,11 @@ class OnKeyEvent(Event):
                                                        " - available: " + supported_special_bindings
         else:
             assert len(key) == 1, "Normal key must be one symbol (like \"a\") -> [" + key + "]"
-
         assert key != " ", "Use \"<space>\", not a literal blank char."
-
 
     def register(self, back_to_scheduler):
         self.gui.bind_key(self.key, back_to_scheduler)
 
-    def _remove_key_binding(self):
-        """ To be called at the end of happen() """  # TODO: consider a generic "unregister", but it makes no sense for DelayEvents.
-        self.gui.free_key(self.key)
 
 
 class ChangeBackgroundColor(DelayedEvent):

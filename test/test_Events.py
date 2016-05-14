@@ -14,9 +14,14 @@ class MockGui():
     def __init__(self):
         self.delay = None
         self.callback = None
+        self.key = None
 
     def register_event(self, delay, callback):
         self.delay = delay
+        self.callback = callback
+
+    def bind_key(self, key, callback):
+        self.key = key
         self.callback = callback
 
 
@@ -84,6 +89,17 @@ class OnKeyEventTest(unittest.TestCase):
     def test_construction__unsupported_special_bind(self):
         key = "<rubbish>"
         self.assertRaises(Exception, OnKeyEvent, key)
+
+    def test_register(self):
+        key = "4"
+        gui = MockGui()
+        event = OnKeyEvent(key)
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+
+        self.assertEquals(key, gui.key)
+        self.assertEquals(mock_callback, gui.callback)
 
 
 
