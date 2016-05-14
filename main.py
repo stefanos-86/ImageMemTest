@@ -17,11 +17,8 @@ def main():
     gui = GuiFacade()
     loader = ExperimentLoader()
     events = loader.load(os.path.join("Demo", "ChangeColorOnKeyPress.txt"), gui)
-
-    if events is not None:
-        scheduler = Scheduler(events, gui)
-
-        gui.main_loop()
+    scheduler = Scheduler(events, gui)
+    gui.main_loop()
 
 if __name__ == "__main__":
     main()

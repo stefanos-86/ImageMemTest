@@ -38,8 +38,11 @@ class ExperimentLoader:
         return line[:comment_start]
 
     def _friendly_error_message(self, filename, line, lineno, problem):
-        print "Error in file " + filename + " at line " + str(lineno) + ": "
-        print ""
-        print line
-        print problem
-        # TODO: this is not good when launching with a double click.
+        """ Users are scientists, not programmers. Try to hide the stack trace
+            from them, but still give useful error messages."""
+        message = "Error in file " + filename + " at line " + str(lineno) + ":\n"
+        message += "\n" + line + "\n"
+        message += str(problem)
+
+        raise Exception(message)
+
