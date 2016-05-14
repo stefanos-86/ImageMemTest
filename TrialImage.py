@@ -1,7 +1,7 @@
 import os
 from PIL import ImageTk, Image
 
-# TODO To be deprecated.
+# TODO To be deprecated. Keep to remember how to load images.
 
 class TrialImage:
     def __init__(self,
