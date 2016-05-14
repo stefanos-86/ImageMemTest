@@ -21,11 +21,13 @@ class ExperimentLoaderTest(unittest.TestCase):
     def test_parse_input_line__one_event(self):
         loader = ExperimentLoader()
         mock_file = ["ChangeBackgroundColor(0, 0, 255)"]
+        gui = MockGui()
 
-        events = loader.parse_input_file(mock_file, "filename", MockGui())
+        events = loader.parse_input_file(mock_file, "filename", gui)
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
+        self.assertEqual(gui, events[0].gui)
 
     def test_parse_input_line__two_events(self):
         loader = ExperimentLoader()
@@ -72,3 +74,9 @@ class ExperimentLoaderTest(unittest.TestCase):
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
+
+    def test_parse_input_syntax_error(self):
+        loader = ExperimentLoader()
+        mock_file = [" ", "ChangeBackgroundColor(0, 0, 255) rubbish"]
+
+        self.assertRaises(Exception, loader.parse_input_file, mock_file, "filename", MockGui())
