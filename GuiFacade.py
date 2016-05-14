@@ -3,6 +3,8 @@
 
 import Tkinter as tk
 
+import tkMessageBox
+
 class GuiFacade:
     def __init__(self):
         window = tk.Tk()
@@ -12,6 +14,13 @@ class GuiFacade:
         self.window = window
 
         self.bind_key("<Escape>", self.quit_on_esc)
+
+        tk.Tk.report_callback_exception = self._show_error
+
+    def _show_error(self, *args):
+        captured_exception, text, traceback_object = args
+        tkMessageBox.showerror("Unrecoverable error", str(text) + "\n\n Press OK to close the program.")
+        self.window.quit()
 
     def quit_on_esc(self, event):
         self.window.quit()

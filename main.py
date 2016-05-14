@@ -14,11 +14,17 @@ def parse_command_line(): # TODO: may be eliminated once the GUI is used...
     return args.experimentFile
 
 
-def main():
-    gui = GuiFacade()
+# Stupid trick to start the gui before doing work, so that I can display error messages, if the need be.
+# TODO: use a class and remove the global!
+gui = GuiFacade()
+def start_experiment():
     loader = ExperimentLoader()
     events = loader.load(os.path.join("Demo", "ChangeColorOnKeyPress.txt"), gui)
     scheduler = Scheduler(events, gui)
+
+
+def main():
+    gui.register_event(0, start_experiment)
     gui.main_loop()
 
 if __name__ == "__main__":

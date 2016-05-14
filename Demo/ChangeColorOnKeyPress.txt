@@ -1,4 +1,4 @@
 ChangeBackgroundColor(255, 0, 0)
 PressKeyToContinue("a")             # The system waits until the user hits 'a'
-ChangeBackgroundColor(0, 0, 255)
+ChangeBackgroundColor(0, 0, 255)xcx
 # At the end, press ESC to close.
