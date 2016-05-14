@@ -20,16 +20,12 @@ class DelayedEvent(Event):
         super(DelayedEvent, self).__init__()
 
         assert isinstance(delay_milliseconds, (int, long)), "Delay must be integer -> " + str(delay_milliseconds)
-        assert delay_milliseconds > 0, "Delay must be 0 or positive -> " + str(delay_milliseconds)
+        assert delay_milliseconds >= 0, "Delay must be 0 or positive -> " + str(delay_milliseconds)
 
         self.delay = delay_milliseconds
 
     def register(self, back_to_scheduler):
         self.gui.register_event(self.delay, back_to_scheduler)
-
-    def _remove_key_binding(self):
-        """ Some events may need to remove the key binding at the end of happen(). """
-        self.gui.free_key(self.key)
 
 
 class OnKeyEvent(Event):
@@ -55,6 +51,9 @@ class OnKeyEvent(Event):
     def register(self, back_to_scheduler):
         self.gui.bind_key(self.key, back_to_scheduler)
 
+    def _remove_key_binding(self):
+        """ Some events may need to remove the key binding at the end of happen(). """
+        self.gui.free_key(self.key)
 
 
 class ChangeBackgroundColor(DelayedEvent):

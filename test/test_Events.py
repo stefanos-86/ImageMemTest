@@ -15,6 +15,8 @@ class MockGui():
         self.delay = None
         self.callback = None
         self.key = None
+        self.bg_color = None
+        self.freed_key = None
 
     def register_event(self, delay, callback):
         self.delay = delay
@@ -23,6 +25,12 @@ class MockGui():
     def bind_key(self, key, callback):
         self.key = key
         self.callback = callback
+
+    def background_color(self, r, g, b):
+        self.bg_color = (r, g, b)
+
+    def free_key(self, key):
+        self.freed_key = key
 
 
 class EventTest(unittest.TestCase):
@@ -44,7 +52,6 @@ class DelayedEventTest(unittest.TestCase):
         self.assertRaises(Exception, DelayedEvent, delay)
 
     def test_construnction__negative_delay(self):
-        self.assertRaises(Exception, DelayedEvent,  0)
         self.assertRaises(Exception, DelayedEvent, -1)
 
     def test_construction__float_delay(self):
@@ -102,5 +109,29 @@ class OnKeyEventTest(unittest.TestCase):
         self.assertEquals(mock_callback, gui.callback)
 
 
+class ChangeBackgroundColorTest(unittest.TestCase):
+    def test_construction(self):
+        event = ChangeBackgroundColor(1,2,3)
+        self.assertEquals((1, 2, 3), event.rgb_triplet)
 
+    def test_happen(self):
+        gui = MockGui()
+        event = ChangeBackgroundColor(1,2,3)
+        event.attach_gui(gui)
+
+        event.happen()
+
+        self.assertEqual((1, 2, 3), gui.bg_color)
+
+
+class PressKeyToContinueTest(unittest.TestCase):
+    def test_happen(self):
+        key = "r"
+        event = PressKeyToContinue(key)
+        gui = MockGui()
+        event.attach_gui(gui)
+
+        event.happen()
+
+        self.assertEquals(key, gui.freed_key)
 
