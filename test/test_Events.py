@@ -114,6 +114,11 @@ class ChangeBackgroundColorTest(unittest.TestCase):
         event = ChangeBackgroundColor(1,2,3)
         self.assertEquals((1, 2, 3), event.rgb_triplet)
 
+    def test_construction__invalid_rgb(self):
+        self.assertRaises(Exception, ChangeBackgroundColor, -1, 2, 3)
+        self.assertRaises(Exception, ChangeBackgroundColor, 256, 2, 3)
+        self.assertRaises(Exception, ChangeBackgroundColor, "NaN", 2, 3)
+
     def test_happen(self):
         gui = MockGui()
         event = ChangeBackgroundColor(1,2,3)

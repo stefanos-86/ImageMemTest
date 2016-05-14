@@ -60,6 +60,12 @@ class ChangeBackgroundColor(DelayedEvent):
     """ Orders the gui to change the background color. """
     def __init__(self,r, g, b):
         super(ChangeBackgroundColor, self).__init__(0)  # 0 delay: this is immediate.
+
+        assert isinstance(r, (int, long))and isinstance(g, (int, long)) and isinstance(b, (int, long)), \
+                                                                       "R, g or b must be integers."
+        assert r >= 0 and g >= 0 and b >= 0, "r, g and b must be 0 or positive."
+        assert r <= 255 and g <= 255 and b <= 255, "r, g or b can't be bigger than 255."
+
         self.rgb_triplet = (r, g, b)
 
     def happen(self):
@@ -71,6 +77,7 @@ class PressKeyToContinue(OnKeyEvent):
     """ Does nothing until the user press the specified key. """
     def __init__(self, key_to_wait):
         super(PressKeyToContinue, self).__init__(key_to_wait)
+        # Key validated by the superclass.
 
     def happen(self):
         self._remove_key_binding()
