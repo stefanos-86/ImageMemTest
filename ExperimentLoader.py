@@ -28,6 +28,7 @@ class ExperimentLoader:
         for line in input_file:
             line_counter += 1
             filtered_line = self._remove_comments(line)
+            filtered_line = self._remove_whitespace(filtered_line)
             if filtered_line != "":
                 try:
                     new_event = eval(filtered_line)
@@ -45,6 +46,9 @@ class ExperimentLoader:
             return line  # not a comment
 
         return line[:comment_start]
+
+    def _remove_whitespace(self, line):
+        return line.strip()
 
     def _friendly_error_message(self, filename, line, lineno, problem):
         """ Users are scientists, not programmers. Try to hide the stack trace
