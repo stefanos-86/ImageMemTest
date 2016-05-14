@@ -135,3 +135,58 @@ class PressKeyToContinueTest(unittest.TestCase):
 
         self.assertEquals(key, gui.freed_key)
 
+
+class SchedulerTest(unittest.TestCase):
+    def test_construction__enqueue_schedule_first_event(self):
+        gui = MockGui()
+        events = [Event()]
+
+        scheduler = Scheduler(events, gui)
+
+        self.assertEquals(0, gui.delay)
+        self.assertEquals(scheduler.schedule_event, gui.callback)
+
+    def test_schedule_event(self):
+        gui = MockGui()
+        key = "r"
+        event = PressKeyToContinue(key)
+        event.attach_gui(gui)
+        events = [event]
+        scheduler = Scheduler(events, gui)
+
+        scheduler.schedule_event()
+
+        self.assertEqual(gui.callback, scheduler.do_event)  # When the event fires, the scheduler must be invoked to do
+                                                            # some bookkeeping.
+        self.assertEqual(key, gui.key)  # The event did its registration.
+
+    def test_schedule_event__end_of_events(self):
+        gui = MockGui()
+        event = PressKeyToContinue("<Key>")
+        event.attach_gui(gui)
+        events = [event]
+
+        scheduler = Scheduler(events, gui)
+        scheduler.schedule_event()  # Use the only available event.
+
+        scheduler.do_event()
+
+        gui.callback = None  # Reset gui
+        scheduler.schedule_event()
+
+        self.assertIsNone(gui.callback) # No changes from the previous scheduling.
+
+    def test_do_event(self):
+        gui = MockGui()
+        event1 = PressKeyToContinue("a")
+        event2 = PressKeyToContinue("b")
+        event1.attach_gui(gui)
+        event2.attach_gui(gui)
+        events = [event1, event2]
+
+        scheduler = Scheduler(events, gui)
+        scheduler.schedule_event()
+
+        scheduler.do_event()
+        self.assertEquals("a", gui.freed_key)  # Side effect of the event 1: it did run.
+        self.assertEquals("b", gui.key)  # The next event has been registered.
