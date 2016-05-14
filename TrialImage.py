@@ -1,6 +1,8 @@
 import os
 from PIL import ImageTk, Image
 
+# TODO To be deprecated.
+
 class TrialImage:
     def __init__(self,
                  width_pixels,

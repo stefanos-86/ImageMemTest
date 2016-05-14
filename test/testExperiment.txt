@@ -1,4 +1,0 @@
-# Width, height, center x, center y, duration, path
-  50     50      0         0         1 TestImage.jpg
-  100    100     1000      200       1 TestImage.jpg
-  100    50      250       600       1 TestImage.jpg

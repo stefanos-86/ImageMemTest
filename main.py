@@ -13,6 +13,7 @@ def parse_command_line(): # TODO: may be eliminated once the GUI is used...
     args = parser.parse_args()
     return args.experimentFile
 
+
 def main():
     gui = GuiFacade()
     loader = ExperimentLoader()
