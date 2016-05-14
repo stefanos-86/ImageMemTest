@@ -1,4 +1,6 @@
 # Here we have the classes to deal with the scheduling of events.
+# Constructors can be invoked by the end users (to program the experiments),
+# therefore the parameter validation must be merciless.
 
 
 class Event(object):
@@ -11,16 +13,16 @@ class Event(object):
     def attach_gui(self, gui):
         self.gui = gui
 
-    def happen(self):
-        """ Does nothing. """
-        pass
-
 
 class DelayedEvent(Event):
     """ This event has to be scheduled after a certain time. """
-    def __init__(self, delay):
+    def __init__(self, delay_milliseconds):
         super(DelayedEvent, self).__init__()
-        self.delay = delay
+
+        assert isinstance(delay_milliseconds, (int, long)), "Delay must be integer."
+        assert delay_milliseconds > 0, "Delay must be 0 or positive."
+
+        self.delay = delay_milliseconds
 
     def register(self, back_to_scheduler):
         self.gui.register_event(self.delay, back_to_scheduler)
