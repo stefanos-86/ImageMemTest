@@ -5,30 +5,39 @@
 # Some python syntax may be added "on the fly" to the lines, but it is more conveniente from the point
 # of view of the user (otherwise, if we force the user to write some python, execfile() could replace
 # this "home-brew" mechanism).
+#
+# There is the risk of an attacker being able to pass a file with a malicious expression that would go
+# trough the eval. The risk is mitigated because the users are not supposed to take files from 3rd parties
+# (e.g. the internet) and if the attacker can compromise a file in the user PC... he could well change the Python code
+# of the application directly!
 
 from Events import *  # Pull everything in so that it is in the "scope" of eval().
 
 
 class ExperimentLoader:
-    def load(self, filename, gui):  # Gui must be a local so that eval finds it when it runs the code...
+    def load(self, filename, gui):
+        events = None
+        with open(filename, "r") as input_file:
+            events = self.parse_input_file(input_file, filename, gui)
+        return events
+
+    def parse_input_file(self, input_file, filename, gui):
+        """ Public only for testability reasons. """
         events = []
         line_counter = 0
-        with open(filename, "r") as input_file:
-            for line in input_file:
-                line_counter += 1
-                filtered_line = self._remove_comments(line)
-                if filtered_line != "":
-                    try:
-                        new_event = eval(filtered_line)  # TODO: filter code, or an attack becomes possible! Warn the user!
-                    except Exception as problem:
-                        self._friendly_error_message(filename, line, line_counter, problem)
-                        return
+        for line in input_file:
+            line_counter += 1
+            filtered_line = self._remove_comments(line)
+            if filtered_line != "":
+                try:
+                    new_event = eval(filtered_line)
+                except Exception as problem:
+                    self._friendly_error_message(filename, line, line_counter, problem)
 
-                    new_event.attach_gui(gui)
-                    events.append(new_event)
-                # TODO: find a a way to kick the GUI out of the constructors!
-                # TODO: syntax errors... are not the best. Moreover, params have to be verified at object constructions.
+                new_event.attach_gui(gui)
+                events.append(new_event)
         return events
+
 
     def _remove_comments(self, line):
         comment_start = line.find("#")  # TODO: not perfect: the user can't use # in strings in the file.

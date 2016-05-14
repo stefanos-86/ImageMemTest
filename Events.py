@@ -76,7 +76,7 @@ class PressKeyToContinue(OnKeyEvent):
         self._remove_key_binding()
 
 
-class Scheduler():
+class Scheduler:
     """ The scheduler has the list of all the steps to do.
         It registers with the GUI to be called on GUI events.
         When it is called, it fires the next event in the list, registers again for callback etc. """
