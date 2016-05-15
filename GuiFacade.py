@@ -48,9 +48,15 @@ class GuiFacade:
     def select_file(self):
         return tkFileDialog.askopenfilename()
 
-    # To get the screen size:
-    #import tkinter as tk
-    #root = tk.Tk()
-    #screen_width = root.winfo_screenwidth()
-    #screen_height = root.winfo_screenheight()
+    def get_screen_size(self):
+        return (self.window.winfo_screenwidth(),
+                self.window.winfo_screenheight())
+
+    def show_image(self, top, left, tk_image):
+        panel = tk.Label(self.window, image=tk_image)
+        panel.place(x=left, y=top)
+        return panel  # To be used as an opaque reference by the caller.
+
+    def remove_image(self, image_handle):  # image_handle is the panel returned by show_image()
+        image_handle.place_forget()
 
