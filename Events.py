@@ -2,6 +2,8 @@
 # Constructors can be invoked by the end users (to program the experiments),
 # therefore the parameter validation must be merciless.
 
+from ExperimentImage import ExperimentImage
+
 class Event(object):
     """ Base of all the events, and also the no-op events."""
     def __init__(self):
@@ -89,6 +91,25 @@ class Wait(DelayedEvent):
 
     def happen(self):
         pass  # Do nothing. We just had to wait.
+
+
+class ShowImage(DelayedEvent):
+    def __init__(self, how_long_milliseconds, centre_x_pixels, centre_y_pixels, filename):
+        super(ShowImage, self).__init__(how_long_milliseconds)
+
+        self.image = ExperimentImage(centre_x_pixels, centre_y_pixels, filename)
+
+        # Image validation is deferred until the gui is available (and can tell the screen size).
+
+    def attach_gui(self, gui):
+        super(ShowImage, self).attach_gui(gui)
+        max_x, max_y = gui.screen_size()
+        self.image.validate(max_x, max_y)  # Throws if the image is not good.
+
+    def register(self, back_to_scheduler):
+        super(ShowImage, self).register(back_to_scheduler)  # Normal registration to call happen() at the right time.
+        # The event starts now: show the image immediately.
+        self.gui.show_image(self.image.top, self.image.left, self.image.tk_image)
 
 
 class Scheduler:

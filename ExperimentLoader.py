@@ -32,10 +32,11 @@ class ExperimentLoader:
             if filtered_line != "":
                 try:
                     new_event = eval(filtered_line)
+                    new_event.attach_gui(gui)  # This is part of the construction. Done "outside" so that the file has
+                                               # no references to the gui object.
                 except Exception as problem:
                     self._friendly_error_message(filename, line, line_counter, problem)
 
-                new_event.attach_gui(gui)
                 events.append(new_event)
         return events
 

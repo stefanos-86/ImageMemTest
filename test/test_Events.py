@@ -17,6 +17,8 @@ class MockGui():
         self.key = None
         self.bg_color = None
         self.freed_key = None
+        self.added_image = None
+        self.removed_image = None
 
     def register_event(self, delay, callback):
         self.delay = delay
@@ -31,6 +33,15 @@ class MockGui():
 
     def free_key(self, key):
         self.freed_key = key
+
+    def screen_size(self):
+        return (1000, 1000)
+
+    def show_image(self, top, left, tk_image):
+        self.added_image = tk_image
+
+    def remove_image(self, image_handle):
+        self.removed_image = image_handle
 
 
 class EventTest(unittest.TestCase):
@@ -157,6 +168,39 @@ class WaitTest(unittest.TestCase):
 
         event.happen()
         # No assertion possible. happen() is a no-op.
+
+
+class ShowImageTest(unittest.TestCase):
+    def test_construction__load_the_image(self):
+        event = ShowImage(1, 2, 3, "TestImage.jpg")
+        self.assertIsNotNone(event.image)
+
+    # No image validation at construction: it must wait until the GUI is attached.
+
+    def test_attach_gui__invalid_image(self):
+        event = ShowImage(1, 2, 3, "TestImage.jpg")
+        gui = MockGui()
+        self.assertRaises(Exception, event.attach_gui, gui)
+
+    # No other validation cases: it is delegated to the image.
+
+    def test_register__shows_the_image(self):
+        event = ShowImage(1, 200, 300, "TestImage.jpg")
+        gui = MockGui()
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+
+        self.assertEqual(event.image.tk_image, gui.added_image)
+
+    def test_register__normal_delay(self):
+        event = ShowImage(1, 200, 300, "TestImage.jpg")
+        gui = MockGui()
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+
+        self.assertEqual(1, gui.delay)
 
 
 

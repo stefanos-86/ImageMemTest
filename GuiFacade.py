@@ -48,7 +48,7 @@ class GuiFacade:
     def select_file(self):
         return tkFileDialog.askopenfilename()
 
-    def get_screen_size(self):
+    def screen_size(self):
         return (self.window.winfo_screenwidth(),
                 self.window.winfo_screenheight())
 
