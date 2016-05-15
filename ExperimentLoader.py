@@ -13,6 +13,7 @@
 
 from Events import *  # Pull everything in so that it is in the "scope" of eval().
 
+import os
 
 class ExperimentLoader:
     def load(self, filename, gui):
@@ -54,7 +55,7 @@ class ExperimentLoader:
     def _friendly_error_message(self, filename, line, lineno, problem):
         """ Users are scientists, not programmers. Try to hide the stack trace
             from them, but still give useful error messages."""
-        message = "Error in file " + filename + " at line " + str(lineno) + ":\n"
+        message = "Error in file " + os.path.abspath(filename) + " at line " + str(lineno) + ":\n"
         message += "\n" + line + "\n"
         message += str(problem)
 

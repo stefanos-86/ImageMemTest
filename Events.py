@@ -92,7 +92,8 @@ class Wait(DelayedEvent):
     def happen(self):
         pass  # Do nothing. We just had to wait.
 
-
+# TODO: The image path depends on where the user is in the console, while it should be relative to the position
+# of the experiment file. But it can't be passed at costruction because the user should give only the file name...
 class ShowImage(DelayedEvent):
     def __init__(self, how_long_milliseconds, centre_x_pixels, centre_y_pixels, filename):
         super(ShowImage, self).__init__(how_long_milliseconds)

@@ -208,7 +208,7 @@ class ShowImageTest(unittest.TestCase):
         gui = MockGui()
         event.attach_gui(gui)
         event.register(mock_callback)  # Emplace the gui handle to the image.
-        
+
         event.happen()
 
         self.assertEqual(event.image.tk_image, gui.removed_image)

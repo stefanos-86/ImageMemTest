@@ -1,0 +1,4 @@
+ShowImage(1000, 256, 320, "Demo/A.jpg") # TEMPORARY - The paths are relative to the position of main.py, rather than the position of the script.
+ShowImage(1000, 600, 300, "Demo/B.jpg")
+ShowImage(1000, 256, 320, "Demo/A.jpg")
+# Use ESC to quit.
