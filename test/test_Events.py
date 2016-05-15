@@ -141,6 +141,25 @@ class PressKeyToContinueTest(unittest.TestCase):
         self.assertEquals(key, gui.freed_key)
 
 
+class WaitTest(unittest.TestCase):
+    def test_construction(self):
+        wait_duration = 123
+
+        event = Wait(wait_duration)
+
+        self.assertEqual(wait_duration, event.delay)
+
+    def test_happen(self):
+        wait_duration = 123
+        event = Wait(wait_duration)
+        gui = MockGui()
+        event.attach_gui(gui)
+
+        event.happen()
+        # No assertion possible. happen() is a no-op.
+
+
+
 class SchedulerTest(unittest.TestCase):
     def test_construction__enqueue_schedule_first_event(self):
         gui = MockGui()

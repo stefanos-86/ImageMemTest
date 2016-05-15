@@ -2,7 +2,6 @@
 # Constructors can be invoked by the end users (to program the experiments),
 # therefore the parameter validation must be merciless.
 
-
 class Event(object):
     """ Base of all the events, and also the no-op events."""
     def __init__(self):
@@ -81,6 +80,15 @@ class PressKeyToContinue(OnKeyEvent):
 
     def happen(self):
         self._remove_key_binding()
+
+
+class Wait(DelayedEvent):
+    """ Blocks the evnt processing until the time has passed. """
+    def __init__(self, wait_milliseconds):
+        super(Wait, self).__init__(wait_milliseconds)
+
+    def happen(self):
+        pass  # Do nothing. We just had to wait.
 
 
 class Scheduler:

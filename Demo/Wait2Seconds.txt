@@ -1,0 +1,5 @@
+ChangeBackgroundColor(255, 0, 0)
+PressKeyToContinue("<Key>")             # Press any key to start the wait.
+Wait(2000)                              # The system halts for 2 seconds before...
+ChangeBackgroundColor(0, 255, 0)        # ... changing the color of the screen.
+# At the end, press ESC to close.
