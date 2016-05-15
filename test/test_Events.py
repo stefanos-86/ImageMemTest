@@ -39,6 +39,7 @@ class MockGui():
 
     def show_image(self, top, left, tk_image):
         self.added_image = tk_image
+        return tk_image
 
     def remove_image(self, image_handle):
         self.removed_image = image_handle
@@ -201,6 +202,16 @@ class ShowImageTest(unittest.TestCase):
         event.register(mock_callback)
 
         self.assertEqual(1, gui.delay)
+
+    def test_happen(self):
+        event = ShowImage(1, 200, 300, "TestImage.jpg")
+        gui = MockGui()
+        event.attach_gui(gui)
+        event.register(mock_callback)  # Emplace the gui handle to the image.
+        
+        event.happen()
+
+        self.assertEqual(event.image.tk_image, gui.removed_image)
 
 
 

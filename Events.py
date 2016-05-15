@@ -98,6 +98,7 @@ class ShowImage(DelayedEvent):
         super(ShowImage, self).__init__(how_long_milliseconds)
 
         self.image = ExperimentImage(centre_x_pixels, centre_y_pixels, filename)
+        self.image_gui_handle = None
 
         # Image validation is deferred until the gui is available (and can tell the screen size).
 
@@ -109,7 +110,10 @@ class ShowImage(DelayedEvent):
     def register(self, back_to_scheduler):
         super(ShowImage, self).register(back_to_scheduler)  # Normal registration to call happen() at the right time.
         # The event starts now: show the image immediately.
-        self.gui.show_image(self.image.top, self.image.left, self.image.tk_image)
+        self.image_gui_handle = self.gui.show_image(self.image.top, self.image.left, self.image.tk_image)
+
+    def happen(self):
+        self.gui.remove_image(self.image_gui_handle)
 
 
 class Scheduler:
