@@ -2,6 +2,8 @@
 # Constructors can be invoked by the end users (to program the experiments),
 # therefore the parameter validation must be merciless.
 
+import os
+
 from ExperimentImage import ExperimentImage
 
 class Event(object):
@@ -10,9 +12,14 @@ class Event(object):
         self.gui = None  # All the events have to register with and manipulate the GUI.
                          # But it can't be in the constructor signature because I don't want the client
                          # to bother with such details.
+        self.base_path = None  # Similar to the gui, some events need to know where files are.
 
     def attach_gui(self, gui):
         self.gui = gui
+
+    def attach_experiment_path(self, experiment_folder):
+        self.base_path = experiment_folder
+
 
 
 class DelayedEvent(Event):
@@ -92,14 +99,20 @@ class Wait(DelayedEvent):
     def happen(self):
         pass  # Do nothing. We just had to wait.
 
-# TODO: The image path depends on where the user is in the console, while it should be relative to the position
-# of the experiment file. But it can't be passed at costruction because the user should give only the file name...
+
 class ShowImage(DelayedEvent):
     def __init__(self, how_long_milliseconds, centre_x_pixels, centre_y_pixels, filename):
         super(ShowImage, self).__init__(how_long_milliseconds)
-
-        self.image = ExperimentImage(centre_x_pixels, centre_y_pixels, filename)
         self.image_gui_handle = None
+        self.image = None
+        self.centre_x = centre_x_pixels
+        self.centre_y = centre_y_pixels
+        self.image_name = filename
+
+    def attach_experiment_path(self, experiment_file):
+        super(ShowImage, self).attach_experiment_path(experiment_file)
+        full_path = os.path.join(self.base_path, self.image_name)
+        self.image = ExperimentImage(self.centre_x, self.centre_y, full_path)
 
         # Image validation is deferred until the gui is available (and can tell the screen size).
 

@@ -23,11 +23,12 @@ class ExperimentLoaderTest(unittest.TestCase):
         mock_file = ["ChangeBackgroundColor(0, 0, 255)"]
         gui = MockGui()
 
-        events = loader.parse_input_file(mock_file, "filename", gui)
+        events = loader.parse_input_file(mock_file, "test/filename", gui)
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
         self.assertEqual(gui, events[0].gui)
+        self.assertEqual("test", events[0].base_path)
 
     def test_parse_input_line__two_events(self):
         loader = ExperimentLoader()

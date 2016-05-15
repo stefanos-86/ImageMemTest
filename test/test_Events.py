@@ -172,14 +172,10 @@ class WaitTest(unittest.TestCase):
 
 
 class ShowImageTest(unittest.TestCase):
-    def test_construction__load_the_image(self):
-        event = ShowImage(1, 2, 3, "TestImage.jpg")
-        self.assertIsNotNone(event.image)
-
-    # No image validation at construction: it must wait until the GUI is attached.
 
     def test_attach_gui__invalid_image(self):
         event = ShowImage(1, 2, 3, "TestImage.jpg")
+        event.attach_experiment_path(".")
         gui = MockGui()
         self.assertRaises(Exception, event.attach_gui, gui)
 
@@ -188,6 +184,7 @@ class ShowImageTest(unittest.TestCase):
     def test_register__shows_the_image(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
         gui = MockGui()
+        event.attach_experiment_path(".")
         event.attach_gui(gui)
 
         event.register(mock_callback)
@@ -196,6 +193,7 @@ class ShowImageTest(unittest.TestCase):
 
     def test_register__normal_delay(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
+        event.attach_experiment_path(".")
         gui = MockGui()
         event.attach_gui(gui)
 
@@ -205,6 +203,7 @@ class ShowImageTest(unittest.TestCase):
 
     def test_happen(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
+        event.attach_experiment_path(".")
         gui = MockGui()
         event.attach_gui(gui)
         event.register(mock_callback)  # Emplace the gui handle to the image.

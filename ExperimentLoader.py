@@ -24,6 +24,7 @@ class ExperimentLoader:
 
     def parse_input_file(self, input_file, filename, gui):
         """ Public only for testability reasons. """
+        base_path = os.path.dirname(filename)
         events = []
         line_counter = 0
         for line in input_file:
@@ -32,9 +33,12 @@ class ExperimentLoader:
             filtered_line = self._remove_whitespace(filtered_line)
             if filtered_line != "":
                 try:
+                    # The construction has to be completed outside the constructor.
+                    # This way the user can write "simplified" constructors in the experiment file.
+                    # ...but I start to think this is not a good idea.
                     new_event = eval(filtered_line)
-                    new_event.attach_gui(gui)  # This is part of the construction. Done "outside" so that the file has
-                                               # no references to the gui object.
+                    new_event.attach_experiment_path(base_path)
+                    new_event.attach_gui(gui)
                 except Exception as problem:
                     self._friendly_error_message(filename, line, line_counter, problem)
 
