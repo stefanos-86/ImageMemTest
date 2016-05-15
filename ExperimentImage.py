@@ -35,5 +35,5 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
         assert right <= max_y, self._not_in_screen_error("rigth", right - max_y)
 
     def _not_in_screen_error(self, border, distance):
-        "Image " + self.id + " exits the screen on the " + border + " by " + str(abs(distance)) + " pixels."
+        return "Image " + self.id + " exits the screen on the " + border + " by " + str(abs(distance)) + " pixels."
 

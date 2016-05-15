@@ -1,14 +1,11 @@
 drag and drop
 http://stackoverflow.com/questions/6740855/board-drawing-code-to-move-an-oval/6789351#6789351
 
-Posizione assoluta
-http://zetcode.com/gui/tkinter/layout/
 
 Per fare una relase:
 - copia tutto su windows
-- ammazza i pyc
 - disattiva avast e pipreqs /pathToProject (per rifare requirements.txt)
-- copia il necessario dentro uno zip (e.g. escludi gli unit test).
+- copia il necessario dentro uno zip (e.g. escludi gli unit test e i pyc).
 
 Per installare -> 
 installare python (occhio all'opzione per mettere python nel path)
@@ -16,16 +13,16 @@ install.bat (che fa pip install, pip viene con l'installatore python di windows)
 
 
 REQUIREMENTS
-- Scelta del colore di sfondo. Terna R, G, B; valori tra 0 e 255.
+*- Scelta del colore di sfondo. Terna R, G, B; valori tra 0 e 255.
 - Quando le immagini appaiono una per una, scalare (NON traslare) di una percentuale per un certo tempo. Zoom fino alla percentuale (100% = come era prima), poi indietro.
-- Scelta dei diversi esperimenti: a riga di comando va bene, a finestra di dialogo è meglio. http://tkinter.unpythonic.net/wiki/tkFileDialog
+*- Scelta dei diversi esperimenti: a riga di comando va bene, a finestra di dialogo è meglio. http://tkinter.unpythonic.net/wiki/tkFileDialog
 - Dare un'allerta di qualche tipo se le immagini sbordano.
 - Eventi: "premere un tasto per partire", "premere un tasto per mettere i cerchietti", "premere un tasto per dire che hai finito".
-- NON alterare le immagini - risoluzione e dimensione fissati dagli sperimentatori.
+*- NON alterare le immagini - risoluzione e dimensione fissati dagli sperimentatori.
 - Proiettare tutte le immagini all'inizio per un certo tempo.
 - Tempo "pausa" tra due immagini. Una scompare, pausa, una appare. Una pausa anche all'inizio, tra "tutte le immagini" e la prima proiezione.
-- I file degli esperimenti... in formato Win! \r\f...
-- Scarti in pixel: va bene.
+*- I file degli esperimenti... in formato Win! \r\f...
+*- Scarti in pixel: va bene.
 - Distanze da riportare: centro cerchio - centro immagine più vicina. Usa un cerchio per immagine (per esempio: tie breaker, cerchi sfanculati...).
 - Outuput su file di testo (es. 2 colonne con nome immagine e distanza del cerchio più vicino), va bene, basta che è leggibile.
 - Portabile su Android? Su iPad? http://qpython.com/#product ?
@@ -33,12 +30,3 @@ REQUIREMENTS
 PRIOR ART
 SuperLab della Noldus (proiettore avanzato, tipo powerpoint ma "lab grade").
 Ethovision è il video tracker.
-
-
-Usa questo codice per caricare un'immagine.
-            panel = tk.Label(window, image=image.tk_image)
-            image.tk_panel = panel
-            window.after(event_time_milliseconds, image.emplace)
-            event_time_milliseconds += image.duration * 1000
-            window.after(event_time_milliseconds, image.remove)
-L'evento "mostra un'immagine" può registrare 3 callback. Mostra, rimuovi e il ritorno allo scheduler.
