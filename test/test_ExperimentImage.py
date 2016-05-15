@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append("./..")
 
-from ImageDeck import ExperimentImage
+from ExperimentImage import ExperimentImage
 
 from GuiFacade import GuiFacade
 g = GuiFacade()  # Must initialize TK to load the real images.
@@ -58,5 +58,4 @@ class ExperimentImageTest(unittest.TestCase):
         img = ExperimentImage(test_image_side / 2, test_image_side / 2, "TestImage.jpg")
 
         self.assertRaises(Exception, img.validate, test_image_side, test_image_side - 1)  # Screen is 1 pixel too short.
-
 

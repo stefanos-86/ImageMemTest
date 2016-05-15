@@ -1,11 +1,9 @@
-# This file is the entry point for the image manipulation.
-# Think of it as the "card deck" of the images to be shown.
-# It is the factory of the images and keeps a full list of them for "bulk" operations (like displaying all
-# the images).
+# Class to manipulate an actual image that the scientist want to use in the experiment.
 #
 # Do not forget that (0, 0) is the top left corner of the screen!
 
 from PIL import ImageTk, Image
+
 
 class ExperimentImage:  # Can't be just "Image" because that name is taken by a dependengcy.
     def __init__(self, centre_x_pixels, centre_y_pixels, filename):
@@ -38,3 +36,4 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
 
     def _not_in_screen_error(self, border, distance):
         "Image " + self.id + " exits the screen on the " + border + " by " + str(abs(distance)) + " pixels."
+
