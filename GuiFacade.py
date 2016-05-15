@@ -3,6 +3,7 @@
 
 import Tkinter as tk
 
+import tkFileDialog
 import tkMessageBox
 
 class GuiFacade:
@@ -32,6 +33,9 @@ class GuiFacade:
         background_color = self._color_rgb_to_hex(r, g, b)
         self.window.configure(background=background_color)
 
+    def _color_rgb_to_hex(self, r, g, b):
+        return '#%02x%02x%02x' % (r, g, b)
+
     def register_event(self, when_milliseconds, what_callback):
         self.window.after(when_milliseconds, what_callback)
 
@@ -41,5 +45,5 @@ class GuiFacade:
     def free_key(self, key):
         self.window.unbind(key)
 
-    def _color_rgb_to_hex(self, r, g, b):
-        return '#%02x%02x%02x' % (r, g, b)
+    def select_file(self):
+        return tkFileDialog.askopenfilename()
