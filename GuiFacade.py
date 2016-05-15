@@ -47,3 +47,10 @@ class GuiFacade:
 
     def select_file(self):
         return tkFileDialog.askopenfilename()
+
+    # To get the screen size:
+    #import tkinter as tk
+    #root = tk.Tk()
+    #screen_width = root.winfo_screenwidth()
+    #screen_height = root.winfo_screenheight()
+
