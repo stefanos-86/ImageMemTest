@@ -60,3 +60,38 @@ class GuiFacade:
     def remove_image(self, image_handle):  # image_handle is the panel returned by show_image()
         image_handle.place_forget()
 
+    def show_draggable_image(self, top, left, tk_image):
+        floating_container = FloatingWindow()
+        floating_container.attach_image(top, left, tk_image)
+        return floating_container
+
+
+
+
+class FloatingWindow(tk.Toplevel):
+    def __init__(self, *args, **kwargs):
+        tk.Toplevel.__init__(self, *args, **kwargs)
+        self.overrideredirect(True)
+        self.label = None
+
+        self.x = None
+        self.y = None
+
+    def attach_image(self, top, left, tk_image):
+        self.label = tk.Label(self, image=tk_image)
+        self.label.pack(side="right", fill="both", expand=True)
+        self.geometry("+%s+%s" % (left, top))
+
+        self.label.bind("<ButtonPress-1>", self.start_move)
+        self.label.bind("<B1-Motion>", self.on_motion)
+
+    def start_move(self, event):
+        self.x = event.x
+        self.y = event.y
+
+    def on_motion(self, event):
+        deltax = event.x - self.x
+        deltay = event.y - self.y
+        x = self.winfo_x() + deltax
+        y = self.winfo_y() + deltay
+        self.geometry("+%s+%s" % (x, y))

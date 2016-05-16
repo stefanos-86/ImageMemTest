@@ -240,6 +240,20 @@ class ShowAllImagesTest(unittest.TestCase):
         self.assertEquals(image.tk_image, gui.removed_image)
 
 
+class PrepareMarkersTest(unittest.TestCase):
+    def test_happen(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.load_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.happen()
+
+        self.assertEquals(1, len(event.marker_handles))
+
+
 class SchedulerTest(unittest.TestCase):
     def test_construction__enqueue_schedule_first_event(self):
         gui = MockGui()

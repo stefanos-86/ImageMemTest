@@ -138,6 +138,17 @@ class ShowAllImages(DelayedEvent):
         for image in self.handles:
             self.gui.remove_image(image)
 
+class PrepareMarkers(DelayedEvent):
+    def __init__(self, marker_image):
+        super(PrepareMarkers, self).__init__(0)  # Immediate event.
+        self.marker_image = marker_image
+
+    def happen(self):
+        marker_handles = self.images.create_markers(self.marker_image)
+        for handle in marker_handles:
+            gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image)
+            self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
+            # TODO: may not need this storage - depends on where the coordinates are saved...
 
 class Scheduler:
     """ The scheduler has the list of all the steps to do.

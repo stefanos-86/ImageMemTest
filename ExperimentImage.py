@@ -50,7 +50,8 @@ class ImageCollection:
         self.max_y = max_y
         self.base_path = base_path  # Here is where we can find the images.
         self.images = []  # The actual collection of images.
-        self.markers = []
+        self.gui_markers = [] # Opaque handles to the markers, to be provided by the GUI.
+        self.marker_images = [] # Actual images - to be stored here to ensure they don't disappear.
 
     def load_image(self, name, centre_x, centre_y):
         new_image = self._load_single_image(name, centre_x, centre_y)
@@ -70,19 +71,20 @@ class ImageCollection:
         needed_markers = len(self.images)  # One per each image.
         actual_row_length = size_x * needed_markers
         if actual_row_length > self.max_x:
-            raise Exception("Too many markers to fit the screen.")
-            # TODO: handle the case...
+            raise Exception("Too many markers to fit on the bottom of the screen.")
         left = (self.max_x - actual_row_length) / 2
         top = self.max_y - size_y # Bottom of the screen
         centre_x = left + size_x / 2
         centre_y = top + size_y / 2
 
+        images = []
         for image in self.images:
             new_marker = self._load_single_image(marker_image_name, centre_x, centre_y)
-            self.markers.append(new_marker)
+            images.append(new_marker)
             centre_x += size_x
 
-        return self.markers
+        self.marker_images = images
+        return images
 
 
     def _load_single_image(self, name, centre_x, centre_y):
