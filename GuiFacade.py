@@ -6,6 +6,8 @@ import Tkinter as tk
 import tkFileDialog
 import tkMessageBox
 
+import sys
+
 class GuiFacade:
     def __init__(self):
         window = tk.Tk()
