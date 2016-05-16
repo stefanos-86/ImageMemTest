@@ -1,1 +1,1 @@
-python main.py --experimentFile test\testExperiment.txt
+python main.py
