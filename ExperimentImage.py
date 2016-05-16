@@ -36,6 +36,9 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
         assert bottom <= max_x, self._not_in_screen_error("bottom", bottom - max_x)
         assert right <= max_y, self._not_in_screen_error("rigth", right - max_y)
 
+    def size(self):
+        return (self.tk_image.width(), self.tk_image.height())
+
     def _not_in_screen_error(self, border, distance):
         return "Image " + self.id + " exits the screen on the " + border + " by " + str(abs(distance)) + " pixels."
 
@@ -47,10 +50,43 @@ class ImageCollection:
         self.max_y = max_y
         self.base_path = base_path  # Here is where we can find the images.
         self.images = []  # The actual collection of images.
+        self.markers = []
 
     def load_image(self, name, centre_x, centre_y):
+        new_image = self._load_single_image(name, centre_x, centre_y)
+        self.images.append(new_image)
+        return new_image
+
+    def create_markers(self, marker_image_name):
+        full_path = os.path.join(self.base_path, marker_image_name)
+        marker_image = ExperimentImage(0, 0, full_path)  # Do not use the load image method: we don't know how big the
+        size_x, size_y = marker_image.size()             # image is, can't position it to pass validation.
+
+        # geometry looks like this:
+        #
+        #  |----------|   full screen
+        #     |----|      row in the middle
+        #  |--|    |--|   each side is 1/2 of the (screen - row) space
+        needed_markers = len(self.images)  # One per each image.
+        actual_row_length = size_x * needed_markers
+        if actual_row_length > self.max_x:
+            raise Exception("Too many markers to fit the screen.")
+            # TODO: handle the case...
+        left = (self.max_x - actual_row_length) / 2
+        top = self.max_y - size_y # Bottom of the screen
+        centre_x = left + size_x / 2
+        centre_y = top + size_y / 2
+
+        for image in self.images:
+            new_marker = self._load_single_image(marker_image_name, centre_x, centre_y)
+            self.markers.append(new_marker)
+            centre_x += size_x
+
+        return self.markers
+
+
+    def _load_single_image(self, name, centre_x, centre_y):
         full_path = os.path.join(self.base_path, name)
         new_image = ExperimentImage(centre_x, centre_y, full_path)
         new_image.validate(self.max_x, self.max_y)
-        self.images.append(new_image)
         return new_image

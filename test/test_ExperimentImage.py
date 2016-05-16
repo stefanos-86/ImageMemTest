@@ -65,6 +65,10 @@ class ExperimentImageTest(unittest.TestCase):
 
         self.assertRaises(Exception, img.validate, test_image_side, test_image_side - 1)  # Screen is 1 pixel too short.
 
+    def test_size(self):
+        img = ExperimentImage(0, 0, "TestMarker.jpg")
+        self.assertEquals((64, 64), img.size())
+
 
 class TestImageCollection(unittest.TestCase):
     def test_load_image(self):
@@ -80,3 +84,14 @@ class TestImageCollection(unittest.TestCase):
         images = ImageCollection(MockGui(), ".")
 
         self.assertRaises(Exception, images.load_image, "TestImage.jpg", 1000, 100)
+
+    def test_create_markers(self):
+        images = ImageCollection(MockGui(), ".")
+        images.load_image("TestImage.jpg", 100, 100)
+        images.load_image("TestImage.jpg", 100, 100)
+
+        markers = images.create_markers("TestMarker.jpg")
+
+        self.assertIsNotNone(markers)
+        self.assertEquals(2, len(markers))
+        self.assertEquals(2, len(images.markers))
