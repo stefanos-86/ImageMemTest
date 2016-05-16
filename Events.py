@@ -122,6 +122,22 @@ class ShowImage(DelayedEvent):
         self.gui.remove_image(self.image_gui_handle)
 
 
+class ShowAllImages(DelayedEvent):
+    def __init__(self, for_how_long):
+        super(ShowAllImages, self).__init__(for_how_long)
+        self.handles = []
+
+    def register(self, back_to_scheduler):
+        # The event starts now: loop to show all images.
+        for image in self.images.images:
+            new_handle = self.gui.show_image(image.top, image.left, image.tk_image)
+            self.handles.append(new_handle)
+
+    def happen(self):
+        for image in self.handles:
+            self.gui.remove_image(image)
+
+
 class Scheduler:
     """ The scheduler has the list of all the steps to do.
         It registers with the GUI to be called on GUI events.

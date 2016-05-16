@@ -213,6 +213,32 @@ class ShowImageTest(unittest.TestCase):
         self.assertEqual(event.image.tk_image, gui.removed_image)
 
 
+class ShowAllImagesTest(unittest.TestCase):
+    def test_register(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.load_image("TestImage.jpg", 100, 100)
+        event = ShowAllImages(152)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+
+        self.assertEquals(image.tk_image, gui.added_image)
+
+    def test_happen(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.load_image("TestImage.jpg", 100, 100)
+        event = ShowAllImages(152)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.register(mock_callback)
+
+        event.happen()
+
+        self.assertEquals(image.tk_image, gui.removed_image)
+
 
 class SchedulerTest(unittest.TestCase):
     def test_construction__enqueue_schedule_first_event(self):
