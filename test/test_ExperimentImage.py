@@ -4,9 +4,15 @@ import sys
 sys.path.append("./..")
 
 from ExperimentImage import ExperimentImage
+from ExperimentImage import ImageCollection
+
 
 from GuiFacade import GuiFacade
-g = GuiFacade()  # Must initialize TK to load the real images.
+gui = GuiFacade()  # Must initialize TK to load the real images.
+
+class MockGui(GuiFacade):  # Subclass so we get the real loading methods, but we can mock what we need.
+    def screen_size(self):
+        return (1000, 1000)
 
 
 class ExperimentImageTest(unittest.TestCase):
@@ -59,3 +65,18 @@ class ExperimentImageTest(unittest.TestCase):
 
         self.assertRaises(Exception, img.validate, test_image_side, test_image_side - 1)  # Screen is 1 pixel too short.
 
+
+class TestImageCollection(unittest.TestCase):
+    def test_load_image(self):
+        images = ImageCollection(MockGui(), ".")
+
+        image = images.load_image("TestImage.jpg", 100, 100)
+
+        self.assertIsNotNone(image)
+        self.assertEquals(1, len(images.images))
+        self.assertEquals(image, images.images[0])
+
+    def test_load_image__invalid_image(self):
+        images = ImageCollection(MockGui(), ".")
+
+        self.assertRaises(Exception, images.load_image, "TestImage.jpg", 1000, 100)
