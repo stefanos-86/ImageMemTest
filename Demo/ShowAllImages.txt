@@ -1,0 +1,6 @@
+ShowAllImages(2000)
+# Esc to exit
+
+# The system still needs to know the images. I program 2 of them with 0 duration just to load the files.
+ShowImage(0, 256, 320, "A.jpg")
+ShowImage(0, 600, 300, "B.jpg")

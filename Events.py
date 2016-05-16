@@ -128,6 +128,7 @@ class ShowAllImages(DelayedEvent):
         self.handles = []
 
     def register(self, back_to_scheduler):
+        super(ShowAllImages, self).register(back_to_scheduler)
         # The event starts now: loop to show all images.
         for image in self.images.images:
             new_handle = self.gui.show_image(image.top, image.left, image.tk_image)
