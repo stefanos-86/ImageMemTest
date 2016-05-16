@@ -20,6 +20,7 @@ class MockGui():
         self.freed_key = None
         self.added_image = None
         self.removed_image = None
+        self.draggable_image = None
 
     def register_event(self, delay, callback):
         self.delay = delay
@@ -44,6 +45,10 @@ class MockGui():
 
     def remove_image(self, image_handle):
         self.removed_image = image_handle
+
+    def show_draggable_image(self, top, left, tk_image):
+        self.draggable_image = tk_image
+        return tk_image
 
 
 class EventTest(unittest.TestCase):
@@ -244,14 +249,14 @@ class PrepareMarkersTest(unittest.TestCase):
     def test_happen(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
-        image = collection.load_image("TestImage.jpg", 100, 100)
+        collection.load_image("TestImage.jpg", 100, 100)
         event = PrepareMarkers("TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
 
         event.happen()
 
-        self.assertEquals(1, len(event.marker_handles))
+        self.assertIsNotNone(gui.draggable_image)
 
 
 class SchedulerTest(unittest.TestCase):

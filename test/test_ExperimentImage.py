@@ -94,4 +94,4 @@ class TestImageCollection(unittest.TestCase):
 
         self.assertIsNotNone(markers)
         self.assertEquals(2, len(markers))
-        self.assertEquals(2, len(images.markers))
+        self.assertEquals(2, len(images.marker_images))
