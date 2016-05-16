@@ -2,6 +2,5 @@ ShowImage(0, 256, 320, "A.jpg")
 ShowImage(0, 256, 320, "B.jpg")
 
 PrepareMarkers("Marker.jpg")
-
-
-PressKeyToContinue("a")
+PressKeyToContinue("<Return>")
+ComputeResult("RESULTS.txt")

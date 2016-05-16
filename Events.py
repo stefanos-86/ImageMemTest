@@ -138,6 +138,7 @@ class ShowAllImages(DelayedEvent):
         for image in self.handles:
             self.gui.remove_image(image)
 
+
 class PrepareMarkers(DelayedEvent):
     def __init__(self, marker_image):
         super(PrepareMarkers, self).__init__(0)  # Immediate event.
@@ -149,6 +150,18 @@ class PrepareMarkers(DelayedEvent):
             gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image)
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
             # TODO: may not need this storage - depends on where the coordinates are saved...
+
+
+class ComputeResult(DelayedEvent):
+    def __init__(self, result_file):
+        super(ComputeResult, self).__init__(0)  # Immediate.
+        self.output_file = result_file
+
+    def happen(self):
+        distances = self.images.find_distances()
+        with open(self.output_file, "w") as result_file:
+            result_file.write(str(distances))
+
 
 class Scheduler:
     """ The scheduler has the list of all the steps to do.

@@ -73,11 +73,13 @@ class FloatingWindow(tk.Toplevel):
         tk.Toplevel.__init__(self, *args, **kwargs)
         self.overrideredirect(True)
         self.label = None
+        self.tk_image = None
 
         self.x = None
         self.y = None
 
     def attach_image(self, top, left, tk_image):
+        self.tk_image = tk_image
         self.label = tk.Label(self, image=tk_image)
         self.label.pack(side="right", fill="both", expand=True)
         self.geometry("+%s+%s" % (left, top))
@@ -95,3 +97,6 @@ class FloatingWindow(tk.Toplevel):
         x = self.winfo_x() + deltax
         y = self.winfo_y() + deltay
         self.geometry("+%s+%s" % (x, y))
+
+    def position(self):
+        return (self.winfo_x(), self.winfo_y())
