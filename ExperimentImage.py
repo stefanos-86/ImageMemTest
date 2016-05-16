@@ -2,6 +2,8 @@
 #
 # Do not forget that (0, 0) is the top left corner of the screen!
 
+import os
+
 from PIL import ImageTk, Image
 
 
@@ -11,7 +13,7 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
         self.centre_x = centre_x_pixels
         self.centre_y = centre_y_pixels
 
-        # Slight breack of the GUI encapsulation. This class "knows" that it has to use Tkinter images.
+        # Slight breach of the GUI encapsulation. This class "knows" that it has to use Tkinter images.
         self.tk_image = None
         self._load_image(filename)
 
@@ -37,3 +39,18 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
     def _not_in_screen_error(self, border, distance):
         return "Image " + self.id + " exits the screen on the " + border + " by " + str(abs(distance)) + " pixels."
 
+
+class ImageCollection:
+    def __init__(self, gui, base_path):
+        max_x, max_y = gui.screen_size()  # Needed for image validation.
+        self.max_x = max_x
+        self.max_y = max_y
+        self.base_path = base_path  # Here is where we can find the images.
+        self.images = []  # The actual collection of images.
+
+    def load_image(self, name, centre_x, centre_y):
+        full_path = os.path.join(self.base_path, name)
+        new_image = ExperimentImage(centre_x, centre_y, full_path)
+        new_image.validate(self.max_x, self.max_y)
+        self.images.append(new_image)
+        return new_image

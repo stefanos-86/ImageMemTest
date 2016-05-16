@@ -4,6 +4,7 @@ import sys
 sys.path.append("./..")
 
 from Events import *
+from ExperimentImage import ImageCollection
 
 
 def mock_callback():
@@ -55,7 +56,7 @@ class EventTest(unittest.TestCase):
 
 class DelayedEventTest(unittest.TestCase):
     def test_construction(self):
-        delay = 123;
+        delay = 123
         event = DelayedEvent(delay)
         self.assertEquals(delay, event.delay)
 
@@ -175,16 +176,15 @@ class ShowImageTest(unittest.TestCase):
 
     def test_attach_gui__invalid_image(self):
         event = ShowImage(1, 2, 3, "TestImage.jpg")
-        event.attach_experiment_path(".")
         gui = MockGui()
-        self.assertRaises(Exception, event.attach_gui, gui)
+        self.assertRaises(Exception, event.attach_images, ImageCollection(gui, "."))
 
     # No other validation cases: it is delegated to the image.
 
     def test_register__shows_the_image(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
         gui = MockGui()
-        event.attach_experiment_path(".")
+        event.attach_images(ImageCollection(gui, "."))
         event.attach_gui(gui)
 
         event.register(mock_callback)
@@ -193,8 +193,8 @@ class ShowImageTest(unittest.TestCase):
 
     def test_register__normal_delay(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
-        event.attach_experiment_path(".")
         gui = MockGui()
+        event.attach_images(ImageCollection(gui, "."))
         event.attach_gui(gui)
 
         event.register(mock_callback)
@@ -203,8 +203,8 @@ class ShowImageTest(unittest.TestCase):
 
     def test_happen(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
-        event.attach_experiment_path(".")
         gui = MockGui()
+        event.attach_images(ImageCollection(gui, "."))
         event.attach_gui(gui)
         event.register(mock_callback)  # Emplace the gui handle to the image.
 

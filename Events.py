@@ -12,13 +12,13 @@ class Event(object):
         self.gui = None  # All the events have to register with and manipulate the GUI.
                          # But it can't be in the constructor signature because I don't want the client
                          # to bother with such details.
-        self.base_path = None  # Similar to the gui, some events need to know where files are.
+        self.images = None  # Similar to the gui, some events need to interact with the whole image collection.
 
     def attach_gui(self, gui):
         self.gui = gui
 
-    def attach_experiment_path(self, experiment_folder):
-        self.base_path = experiment_folder
+    def attach_images(self, image_collection):
+        self.images = image_collection
 
 
 
@@ -109,17 +109,9 @@ class ShowImage(DelayedEvent):
         self.centre_y = centre_y_pixels
         self.image_name = filename
 
-    def attach_experiment_path(self, experiment_file):
-        super(ShowImage, self).attach_experiment_path(experiment_file)
-        full_path = os.path.join(self.base_path, self.image_name)
-        self.image = ExperimentImage(self.centre_x, self.centre_y, full_path)
-
-        # Image validation is deferred until the gui is available (and can tell the screen size).
-
-    def attach_gui(self, gui):
-        super(ShowImage, self).attach_gui(gui)
-        max_x, max_y = gui.screen_size()
-        self.image.validate(max_x, max_y)  # Throws if the image is not good.
+    def attach_images(self, image_collection):
+        super(ShowImage, self).attach_images(image_collection)
+        self.image = image_collection.load_image(self.image_name, self.centre_x, self.centre_y)
 
     def register(self, back_to_scheduler):
         super(ShowImage, self).register(back_to_scheduler)  # Normal registration to call happen() at the right time.

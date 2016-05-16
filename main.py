@@ -5,7 +5,7 @@ import os
 from Events import Scheduler
 from GuiFacade import GuiFacade
 from ExperimentLoader import ExperimentLoader
-
+from ExperimentImage import ImageCollection
 
 def parse_command_line():
     parser = argparse.ArgumentParser()
@@ -27,7 +27,8 @@ gui = GuiFacade()
 def start_experiment():
     filename = select_file()
     loader = ExperimentLoader()
-    events = loader.load(filename, gui)
+    image_collection = ImageCollection(gui, os.path.dirname(filename))
+    events = loader.load(filename, gui, image_collection)
     scheduler = Scheduler(events, gui)
 
 

@@ -16,15 +16,14 @@ from Events import *  # Pull everything in so that it is in the "scope" of eval(
 import os
 
 class ExperimentLoader:
-    def load(self, filename, gui):
+    def load(self, filename, gui, image_collection):
         events = None
         with open(filename, "r") as input_file:
-            events = self.parse_input_file(input_file, filename, gui)
+            events = self.parse_input_file(input_file, filename, gui, image_collection)
         return events
 
-    def parse_input_file(self, input_file, filename, gui):
+    def parse_input_file(self, input_file, filename, gui, image_collection):
         """ Public only for testability reasons. """
-        base_path = os.path.dirname(filename)
         events = []
         line_counter = 0
         for line in input_file:
@@ -37,7 +36,7 @@ class ExperimentLoader:
                     # This way the user can write "simplified" constructors in the experiment file.
                     # ...but I start to think this is not a good idea.
                     new_event = eval(filtered_line)
-                    new_event.attach_experiment_path(base_path)
+                    new_event.attach_images(image_collection)
                     new_event.attach_gui(gui)
                 except Exception as problem:
                     self._friendly_error_message(filename, line, line_counter, problem)

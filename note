@@ -16,11 +16,12 @@ REQUIREMENTS
 *- Scelta del colore di sfondo. Terna R, G, B; valori tra 0 e 255.
 - Quando le immagini appaiono una per una, scalare (NON traslare) di una percentuale per un certo tempo. Zoom fino alla percentuale (100% = come era prima), poi indietro.
 *- Scelta dei diversi esperimenti: a riga di comando va bene, a finestra di dialogo è meglio. http://tkinter.unpythonic.net/wiki/tkFileDialog
-- Dare un'allerta di qualche tipo se le immagini sbordano.
-- Eventi: "premere un tasto per partire", "premere un tasto per mettere i cerchietti", "premere un tasto per dire che hai finito".
+*- Dare un'allerta di qualche tipo se le immagini sbordano.
+*- Eventi: "premere un tasto per partire",
+            "premere un tasto per mettere i cerchietti", "premere un tasto per dire che hai finito".
 *- NON alterare le immagini - risoluzione e dimensione fissati dagli sperimentatori.
 - Proiettare tutte le immagini all'inizio per un certo tempo.
-- Tempo "pausa" tra due immagini. Una scompare, pausa, una appare. Una pausa anche all'inizio, tra "tutte le immagini" e la prima proiezione.
+*- Tempo "pausa" tra due immagini. Una scompare, pausa, una appare. Una pausa anche all'inizio, tra "tutte le immagini" e la prima proiezione.
 *- I file degli esperimenti... in formato Win! \r\f...
 *- Scarti in pixel: va bene.
 - Distanze da riportare: centro cerchio - centro immagine più vicina. Usa un cerchio per immagine (per esempio: tie breaker, cerchi sfanculati...).
