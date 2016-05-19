@@ -100,35 +100,27 @@ class ImageCollection:
 
         result = []
         for image in self.images:
-            for m in self.gui_markers:
-                print m.position()
-            print "---------"
             marker = self._find_closest_marker(image)
             result.append( {image.id, self._distance(image, marker) } )
             self.gui_markers.remove(marker)  # Avoid pathological cases like all the marker on a single image.
-            print str({image.id, self._distance(image, marker) })
         return result
 
 
     def _find_closest_marker(self, image):
-        min_distance = 1000000.0  # Assuming no one has a 1000 000 pixel wide screen. TODO: find <climits>...
+        min_distance = 1000000.0  # Assuming no one has a 1 000 000 pixel wide screen. TODO: find <climits>...
         closest_marker = None
         for marker in self.gui_markers:
-            print "it " + str(marker.position())
             distance = self._distance(image, marker)
-            print "mm " + str((min_distance, distance))
-            print distance < min_distance
             if distance < min_distance:
                 closest_marker = marker
                 min_distance = distance
-            print "it "  + str(distance)
         return closest_marker
 
 
     def _distance(self, image, marker):
         size_x, size_y = self.marker_images[0].size()
 
-        top, left = marker.position()
+        left, top = marker.position()
         marker_x = left + size_x / 2
         marker_y = top + size_y / 2
 

@@ -93,4 +93,5 @@ class MobileLabel(tk.Label):
         self.place(x=x, y=y)
 
     def position(self):
-        return (self.winfo_x(), self.winfo_y())  # Probably not the real position...
+        """ Returns left and top! """
+        return (self.winfo_rootx(), self.winfo_rooty())
