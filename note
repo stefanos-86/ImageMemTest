@@ -32,6 +32,7 @@ REQUIREMENTS
 Problemi SOTTO WINDOWS
 * - Il file di output non compare A Dani è comparso.
 - Pare non prendere più i bind dei tasti (e.g. la demo del cambio di colore di sfondo non funziona più Nemmeno ESC!
+- Se fai click sullo sfondo, i cerchietti scompaiono.
 
 PRIOR ART
 SuperLab della Noldus (proiettore avanzato, tipo powerpoint ma "lab grade").
