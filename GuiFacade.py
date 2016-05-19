@@ -1,6 +1,8 @@
 # Facade in front of the Tkinter gui, with the "basic operations" I need.
 # This module is coupled with Tkinter, and so not testable: keep it small.
 
+import types
+
 import Tkinter as tk
 
 import tkFileDialog
@@ -63,31 +65,21 @@ class GuiFacade:
         image_handle.place_forget()
 
     def show_draggable_image(self, top, left, tk_image):
-        floating_container = FloatingWindow()
-        floating_container.attach_image(top, left, tk_image)
-        return floating_container
+        panel = MobileLabel(self.window, tk_image)
+        panel.place(x=left, y=top)
+        return panel
 
 
-
-
-class FloatingWindow(tk.Toplevel):
-    def __init__(self, *args, **kwargs):
-        tk.Toplevel.__init__(self, *args, **kwargs)
-        self.overrideredirect(True)
-        self.label = None
-        self.tk_image = None
+class MobileLabel(tk.Label):
+    def __init__(self, window, tk_image):
+        #super(MobileLabel, self).__init__(window, image=tk_image) # Nope. tk.Label is old style class...
+        tk.Label.__init__(self, window, image=tk_image)
 
         self.x = None
         self.y = None
 
-    def attach_image(self, top, left, tk_image):
-        self.tk_image = tk_image
-        self.label = tk.Label(self, image=tk_image)
-        self.label.pack(side="right", fill="both", expand=True)
-        self.geometry("+%s+%s" % (left, top))
-
-        self.label.bind("<ButtonPress-1>", self.start_move)
-        self.label.bind("<B1-Motion>", self.on_motion)
+        self.bind("<ButtonPress-1>", self.start_move)
+        self.bind("<B1-Motion>", self.on_motion)
 
     def start_move(self, event):
         self.x = event.x
@@ -98,7 +90,7 @@ class FloatingWindow(tk.Toplevel):
         deltay = event.y - self.y
         x = self.winfo_x() + deltax
         y = self.winfo_y() + deltay
-        self.geometry("+%s+%s" % (x, y))
+        self.place(x=x, y=y)
 
     def position(self):
-        return (self.winfo_x(), self.winfo_y())
+        return (self.winfo_x(), self.winfo_y())  # Probably not the real position...
