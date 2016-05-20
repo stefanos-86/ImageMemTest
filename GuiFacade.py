@@ -50,7 +50,10 @@ class GuiFacade:
         self.window.unbind(key)
 
     def select_file(self):
-        return tkFileDialog.askopenfilename()
+        filename = tkFileDialog.askopenfilename()
+        self.window.focus_force()       # MS Windows shit. The main window does not get back the focus when the file dialog closes. In Linux, this would not be needed.
+        return filename
+        
 
     def screen_size(self):
         return (self.window.winfo_screenwidth(),

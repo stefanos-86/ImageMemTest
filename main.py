@@ -15,7 +15,7 @@ def parse_command_line():
     return args.e
 
 
-def select_file():
+def select_file(gui):
     filename = parse_command_line()
     while filename is None or len(filename) == 0:  # Loop until we get something: we must have a file to read.
         filename = gui.select_file()
@@ -23,9 +23,8 @@ def select_file():
 
 
 # Stupid trick to start the gui before doing work, to display error messages, if the need be, while initializing things.
-gui = GuiFacade()
-def start_experiment():
-    filename = select_file()
+def start_experiment(gui):
+    filename = select_file(gui)
     loader = ExperimentLoader()
     image_collection = ImageCollection(gui, os.path.dirname(filename))
     events = loader.load(filename, gui, image_collection)
@@ -33,7 +32,8 @@ def start_experiment():
 
 
 def main():
-    gui.register_event(0, start_experiment)
+    gui = GuiFacade()
+    start_experiment(gui)
     gui.main_loop()
 
 if __name__ == "__main__":
