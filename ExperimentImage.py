@@ -122,12 +122,7 @@ class ImageCollection:
 
 
     def _distance(self, image, marker):
-        size_x, size_y = self.marker_images[0].size()
-
-        left, top = marker.position()
-        marker_x = left + size_x / 2
-        marker_y = top + size_y / 2
-
+        marker_x, marker_y = marker.centre_position()
         img_x, img_y = image.centre_position()
 
         delta_x = abs(img_x - marker_x)

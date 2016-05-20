@@ -52,7 +52,7 @@ class MockGui():
 
 
 class MockMarker:
-    def position(self):
+    def centre_position(self):
         return (0, 0)
 
 

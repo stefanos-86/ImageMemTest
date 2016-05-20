@@ -86,6 +86,9 @@ class MobileLabel(tk.Label):
         self.bind("<ButtonPress-1>", self.start_move)
         self.bind("<B1-Motion>", self.on_motion)
 
+        self.size_x = tk_image.width()
+        self.size_y = tk_image.height()
+
     def start_move(self, event):
         self.x = event.x
         self.y = event.y
@@ -97,6 +100,6 @@ class MobileLabel(tk.Label):
         y = self.winfo_y() + deltay
         self.place(x=x, y=y)
 
-    def position(self):
-        """ Returns left and top! """
-        return (self.winfo_rootx(), self.winfo_rooty())
+    def centre_position(self):
+        return (self.winfo_rootx() + self.size_x / 2,
+                self.winfo_rooty() + self.size_y / 2)
