@@ -51,6 +51,11 @@ class MockGui():
         return tk_image
 
 
+class MockMarker:
+    def position(self):
+        return (0, 0)
+
+
 class EventTest(unittest.TestCase):
     def test_attach_gui(self):
         mock_gui = MockGui
@@ -258,6 +263,23 @@ class PrepareMarkersTest(unittest.TestCase):
 
         self.assertIsNotNone(gui.draggable_image)
 
+
+class ComputeResultTest(unittest.TestCase):
+    def test_happen(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        collection.load_image("TestImage.jpg", 100, 100)
+        collection.create_markers("TestMarker.jpg")
+        collection.gui_markers.append(MockMarker())
+        expected_file = "./TestOutput.txt"
+
+        event = ComputeResult(expected_file)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.happen()
+
+        self.assertIsNotNone(open(expected_file, "r"))  # This event writes on a file, but is not master of the file format.
+                                             # Assuring that the file exists is good enough.
 
 class SchedulerTest(unittest.TestCase):
     def test_construction__enqueue_schedule_first_event(self):

@@ -43,6 +43,10 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
     def _not_in_screen_error(self, border, distance):
         return "Image " + self.id + " exits the screen on the " + border + " by " + str(abs(distance)) + " pixels."
 
+    def centre_position(self):
+        """ Keep it consistent with the gui markers. """
+        return (self.centre_x, self.centre_y)
+
 
 class ImageCollection:
     def __init__(self, gui, base_path):
@@ -74,7 +78,7 @@ class ImageCollection:
         if actual_row_length > self.max_x:
             raise Exception("Too many markers to fit on the bottom of the screen.")
         left = (self.max_x - actual_row_length) / 2
-        top = self.max_y - size_y # Bottom of the screen
+        top = self.max_y - size_y  # Bottom of the screen
         centre_x = left + size_x / 2
         centre_y = top + size_y / 2
 
@@ -124,8 +128,7 @@ class ImageCollection:
         marker_x = left + size_x / 2
         marker_y = top + size_y / 2
 
-        img_x = image.centre_x
-        img_y = image.centre_y
+        img_x, img_y = image.centre_position()
 
         delta_x = abs(img_x - marker_x)
         delta_y = abs(img_y - marker_y)

@@ -69,6 +69,10 @@ class ExperimentImageTest(unittest.TestCase):
         img = ExperimentImage(0, 0, "TestMarker.jpg")
         self.assertEquals((64, 64), img.size())
 
+    def test_centre_position(self):
+        img = ExperimentImage(10, 230, "TestMarker.jpg")
+        self.assertEquals((10, 230), img.centre_position())
+
 
 class TestImageCollection(unittest.TestCase):
     def test_load_image(self):
@@ -95,3 +99,8 @@ class TestImageCollection(unittest.TestCase):
         self.assertIsNotNone(markers)
         self.assertEquals(2, len(markers))
         self.assertEquals(2, len(images.marker_images))
+
+    def test_find_distances__no_markers(self):
+        images = ImageCollection(MockGui(), ".")
+        self.assertRaises(Exception, images.find_distances)
+

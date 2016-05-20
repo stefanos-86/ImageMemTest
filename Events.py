@@ -149,7 +149,6 @@ class PrepareMarkers(DelayedEvent):
         for handle in marker_handles:
             gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image)
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
-            # TODO: may not need this storage - depends on where the coordinates are saved...
 
 
 class ComputeResult(DelayedEvent):
