@@ -101,11 +101,18 @@ class ImageCollection:
     def find_distances(self):
         if len(self.marker_images) == 0:
             raise Exception("Can't compute result with no markers.")
+            # This triggers if the PrepareMarkers event was not called before.
 
         result = []
         for image in self.images:
             marker = self._find_closest_marker(image)
-            result.append( {image.id, self._distance(image, marker) } )
+            result.append(
+                DecoratedDistance(
+                    self._distance(image, marker),
+                    image.centre_position(),
+                    marker.centre_position(),
+                    image.id )
+            )
             self.gui_markers.remove(marker)  # Avoid pathological cases like all the marker on a single image.
         return result
 
@@ -129,3 +136,13 @@ class ImageCollection:
         delta_y = abs(img_y - marker_y)
 
         return math.sqrt(delta_x * delta_x + delta_y * delta_y)
+
+
+class DecoratedDistance:
+    """ Simple data object to keep togheter the data of the results of interest. """
+    def __init__(self, distance, image_centre, marker_centre, image_id):
+        self.distance = distance
+        self.image_centre = image_centre
+        self.marker_centre = marker_centre
+        self.image_id = image_id
+
