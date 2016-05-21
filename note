@@ -15,6 +15,7 @@ install.bat (che fa pip install, pip viene con l'installatore python di windows)
 REQUIREMENTS
 *- Scelta del colore di sfondo. Terna R, G, B; valori tra 0 e 255.
 - Quando le immagini appaiono una per una, scalare (NON traslare) di una percentuale per un certo tempo. Zoom fino alla percentuale (100% = come era prima), poi indietro.
+  NON è necessaria opzione “ingrandimento JPG”, purché le dimensioni del JPG possano essere impostate (su base empirica) all’avvio del programma;
 *- Scelta dei diversi esperimenti: a riga di comando va bene, a finestra di dialogo è meglio. http://tkinter.unpythonic.net/wiki/tkFileDialog
 *- Dare un'allerta di qualche tipo se le immagini sbordano.
 *- Eventi: "premere un tasto per partire", "premere un tasto per mettere i cerchietti", "premere un tasto per dire che hai finito".
@@ -28,6 +29,7 @@ REQUIREMENTS
 - Il programma si deve chiudere dopo l'ultimo evento. Altrimenti resta "sospeso" quando l'utente preme l'ultimo tasto per salvare il risultato.
 - Portabile su Android? Su iPad? http://qpython.com/#product ?
 - Formatta il file dei risultati in modo più chiaro!
+- calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio)  ==> Eventi start e stop timer? Sarà abbastanza preciso???
 
 Problemi SOTTO WINDOWS (Linux ha python 2.7.11+ Win?)
 * - Il file di output non compare A Dani è comparso.
