@@ -24,8 +24,8 @@ REQUIREMENTS
 *- Tempo "pausa" tra due immagini. Una scompare, pausa, una appare. Una pausa anche all'inizio, tra "tutte le immagini" e la prima proiezione.
 *- I file degli esperimenti... in formato Win! \r\f...
 *- Scarti in pixel: va bene.
-* Distanze da riportare: centro cerchio - centro immagine più vicina. Usa un cerchio per immagine (per esempio: tie breaker, cerchi sfanculati...).
-- Outuput su file di testo (es. 2 colonne con nome immagine e distanza del cerchio più vicino), va bene, basta che è leggibile.
+* -Distanze da riportare: centro cerchio - centro immagine più vicina. Usa un cerchio per immagine (per esempio: tie breaker, cerchi sfanculati...).
+* - Outuput su file di testo (es. 2 colonne con nome immagine e distanza del cerchio più vicino), va bene, basta che è leggibile.
 - Il programma si deve chiudere dopo l'ultimo evento. Altrimenti resta "sospeso" quando l'utente preme l'ultimo tasto per salvare il risultato.
 - Portabile su Android? Su iPad? http://qpython.com/#product ?
 - calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio) con precisione al secondo
