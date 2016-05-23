@@ -5,6 +5,7 @@ sys.path.append("./..")
 
 from ExperimentImage import ExperimentImage
 from ExperimentImage import ImageCollection
+from ExperimentImage import DecoratedDistance
 
 
 from GuiFacade import GuiFacade
@@ -166,3 +167,29 @@ class TestImageCollection(unittest.TestCase):
         self.assertEquals(1, distances[0].distance)
         self.assertEquals(1, distances[1].distance)
 
+
+class MockFile:
+    def __init__(self):
+        self.text = None
+
+    def write(self, text):
+        self.text = text
+
+
+class TestDecoratedDistance(unittest.TestCase):
+    def test_dump_on_file(self):
+        output_file = MockFile()
+        distance = DecoratedDistance(1, (2, 3), (4, 5), "id")
+
+        distance.dump(output_file)
+
+        self.assertEqual("     1           (2, 3)           (4, 5) id", output_file.text)
+
+
+    def test_header(self):
+        output_file = MockFile()
+        distance = DecoratedDistance(1, (2, 3), (4, 5), "id")
+
+        distance.header(output_file)
+
+        self.assertEqual("distance     image_centre    marker_centre image_id", output_file.text)

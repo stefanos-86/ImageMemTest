@@ -6,7 +6,7 @@ import os
 
 from ExperimentImage import ExperimentImage
 
-class Event(object):
+class Event(object):  # TODO: rename... those are more commands to the program than events.
     """ Base of all the events, and also the no-op events."""
     def __init__(self):
         self.gui = None  # All the events have to register with and manipulate the GUI.

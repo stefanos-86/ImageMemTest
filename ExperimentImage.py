@@ -1,6 +1,9 @@
 # Class to manipulate an actual image that the scientist want to use in the experiment.
 #
 # Do not forget that (0, 0) is the top left corner of the screen!
+#
+# TODO: this file may be renamed "ExperimentElements" because it contains all the elements to do an experiment
+#       like images, collections of images, distances... I will put there the timer too.
 
 import os
 import math
@@ -146,3 +149,23 @@ class DecoratedDistance:
         self.marker_centre = marker_centre
         self.image_id = image_id
 
+        # Screens reasonably top at 1500 pixels, more or less.
+        # Pixel fields are accordingly 6 chars wide, and couples twice as big (bigger than needed).
+        # In some cases we have to account for formatting (e.g. the "( ,)" chars in a couple).
+        # IDs may be unlimited.
+        self.distance_line_format = "{distance:>6} {image_centre:>16} {marker_centre:>16} {image_id}"
+
+    def dump(self, output_file):
+        """ Assumes that the file is already opened. """
+        self._dump_fields(output_file, self.__dict__)
+
+    def header(self, output_file):
+        """ Assumes that the file is already opened. """
+        field_names = {}
+        for key in self.__dict__:
+            field_names[key] = key
+        self._dump_fields(output_file, field_names)
+
+    def _dump_fields(self, output_file, dictionary):
+        filled_text = self.distance_line_format.format(**dictionary)
+        output_file.write(filled_text)
