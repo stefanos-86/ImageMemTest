@@ -153,17 +153,21 @@ class DecoratedDistance:
         # Pixel fields are accordingly 6 chars wide, and couples twice as big (bigger than needed).
         # In some cases we have to account for formatting (e.g. the "( ,)" chars in a couple).
         # IDs may be unlimited.
-        self.distance_line_format = "{distance:>6} {image_centre:>16} {marker_centre:>16} {image_id}"
+        self.distance_line_format = "{distance:>6} {image_centre:>16} {marker_centre:>16} {image_id}\n"
 
     def dump(self, output_file):
         """ Assumes that the file is already opened. """
-        self._dump_fields(output_file, self.__dict__)
+        attributes = self.__dict__
+        attributes["distance"] = int(attributes["distance"])  # Truncate decimals.
+        self._dump_fields(output_file, attributes)
 
     def header(self, output_file):
         """ Assumes that the file is already opened. """
         field_names = {}
         for key in self.__dict__:
             field_names[key] = key
+
+        field_names["distance"] = "dist"  # Truncate long name (can't rely on format - in dump this is a number).
         self._dump_fields(output_file, field_names)
 
     def _dump_fields(self, output_file, dictionary):

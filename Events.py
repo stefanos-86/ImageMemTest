@@ -159,7 +159,9 @@ class ComputeResult(DelayedEvent):
     def happen(self):
         distances = self.images.find_distances()
         with open(self.output_file, "w") as result_file:
-            result_file.write(str(distances))
+            distances[0].header(result_file)  # There must be at least one result, no array overflow.
+            for result in distances:
+                result.dump(result_file)
 
 
 class Scheduler:

@@ -183,7 +183,15 @@ class TestDecoratedDistance(unittest.TestCase):
 
         distance.dump(output_file)
 
-        self.assertEqual("     1           (2, 3)           (4, 5) id", output_file.text)
+        self.assertEqual("     1           (2, 3)           (4, 5) id\n", output_file.text)
+
+    def test_dump_on_file__lots_of_decimals_in_float_distance(self):
+        output_file = MockFile()
+        distance = DecoratedDistance(1.123456789, (2, 3), (4, 5), "id")
+
+        distance.dump(output_file)
+
+        self.assertEqual("     1           (2, 3)           (4, 5) id\n", output_file.text)
 
 
     def test_header(self):
@@ -192,4 +200,4 @@ class TestDecoratedDistance(unittest.TestCase):
 
         distance.header(output_file)
 
-        self.assertEqual("distance     image_centre    marker_centre image_id", output_file.text)
+        self.assertEqual("  dist     image_centre    marker_centre image_id\n", output_file.text)
