@@ -55,6 +55,8 @@ class MockMarker:
     def centre_position(self):
         return (0, 0)
 
+class MockRecallTimer:
+    pass
 
 class EventTest(unittest.TestCase):
     def test_attach_gui(self):
@@ -62,6 +64,12 @@ class EventTest(unittest.TestCase):
         event = ExperimentStep()
         event.attach_gui(mock_gui)
         self.assertEquals(mock_gui, event.gui)
+
+    def test_attach_recall_timer(self):
+        timer = MockRecallTimer()
+        event = ExperimentStep()
+        event.attach_recall_timer(timer)
+        self.assertEquals(timer, event.recall_timer)
 
 
 class DelayedEventTest(unittest.TestCase):

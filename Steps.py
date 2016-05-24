@@ -14,6 +14,8 @@ class ExperimentStep(object):
                          # But it can't be in the constructor signature because I don't want the client
                          # to bother with such details.
         self.images = None  # Similar to the gui, some actions need to interact with the whole image collection.
+        self.recall_timer = None  # Same principle, with the object to time the duration of the experiment
+                                  # (the time the user needs to recall the position of the images).
 
     def attach_gui(self, gui):
         self.gui = gui
@@ -21,6 +23,8 @@ class ExperimentStep(object):
     def attach_images(self, image_collection):
         self.images = image_collection
 
+    def attach_recall_timer(self, recall_timer):
+        self.recall_timer = recall_timer
 
 
 class DelayedExperimentStep(ExperimentStep):

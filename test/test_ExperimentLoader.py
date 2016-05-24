@@ -12,12 +12,14 @@ class MockGui:
 class MockImageCollection:
     pass
 
+class MockRecallTimer:
+    pass
 
 class ExperimentLoaderTest(unittest.TestCase):
     def test_parse_input_line__nothing(self):
         loader = ExperimentLoader()
 
-        events = loader.parse_input_file([], "filename", MockGui(), MockImageCollection())
+        events = loader.parse_input_file([], "filename", MockGui(), MockImageCollection(), MockRecallTimer())
 
         self.assertEqual([], events)
 
@@ -26,19 +28,21 @@ class ExperimentLoaderTest(unittest.TestCase):
         mock_file = ["ChangeBackgroundColor(0, 0, 255)"]
         gui = MockGui()
         images = MockImageCollection()
+        timer = MockRecallTimer()
 
-        events = loader.parse_input_file(mock_file, "test/filename", gui, images)
+        events = loader.parse_input_file(mock_file, "test/filename", gui, images, timer)
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
         self.assertEqual(gui, events[0].gui)
         self.assertEqual(images, events[0].images)
+        self.assertEqual(timer, events[0].recall_timer)
 
     def test_parse_input_line__two_events(self):
         loader = ExperimentLoader()
         mock_file = ["ChangeBackgroundColor(0, 0, 255)", "PressKeyToContinue(\"a\")"]
 
-        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection())
+        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection(), MockRecallTimer())
 
         self.assertEqual(2, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
@@ -48,7 +52,7 @@ class ExperimentLoaderTest(unittest.TestCase):
         loader = ExperimentLoader()
         mock_file = ["ChangeBackgroundColor(0, 0, 255) # This is a comment."]
 
-        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection())
+        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection(), MockRecallTimer())
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
@@ -57,7 +61,7 @@ class ExperimentLoaderTest(unittest.TestCase):
         loader = ExperimentLoader()
         mock_file = ["# This is a comment.", "ChangeBackgroundColor(0, 0, 255)"]
 
-        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection())
+        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection(), MockRecallTimer())
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
@@ -66,7 +70,7 @@ class ExperimentLoaderTest(unittest.TestCase):
         loader = ExperimentLoader()
         mock_file = ["", "ChangeBackgroundColor(0, 0, 255)"]
 
-        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection())
+        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection(), MockRecallTimer())
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
@@ -75,7 +79,7 @@ class ExperimentLoaderTest(unittest.TestCase):
         loader = ExperimentLoader()
         mock_file = [" ", "ChangeBackgroundColor(0, 0, 255)"]
 
-        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection())
+        events = loader.parse_input_file(mock_file, "filename", MockGui(), MockImageCollection(), MockRecallTimer())
 
         self.assertEqual(1, len(events))
         self.assertIsInstance(events[0], ChangeBackgroundColor)
@@ -84,4 +88,4 @@ class ExperimentLoaderTest(unittest.TestCase):
         loader = ExperimentLoader()
         mock_file = [" ", "ChangeBackgroundColor(0, 0, 255) rubbish"]
 
-        self.assertRaises(Exception, loader.parse_input_file, mock_file, "filename", MockGui())
+        self.assertRaises(Exception, loader.parse_input_file, mock_file, "filename", MockGui(), MockImageCollection(), MockRecallTimer())

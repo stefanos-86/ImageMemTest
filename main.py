@@ -6,6 +6,7 @@ from Steps import Scheduler
 from GuiFacade import GuiFacade
 from ExperimentLoader import ExperimentLoader
 from Elements import ImageCollection
+from Elements import RecallTimer
 
 def parse_command_line():
     parser = argparse.ArgumentParser()
@@ -26,8 +27,9 @@ def select_file(gui):
 def start_experiment(gui):
     filename = select_file(gui)
     loader = ExperimentLoader()
+    timer = RecallTimer()
     image_collection = ImageCollection(gui, os.path.dirname(filename))
-    events = loader.load(filename, gui, image_collection)
+    events = loader.load(filename, gui, image_collection, timer)
     scheduler = Scheduler(events, gui)
 
 

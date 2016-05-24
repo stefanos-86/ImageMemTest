@@ -223,3 +223,5 @@ class TestRecallTimer(unittest.TestCase):
         rt.experiment_complete()
 
         self.assertEqual(1, rt.experiment_duration_seconds)
+
+        # See also the long duration test Demo - can't have a minute-long test case...

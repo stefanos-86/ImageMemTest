@@ -16,13 +16,13 @@ from Steps import *  # Pull everything in so that it is in the "scope" of eval()
 import os
 
 class ExperimentLoader:
-    def load(self, filename, gui, image_collection):
+    def load(self, filename, gui, image_collection, recall_timer):
         events = None
         with open(filename, "r") as input_file:
-            events = self.parse_input_file(input_file, filename, gui, image_collection)
+            events = self.parse_input_file(input_file, filename, gui, image_collection, recall_timer)
         return events
 
-    def parse_input_file(self, input_file, filename, gui, image_collection):
+    def parse_input_file(self, input_file, filename, gui, image_collection, recall_timer):
         """ Public only for testability reasons. """
         events = []
         line_counter = 0
@@ -38,6 +38,7 @@ class ExperimentLoader:
                     new_event = eval(filtered_line)
                     new_event.attach_images(image_collection)
                     new_event.attach_gui(gui)
+                    new_event.attach_recall_timer(recall_timer)
                 except Exception as problem:
                     self._friendly_error_message(filename, line, line_counter, problem)
 
