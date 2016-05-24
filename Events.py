@@ -1,4 +1,4 @@
-# Here we have the classes to deal with the scheduling of events.
+# Here we have the classes to deal with the scheduling of commands in the program.
 # Constructors can be invoked by the end users (to program the experiments),
 # therefore the parameter validation must be merciless.
 
@@ -6,13 +6,14 @@ import os
 
 from ExperimentImage import ExperimentImage
 
-class Event(object):  # TODO: rename... those are more commands to the program than events.
-    """ Base of all the events, and also the no-op events."""
+
+class ExperimentStep(object):
+    """ Base of all the steps (GUI events), and also the no-op action."""
     def __init__(self):
-        self.gui = None  # All the events have to register with and manipulate the GUI.
+        self.gui = None  # All the commands have to register with and manipulate the GUI.
                          # But it can't be in the constructor signature because I don't want the client
                          # to bother with such details.
-        self.images = None  # Similar to the gui, some events need to interact with the whole image collection.
+        self.images = None  # Similar to the gui, some actions need to interact with the whole image collection.
 
     def attach_gui(self, gui):
         self.gui = gui
@@ -22,10 +23,10 @@ class Event(object):  # TODO: rename... those are more commands to the program t
 
 
 
-class DelayedEvent(Event):
+class DelayedExperimentStep(ExperimentStep):
     """ This event has to be scheduled after a certain time. """
     def __init__(self, delay_milliseconds):
-        super(DelayedEvent, self).__init__()
+        super(DelayedExperimentStep, self).__init__()
 
         assert isinstance(delay_milliseconds, (int, long)), "Delay must be integer -> " + str(delay_milliseconds)
         assert delay_milliseconds >= 0, "Delay must be 0 or positive -> " + str(delay_milliseconds)
@@ -36,10 +37,10 @@ class DelayedEvent(Event):
         self.gui.register_event(self.delay, back_to_scheduler)
 
 
-class OnKeyEvent(Event):
+class OnKeyExperimentStep(ExperimentStep):
     """ This event waits for a key press. """
     def __init__(self, key):
-        super(OnKeyEvent, self).__init__()
+        super(OnKeyExperimentStep, self).__init__()
         self._validate_key(key)
         self.key = key
 
@@ -64,7 +65,7 @@ class OnKeyEvent(Event):
         self.gui.free_key(self.key)
 
 
-class ChangeBackgroundColor(DelayedEvent):
+class ChangeBackgroundColor(DelayedExperimentStep):
     """ Orders the gui to change the background color. """
     def __init__(self,r, g, b):
         super(ChangeBackgroundColor, self).__init__(0)  # 0 delay: this is immediate.
@@ -81,7 +82,7 @@ class ChangeBackgroundColor(DelayedEvent):
         self.gui.background_color(r, g, b)
 
 
-class PressKeyToContinue(OnKeyEvent):
+class PressKeyToContinue(OnKeyExperimentStep):
     """ Does nothing until the user press the specified key. """
     def __init__(self, key_to_wait):
         super(PressKeyToContinue, self).__init__(key_to_wait)
@@ -91,7 +92,7 @@ class PressKeyToContinue(OnKeyEvent):
         self._remove_key_binding()
 
 
-class Wait(DelayedEvent):
+class Wait(DelayedExperimentStep):
     """ Blocks the evnt processing until the time has passed. """
     def __init__(self, wait_milliseconds):
         super(Wait, self).__init__(wait_milliseconds)
@@ -100,7 +101,7 @@ class Wait(DelayedEvent):
         pass  # Do nothing. We just had to wait.
 
 
-class ShowImage(DelayedEvent):
+class ShowImage(DelayedExperimentStep):
     def __init__(self, how_long_milliseconds, centre_x_pixels, centre_y_pixels, filename):
         super(ShowImage, self).__init__(how_long_milliseconds)
         self.image_gui_handle = None
@@ -122,7 +123,7 @@ class ShowImage(DelayedEvent):
         self.gui.remove_image(self.image_gui_handle)
 
 
-class ShowAllImages(DelayedEvent):
+class ShowAllImages(DelayedExperimentStep):
     def __init__(self, for_how_long):
         super(ShowAllImages, self).__init__(for_how_long)
         self.handles = []
@@ -139,7 +140,7 @@ class ShowAllImages(DelayedEvent):
             self.gui.remove_image(image)
 
 
-class PrepareMarkers(DelayedEvent):
+class PrepareMarkers(DelayedExperimentStep):
     def __init__(self, marker_image):
         super(PrepareMarkers, self).__init__(0)  # Immediate event.
         self.marker_image = marker_image
@@ -151,7 +152,7 @@ class PrepareMarkers(DelayedEvent):
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
 
 
-class ComputeResult(DelayedEvent):
+class ComputeResult(DelayedExperimentStep):
     def __init__(self, result_file):
         super(ComputeResult, self).__init__(0)  # Immediate.
         self.output_file = result_file

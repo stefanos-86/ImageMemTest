@@ -59,7 +59,7 @@ class MockMarker:
 class EventTest(unittest.TestCase):
     def test_attach_gui(self):
         mock_gui = MockGui
-        event = Event()
+        event = ExperimentStep()
         event.attach_gui(mock_gui)
         self.assertEquals(mock_gui, event.gui)
 
@@ -67,24 +67,24 @@ class EventTest(unittest.TestCase):
 class DelayedEventTest(unittest.TestCase):
     def test_construction(self):
         delay = 123
-        event = DelayedEvent(delay)
+        event = DelayedExperimentStep(delay)
         self.assertEquals(delay, event.delay)
 
     def test_construnction__nonsensical_delay(self):
         delay = "Not a number."
-        self.assertRaises(Exception, DelayedEvent, delay)
+        self.assertRaises(Exception, DelayedExperimentStep, delay)
 
     def test_construnction__negative_delay(self):
-        self.assertRaises(Exception, DelayedEvent, -1)
+        self.assertRaises(Exception, DelayedExperimentStep, -1)
 
     def test_construction__float_delay(self):
-        self.assertRaises(Exception, DelayedEvent, 1.5)
+        self.assertRaises(Exception, DelayedExperimentStep, 1.5)
 
     def test_register(self):
         delay = 123
         gui = MockGui()
 
-        event = DelayedEvent(delay)
+        event = DelayedExperimentStep(delay)
         event.attach_gui(gui)
 
         event.register(mock_callback)
@@ -96,34 +96,34 @@ class DelayedEventTest(unittest.TestCase):
 class OnKeyEventTest(unittest.TestCase):
     def test_construction(self):
         key = "x"
-        event = OnKeyEvent(key)
+        event = OnKeyExperimentStep(key)
         self.assertEquals(key, event.key)
 
     def test_construction__special_binding(self):
         key = "<Return>"
-        event = OnKeyEvent(key)
+        event = OnKeyExperimentStep(key)
         self.assertEquals(key, event.key)
 
     def test_construction__nonsensical_key(self):
         key = 3874.83
-        self.assertRaises(Exception, OnKeyEvent, key)
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
 
     def test_construction__too_many_keys(self):
         key = "ab"
-        self.assertRaises(Exception, OnKeyEvent, key)
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
 
     def test_construction__incorrect_space(self):
         key = " "
-        self.assertRaises(Exception, OnKeyEvent, key)
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
 
     def test_construction__unsupported_special_bind(self):
         key = "<rubbish>"
-        self.assertRaises(Exception, OnKeyEvent, key)
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
 
     def test_register(self):
         key = "4"
         gui = MockGui()
-        event = OnKeyEvent(key)
+        event = OnKeyExperimentStep(key)
         event.attach_gui(gui)
 
         event.register(mock_callback)
@@ -284,7 +284,7 @@ class ComputeResultTest(unittest.TestCase):
 class SchedulerTest(unittest.TestCase):
     def test_construction__enqueue_schedule_first_event(self):
         gui = MockGui()
-        events = [Event()]
+        events = [ExperimentStep()]
 
         scheduler = Scheduler(events, gui)
 

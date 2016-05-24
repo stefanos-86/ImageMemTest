@@ -46,7 +46,7 @@ class ExperimentLoader:
 
 
     def _remove_comments(self, line):
-        comment_start = line.find("#")  # TODO: not perfect: the user can't use # in strings in the file.
+        comment_start = line.find("#")
         if comment_start == -1:
             return line  # not a comment
 
