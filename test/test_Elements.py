@@ -1,11 +1,14 @@
 import unittest
 
 import sys
+import time
+
 sys.path.append("./..")
 
 from Elements import ExperimentImage
 from Elements import ImageCollection
 from Elements import DecoratedDistance
+from Elements import RecallTimer
 
 
 from GuiFacade import GuiFacade
@@ -210,3 +213,13 @@ class TestDecoratedDistance(unittest.TestCase):
         distance.header(output_file)
 
         self.assertEqual("  dist     image_centre    marker_centre image_id\n", output_file.text)
+
+
+class TestRecallTimer(unittest.TestCase):
+    def test_duration_measure(self):
+        rt = RecallTimer()
+        rt.markers_placed()
+        time.sleep(1)
+        rt.experiment_complete()
+
+        self.assertEqual(1, rt.experiment_duration_seconds)

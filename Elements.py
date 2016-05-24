@@ -6,6 +6,7 @@
 
 import os
 import math
+import time
 
 from PIL import ImageTk, Image
 
@@ -172,3 +173,23 @@ class DecoratedDistance:
     def _dump_fields(self, output_file, dictionary):
         filled_text = self.distance_line_format.format(**dictionary)
         output_file.write(filled_text)
+
+
+class RecallTimer:
+    """ Class to record the amount of time. """
+    # I can only find "how to time the execution of code"-type of tips on the web, but it should do.
+    # Precision requirement is the second, but on a possibly long time (several minutes).
+    # I assume that the clock won't go back during an experiment (and don't care for leap seconds).
+
+    def __init__(self):
+        self.experiment_duration_seconds = -1  # Obvious bad value.
+        self.start_time = 0  # On windows, it may return t
+
+    def markers_placed(self):
+
+        self.start_time = time.time()
+
+    def experiment_complete(self):
+        end_time = time.time()
+        duration = end_time - self.start_time
+        self.experiment_duration_seconds = int(duration)  # Brutal truncation.
