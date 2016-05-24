@@ -4,7 +4,7 @@ import sys
 sys.path.append("./..")
 
 from Steps import *
-from ExperimentImage import ImageCollection
+from Elements import ImageCollection
 
 
 def mock_callback():

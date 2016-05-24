@@ -1,9 +1,8 @@
-# Class to manipulate an actual image that the scientist want to use in the experiment.
+# This file has the classes to represent all the objects involved in the experiment,
+# like images, collections of images, distances... I will put there the timer too.
 #
 # Do not forget that (0, 0) is the top left corner of the screen!
 #
-# TODO: this file may be renamed "ExperimentElements" because it contains all the elements to do an experiment
-#       like images, collections of images, distances... I will put there the timer too.
 
 import os
 import math
@@ -11,7 +10,7 @@ import math
 from PIL import ImageTk, Image
 
 
-class ExperimentImage:  # Can't be just "Image" because that name is taken by a dependengcy.
+class ExperimentImage:  # Can't be just "Image" because that name is taken by a dependency.
     def __init__(self, centre_x_pixels, centre_y_pixels, filename):
         self.id = filename
         self.centre_x = centre_x_pixels

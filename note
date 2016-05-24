@@ -31,6 +31,7 @@ REQUIREMENTS
 - calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio) con precisione al secondo
 - Scalamento delle immagini: impostare un fattore di scala nell'esperimento per ingrandire tutte le immagini in un colpo solo.
 - Riportare nel manuale  the user can't use # in strings in the file (that's the comment reserved char).
+    Do not forget that (0, 0) is the top left corner of the screen!
 
 Problemi SOTTO WINDOWS (Linux ha python 2.7.11+ Win?)
 * - Il file di output non compare A Dani è comparso.

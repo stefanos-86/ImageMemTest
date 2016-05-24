@@ -3,9 +3,9 @@ import unittest
 import sys
 sys.path.append("./..")
 
-from ExperimentImage import ExperimentImage
-from ExperimentImage import ImageCollection
-from ExperimentImage import DecoratedDistance
+from Elements import ExperimentImage
+from Elements import ImageCollection
+from Elements import DecoratedDistance
 
 
 from GuiFacade import GuiFacade

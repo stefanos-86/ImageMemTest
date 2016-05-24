@@ -5,7 +5,7 @@ import os
 from Steps import Scheduler
 from GuiFacade import GuiFacade
 from ExperimentLoader import ExperimentLoader
-from ExperimentImage import ImageCollection
+from Elements import ImageCollection
 
 def parse_command_line():
     parser = argparse.ArgumentParser()

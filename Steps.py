@@ -4,7 +4,7 @@
 
 import os
 
-from ExperimentImage import ExperimentImage
+from Elements import ExperimentImage
 
 
 class ExperimentStep(object):
