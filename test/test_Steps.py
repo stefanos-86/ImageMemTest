@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append("./..")
 
-from Events import *
+from Steps import *
 from ExperimentImage import ImageCollection
 
 

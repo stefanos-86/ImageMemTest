@@ -11,7 +11,7 @@
 # (e.g. the internet) and if the attacker can compromise a file in the user PC... he could well change the Python code
 # of the application directly!
 
-from Events import *  # Pull everything in so that it is in the "scope" of eval().
+from Steps import *  # Pull everything in so that it is in the "scope" of eval().
 
 import os
 

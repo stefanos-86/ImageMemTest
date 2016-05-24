@@ -2,7 +2,7 @@ import argparse
 
 import os
 
-from Events import Scheduler
+from Steps import Scheduler
 from GuiFacade import GuiFacade
 from ExperimentLoader import ExperimentLoader
 from ExperimentImage import ImageCollection
