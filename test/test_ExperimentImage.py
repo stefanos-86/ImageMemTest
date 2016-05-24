@@ -167,6 +167,15 @@ class TestImageCollection(unittest.TestCase):
         self.assertEquals(1, distances[0].distance)
         self.assertEquals(1, distances[1].distance)
 
+    def test_find_distances__almost_whole_screen(self):
+        images = ImageCollection(MockGui(), ".")
+        images.load_image("TestImage.jpg", 96, 96)
+        images.create_markers("TestMarker.jpg")
+        images.gui_markers.append(MockMarker(996, 996))
+
+        distances = images.find_distances()
+        self.assertAlmostEquals(1.414213562 * 900, distances[0].distance, 3) # The screen is square.
+
 
 class MockFile:
     def __init__(self):
