@@ -19,7 +19,7 @@ def parse_command_line():
 def select_file(gui):
     filename = parse_command_line()
     while filename is None or len(filename) == 0:  # Loop until we get something: we must have a file to read.
-        filename = gui.select_file()
+        filename = os.path.abspath(gui.select_file())
     return filename
 
 

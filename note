@@ -37,6 +37,7 @@ Problemi SOTTO WINDOWS (Linux ha python 2.7.11+ Win?)
 * - Il file di output non compare A Dani è comparso.
 * - Pare non prendere più i bind dei tasti (e.g. la demo del cambio di colore di sfondo non funziona più Nemmeno ESC!
 * - Se fai click sullo sfondo, i cerchietti scompaiono.
+-    363       (256, 320)         (30, 35) C:/Users/Stefano/Desktop/test/Demo\A.jpg  << L'ultimo separatore nel path non quaglia.
 
 PRIOR ART
 SuperLab della Noldus (proiettore avanzato, tipo powerpoint ma "lab grade").
