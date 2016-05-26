@@ -172,6 +172,7 @@ class ComputeResult(DelayedExperimentStep):
             distances[0].header(result_file)  # There must be at least one result, no array overflow.
             for result in distances:
                 result.dump(result_file)
+            self.recall_timer.dump(result_file)
 
 
 class Scheduler:

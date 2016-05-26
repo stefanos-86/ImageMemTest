@@ -195,7 +195,7 @@ class RecallTimer:
         duration = self.end_time - self.start_time
         self.experiment_duration_seconds = int(duration)  # Brutal truncation.
 
-    def dump(self):
+    def dump(self, output_file):
         text = "Start:    {start_time}\n" \
                "End:      {end_time}\n" \
                "Duration: {experiment_duration_seconds} seconds"
@@ -207,7 +207,7 @@ class RecallTimer:
                 "experiment_duration_seconds": self.experiment_duration_seconds
             }
 
-        return text.format(**formatted_times)
+        output_file.write(text.format(**formatted_times))
 
     def _to_date(self, unix_time):
         return datetime.datetime.fromtimestamp(unix_time).strftime('%Y-%m-%d %H:%M:%S')

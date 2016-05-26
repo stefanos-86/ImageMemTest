@@ -228,11 +228,14 @@ class TestRecallTimer(unittest.TestCase):
         # See also the long duration test Demo - can't have a minute-long test case...
 
     def test_dump(self):
+        output_file = MockFile()
         rt = RecallTimer()
         rt.markers_placed()
         rt.experiment_complete()
 
+        rt.dump(output_file)
+
         expected = re.compile("Start: .*\nEnd: .*\nDuration: 0 seconds")
-        match = re.match(expected, rt.dump())
+        match = re.match(expected, output_file.text)
 
         self.assertTrue(match)

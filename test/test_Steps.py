@@ -66,6 +66,9 @@ class MockRecallTimer:
     def experiment_complete(self):
         self.stopped = True
 
+    def dump(self, output_file):
+        pass
+
 
 class EventTest(unittest.TestCase):
     def test_attach_gui(self):
