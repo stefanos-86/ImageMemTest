@@ -33,6 +33,8 @@ X - Portabile su Android? Su iPad? http://qpython.com/#product ?
 - Scalamento delle immagini: impostare un fattore di scala nell'esperimento per ingrandire tutte le immagini in un colpo solo.
 - Riportare nel manuale  the user can't use # in strings in the file (that's the comment reserved char).
     Do not forget that (0, 0) is the top left corner of the screen!
+    I vari casi patologici delle immagini (una troppo vicina, equidistanze...). Segna da qualche parte (NON nel manuale) l'algoritmo ungherese.
+- Demo con esperimento completo.
 
 Problemi SOTTO WINDOWS (Linux ha python 2.7.11+ Win?)
 * - Il file di output non compare A Dani è comparso.
