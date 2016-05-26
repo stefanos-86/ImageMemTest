@@ -28,8 +28,8 @@ REQUIREMENTS
 * - Outuput su file di testo (es. 2 colonne con nome immagine e distanza del cerchio più vicino), va bene, basta che è leggibile.
 X - Il programma si deve chiudere dopo l'ultimo evento. Altrimenti resta "sospeso" quando l'utente preme l'ultimo tasto per salvare il risultato.
 X - Portabile su Android? Su iPad? http://qpython.com/#product ?
-- calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio) con precisione al secondo
-- Demo di lunga durata per testare il cronometro.
+* - calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio) con precisione al secondo
+* - Demo di lunga durata per testare il cronometro.
 - Scalamento delle immagini: impostare un fattore di scala nell'esperimento per ingrandire tutte le immagini in un colpo solo.
 - Riportare nel manuale  the user can't use # in strings in the file (that's the comment reserved char).
     Do not forget that (0, 0) is the top left corner of the screen!
