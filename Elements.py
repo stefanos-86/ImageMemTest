@@ -7,6 +7,7 @@
 import os
 import math
 import time
+import datetime
 
 from PIL import ImageTk, Image
 
@@ -183,12 +184,30 @@ class RecallTimer:
 
     def __init__(self):
         self.experiment_duration_seconds = -1  # Obvious bad value.
-        self.start_time = 0  # On windows, it may return t
+        self.start_time = None
+        self.end_time = None
 
     def markers_placed(self):
         self.start_time = time.time()
 
     def experiment_complete(self):
-        end_time = time.time()
-        duration = end_time - self.start_time
+        self.end_time = time.time()
+        duration = self.end_time - self.start_time
         self.experiment_duration_seconds = int(duration)  # Brutal truncation.
+
+    def dump(self):
+        text = "Start:    {start_time}\n" \
+               "End:      {end_time}\n" \
+               "Duration: {experiment_duration_seconds} seconds"
+
+        formatted_times = \
+            {
+                "start_time" : self._to_date(self.start_time),
+                "end_time": self._to_date(self.end_time),
+                "experiment_duration_seconds": self.experiment_duration_seconds
+            }
+
+        return text.format(**formatted_times)
+
+    def _to_date(self, unix_time):
+        return datetime.datetime.fromtimestamp(unix_time).strftime('%Y-%m-%d %H:%M:%S')

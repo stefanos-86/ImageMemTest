@@ -2,6 +2,7 @@ import unittest
 
 import sys
 import time
+import re
 
 sys.path.append("./..")
 
@@ -225,3 +226,13 @@ class TestRecallTimer(unittest.TestCase):
         self.assertEqual(1, rt.experiment_duration_seconds)
 
         # See also the long duration test Demo - can't have a minute-long test case...
+
+    def test_dump(self):
+        rt = RecallTimer()
+        rt.markers_placed()
+        rt.experiment_complete()
+
+        expected = re.compile("Start: .*\nEnd: .*\nDuration: 0 seconds")
+        match = re.match(expected, rt.dump())
+
+        self.assertTrue(match)
