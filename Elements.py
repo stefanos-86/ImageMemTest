@@ -186,7 +186,6 @@ class RecallTimer:
         self.start_time = 0  # On windows, it may return t
 
     def markers_placed(self):
-
         self.start_time = time.time()
 
     def experiment_complete(self):

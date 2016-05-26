@@ -56,7 +56,16 @@ class MockMarker:
         return (0, 0)
 
 class MockRecallTimer:
-    pass
+    def __init__(self):
+        self.started = False
+        self.stopped = False
+
+    def markers_placed(self):
+        self.started = True
+
+    def experiment_complete(self):
+        self.stopped = True
+
 
 class EventTest(unittest.TestCase):
     def test_attach_gui(self):
@@ -261,20 +270,37 @@ class ShowAllImagesTest(unittest.TestCase):
 class PrepareMarkersTest(unittest.TestCase):
     def test_happen(self):
         gui = MockGui()
+        clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
         collection.load_image("TestImage.jpg", 100, 100)
         event = PrepareMarkers("TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
+        event.attach_recall_timer(clock)
 
         event.happen()
 
         self.assertIsNotNone(gui.draggable_image)
 
+    def test_happen__starts_cronometer(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.load_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.happen()
+
+        self.assertTrue(clock.started)
+
 
 class ComputeResultTest(unittest.TestCase):
     def test_happen(self):
         gui = MockGui()
+        clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
         collection.load_image("TestImage.jpg", 100, 100)
         collection.create_markers("TestMarker.jpg")
@@ -284,10 +310,30 @@ class ComputeResultTest(unittest.TestCase):
         event = ComputeResult(expected_file)
         event.attach_images(collection)
         event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
         event.happen()
 
         self.assertIsNotNone(open(expected_file, "r"))  # This event writes on a file, but is not master of the file format.
                                              # Assuring that the file exists is good enough.
+
+    def test_happen__stop_recall_cronometer(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.load_image("TestImage.jpg", 100, 100)
+        collection.create_markers("TestMarker.jpg")
+        collection.gui_markers.append(MockMarker())
+        expected_file = "./TestOutput.txt"
+
+        event = ComputeResult(expected_file)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+        event.happen()
+
+        self.assertTrue(clock.stopped)
+
 
 class SchedulerTest(unittest.TestCase):
     def test_construction__enqueue_schedule_first_event(self):

@@ -155,6 +155,9 @@ class PrepareMarkers(DelayedExperimentStep):
             gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image)
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
 
+        # The markers are ready: start counting how much time it takes to have them repositioned.
+        self.recall_timer.markers_placed()
+
 
 class ComputeResult(DelayedExperimentStep):
     def __init__(self, result_file):
@@ -162,6 +165,8 @@ class ComputeResult(DelayedExperimentStep):
         self.output_file = result_file
 
     def happen(self):
+        self.recall_timer.experiment_complete()
+
         distances = self.images.find_distances()
         with open(self.output_file, "w") as result_file:
             distances[0].header(result_file)  # There must be at least one result, no array overflow.
