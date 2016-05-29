@@ -144,6 +144,25 @@ class ShowAllImages(DelayedExperimentStep):
             self.gui.remove_image(image)
 
 
+class ShowAllMarkers(DelayedExperimentStep):
+    def __init__(self, for_how_long, marker_image):
+        super(ShowAllMarkers, self).__init__(for_how_long)
+        self.placeholder_handles = []
+        self.placeholder_image = marker_image
+
+    def register(self, back_to_scheduler):
+        super(ShowAllMarkers, self).register(back_to_scheduler)
+        for image in self.images.images:
+            same_centre_x, same_centre_y = image.centre_position()
+            placeholder = self.images.create_image(self.placeholder_image, same_centre_x, same_centre_y)
+            placeholder_handle = self.gui.show_image(placeholder.top, placeholder.left, placeholder.tk_image)
+            self.placeholder_handles.append(placeholder_handle)
+
+    def happen(self):
+        for handle in self.placeholder_handles:
+            self.gui.remove_image(handle)
+
+
 class PrepareMarkers(DelayedExperimentStep):
     def __init__(self, marker_image):
         super(PrepareMarkers, self).__init__(0)  # Immediate event.

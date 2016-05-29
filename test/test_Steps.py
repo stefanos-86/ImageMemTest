@@ -270,6 +270,35 @@ class ShowAllImagesTest(unittest.TestCase):
         self.assertEquals(image.tk_image, gui.removed_image)
 
 
+class ShowAllMarkersTest(unittest.TestCase):
+    def test_register(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = ShowAllMarkers(52, "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+
+        self.assertNotEquals(image.tk_image, gui.added_image)  # Can't be more precise - how to compare tkimages?
+        self.assertEquals(1, len(collection.images))  # The collection is not modified.
+
+    def test_happen(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = ShowAllMarkers(52, "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.register(mock_callback)
+
+        event.happen()
+
+        self.assertEqual(gui.added_image, gui.removed_image)  # Has removed the same image...
+        self.assertNotEqual(image, gui.added_image)  # ...without touching the collection image.
+
+
 class PrepareMarkersTest(unittest.TestCase):
     def test_happen(self):
         gui = MockGui()

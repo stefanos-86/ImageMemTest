@@ -1,0 +1,12 @@
+# Load 2 test images and show them.
+ShowImage(0, 256, 320, "A.jpg")
+ShowImage(0, 600, 300, "B.jpg")
+
+# Show the images to confirm they have been loaded.
+ShowAllImages(2000)
+
+# Replace them with markers.
+ShowAllMarkers(2000, "Marker.jpg")
+
+#ESC to exit at the end.
+
