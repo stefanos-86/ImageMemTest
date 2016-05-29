@@ -88,7 +88,7 @@ class ExperimentImageTest(unittest.TestCase):
 
 
 class TestImageCollection(unittest.TestCase):
-    def test_load_image(self):
+    def test_add_image(self):
         images = ImageCollection(MockGui(), ".")
 
         image = images.add_image("TestImage.jpg", 100, 100)
@@ -97,10 +97,18 @@ class TestImageCollection(unittest.TestCase):
         self.assertEquals(1, len(images.images))
         self.assertEquals(image, images.images[0])
 
-    def test_load_image__invalid_image(self):
+    def test_create_image__invalid_image(self):
         images = ImageCollection(MockGui(), ".")
 
-        self.assertRaises(Exception, images.add_image, "TestImage.jpg", 1000, 100)
+        self.assertRaises(Exception, images.create_image, "TestImage.jpg", 1000, 100)
+
+    def test_create_image(self):
+        images = ImageCollection(MockGui(), ".")
+
+        image = images.create_image("TestImage.jpg", 100, 100)
+
+        self.assertIsNotNone(image)
+        self.assertEquals(0, len(images.images))  # Image loaded, but not added.
 
     def test_create_markers(self):
         images = ImageCollection(MockGui(), ".")
