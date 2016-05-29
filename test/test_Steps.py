@@ -247,7 +247,7 @@ class ShowAllImagesTest(unittest.TestCase):
     def test_register(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
-        image = collection.load_image("TestImage.jpg", 100, 100)
+        image = collection.add_image("TestImage.jpg", 100, 100)
         event = ShowAllImages(152)
         event.attach_images(collection)
         event.attach_gui(gui)
@@ -259,7 +259,7 @@ class ShowAllImagesTest(unittest.TestCase):
     def test_happen(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
-        image = collection.load_image("TestImage.jpg", 100, 100)
+        image = collection.add_image("TestImage.jpg", 100, 100)
         event = ShowAllImages(152)
         event.attach_images(collection)
         event.attach_gui(gui)
@@ -275,7 +275,7 @@ class PrepareMarkersTest(unittest.TestCase):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
-        collection.load_image("TestImage.jpg", 100, 100)
+        collection.add_image("TestImage.jpg", 100, 100)
         event = PrepareMarkers("TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
@@ -289,7 +289,7 @@ class PrepareMarkersTest(unittest.TestCase):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
-        collection.load_image("TestImage.jpg", 100, 100)
+        collection.add_image("TestImage.jpg", 100, 100)
         event = PrepareMarkers("TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
@@ -305,7 +305,7 @@ class ComputeResultTest(unittest.TestCase):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
-        collection.load_image("TestImage.jpg", 100, 100)
+        collection.add_image("TestImage.jpg", 100, 100)
         collection.create_markers("TestMarker.jpg")
         collection.gui_markers.append(MockMarker())
         expected_file = "./TestOutput.txt"
@@ -324,7 +324,7 @@ class ComputeResultTest(unittest.TestCase):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
-        collection.load_image("TestImage.jpg", 100, 100)
+        collection.add_image("TestImage.jpg", 100, 100)
         collection.create_markers("TestMarker.jpg")
         collection.gui_markers.append(MockMarker())
         expected_file = "./TestOutput.txt"

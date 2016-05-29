@@ -116,7 +116,7 @@ class ShowImage(DelayedExperimentStep):
 
     def attach_images(self, image_collection):
         super(ShowImage, self).attach_images(image_collection)
-        self.image = image_collection.load_image(self.image_name, self.centre_x, self.centre_y)
+        self.image = image_collection.add_image(self.image_name, self.centre_x, self.centre_y)
 
     def register(self, back_to_scheduler):
         super(ShowImage, self).register(back_to_scheduler)  # Normal registration to call happen() at the right time.

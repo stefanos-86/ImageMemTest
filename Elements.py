@@ -62,7 +62,7 @@ class ImageCollection:
         self.gui_markers = [] # Opaque handles to the markers, to be provided by the GUI.
         self.marker_images = [] # Actual images - to be stored here to ensure they don't disappear.
 
-    def load_image(self, name, centre_x, centre_y):
+    def add_image(self, name, centre_x, centre_y):
         new_image = self._load_single_image(name, centre_x, centre_y)
         self.images.append(new_image)
         return new_image

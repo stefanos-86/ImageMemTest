@@ -91,7 +91,7 @@ class TestImageCollection(unittest.TestCase):
     def test_load_image(self):
         images = ImageCollection(MockGui(), ".")
 
-        image = images.load_image("TestImage.jpg", 100, 100)
+        image = images.add_image("TestImage.jpg", 100, 100)
 
         self.assertIsNotNone(image)
         self.assertEquals(1, len(images.images))
@@ -100,12 +100,12 @@ class TestImageCollection(unittest.TestCase):
     def test_load_image__invalid_image(self):
         images = ImageCollection(MockGui(), ".")
 
-        self.assertRaises(Exception, images.load_image, "TestImage.jpg", 1000, 100)
+        self.assertRaises(Exception, images.add_image, "TestImage.jpg", 1000, 100)
 
     def test_create_markers(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 100, 100)
-        images.load_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 100, 100)
 
         markers = images.create_markers("TestMarker.jpg")
 
@@ -119,7 +119,7 @@ class TestImageCollection(unittest.TestCase):
 
     def test_find_distances__fills_results_correctly(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 100, 200)
+        images.add_image("TestImage.jpg", 100, 200)
         images.create_markers("TestMarker.jpg")
         images.gui_markers.append(MockMarker(3, 4))
 
@@ -133,7 +133,7 @@ class TestImageCollection(unittest.TestCase):
 
     def test_find_distances__coincidents(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 100, 100)
         images.create_markers("TestMarker.jpg")
         images.gui_markers.append(MockMarker(100, 100))
 
@@ -142,7 +142,7 @@ class TestImageCollection(unittest.TestCase):
 
     def test_find_distances__single_image(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 100, 100)
         images.create_markers("TestMarker.jpg")
         images.gui_markers.append(MockMarker(200, 100))
 
@@ -151,7 +151,7 @@ class TestImageCollection(unittest.TestCase):
 
     def test_find_distances__both_axis(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 100, 100)
         images.create_markers("TestMarker.jpg")
         images.gui_markers.append(MockMarker(101, 101))
 
@@ -160,8 +160,8 @@ class TestImageCollection(unittest.TestCase):
 
     def test_find_distances__equidistant_images(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 100, 100)
-        images.load_image("TestImage.jpg", 200, 100)
+        images.add_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 200, 100)
         images.create_markers("TestMarker.jpg")
         images.gui_markers.append(MockMarker(101, 100))
         images.gui_markers.append(MockMarker(201, 100))
@@ -173,7 +173,7 @@ class TestImageCollection(unittest.TestCase):
 
     def test_find_distances__almost_whole_screen(self):
         images = ImageCollection(MockGui(), ".")
-        images.load_image("TestImage.jpg", 96, 96)
+        images.add_image("TestImage.jpg", 96, 96)
         images.create_markers("TestMarker.jpg")
         images.gui_markers.append(MockMarker(996, 996))
 
