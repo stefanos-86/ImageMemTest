@@ -63,7 +63,7 @@ class ImageCollection:
         self.marker_images = [] # Actual images - to be stored here to ensure they don't disappear.
 
     def add_image(self, name, centre_x, centre_y):
-        new_image = self._load_single_image(name, centre_x, centre_y)
+        new_image = self.create_image(name, centre_x, centre_y)
         self.images.append(new_image)
         return new_image
 
@@ -88,15 +88,15 @@ class ImageCollection:
 
         images = []
         for image in self.images:
-            new_marker = self._load_single_image(marker_image_name, centre_x, centre_y)
+            new_marker = self.create_image(marker_image_name, centre_x, centre_y)
             images.append(new_marker)
             centre_x += size_x
 
         self.marker_images = images
         return images
 
-
-    def _load_single_image(self, name, centre_x, centre_y):
+    def create_image(self, name, centre_x, centre_y):
+        """ Factory method for the images - ensure vailidity with respect to the screen. """
         full_path = os.path.join(self.base_path, name)
         new_image = ExperimentImage(centre_x, centre_y, full_path)
         new_image.validate(self.max_x, self.max_y)
