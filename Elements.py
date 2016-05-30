@@ -38,8 +38,8 @@ class ExperimentImage:  # Can't be just "Image" because that name is taken by a 
         assert self.top >= 0, self._not_in_screen_error("top", self.top)
         bottom = self.top + self.tk_image.height()
         right = self.left + self.tk_image.width()
-        assert bottom <= max_x, self._not_in_screen_error("bottom", bottom - max_x)
-        assert right <= max_y, self._not_in_screen_error("rigth", right - max_y)
+        assert bottom <= max_y, self._not_in_screen_error("bottom", bottom - max_y)
+        assert right <= max_x, self._not_in_screen_error("rigth", right - max_x)
 
     def size(self):
         return (self.tk_image.width(), self.tk_image.height())

@@ -17,7 +17,7 @@ gui = GuiFacade()  # Must initialize TK to load the real images.
 
 class MockGui(GuiFacade):  # Subclass so we get the real loading methods, but we can mock what we need.
     def screen_size(self):
-        return (1000, 1000)
+        return (999, 1001)   # Use different sizes to catch bugs in case x and y are swapped.
 
 class MockMarker:
     def __init__(self, x, y):
@@ -26,6 +26,18 @@ class MockMarker:
 
     def centre_position(self):
         return self.x, self.y
+
+
+
+def assert_raises_text(expected_test, expression, arg1, arg2):  # TODO: pass variable args... how?
+    """ This domain assertion to test the error messages requires a lot of rework,
+    but in the spirit of 'a bad test is better than no test' I introduce it all the same - I have a bug to fix now. """
+    try:
+        expression(arg1, arg2)
+        raise Exception("Expression did not fail.")  # TODO: any way to force a unit test failure?
+    except Exception as e:
+        if str(e) != expected_test:
+            raise Exception("Bad exception: expected [" + expected_test + "] got ["+ str(e) + "].")  # TODO: can use assertEqual, somehow?
 
 
 class ExperimentImageTest(unittest.TestCase):
@@ -58,25 +70,25 @@ class ExperimentImageTest(unittest.TestCase):
         test_image_side = 192
         img = ExperimentImage(test_image_side/2 - 1, test_image_side/2, "TestImage.jpg")  # 1 pixel too to the left.
 
-        self.assertRaises(Exception, img.validate, 1000, 1000)
+        assert_raises_text("Image TestImage.jpg exits the screen on the left by 1 pixels.", img.validate, 1000, 1000)
 
     def test_validate__exits_right(self):
         test_image_side = 192
         img = ExperimentImage(1000, test_image_side / 2, "TestImage.jpg")  # Centered on the border.
 
-        self.assertRaises(Exception, img.validate, 1000, 1000)
+        assert_raises_text("Image TestImage.jpg exits the screen on the rigth by 96 pixels.", img.validate, 1000, 1000)
 
     def test_validate__exits_top(self):
         test_image_side = 192
         img = ExperimentImage(500, test_image_side / 2 - 1 , "TestImage.jpg")  # 1 pixel too high
 
-        self.assertRaises(Exception, img.validate, 1000, 1000)
+        assert_raises_text("Image TestImage.jpg exits the screen on the top by 1 pixels.", img.validate, 1000, 1000)
 
     def test_validate__exits_bottom(self):
         test_image_side = 192
         img = ExperimentImage(test_image_side / 2, test_image_side / 2, "TestImage.jpg")
 
-        self.assertRaises(Exception, img.validate, test_image_side, test_image_side - 1)  # Screen is 1 pixel too short.
+        assert_raises_text("Image TestImage.jpg exits the screen on the bottom by 1 pixels.", img.validate, test_image_side, test_image_side - 1)
 
     def test_size(self):
         img = ExperimentImage(0, 0, "TestMarker.jpg")

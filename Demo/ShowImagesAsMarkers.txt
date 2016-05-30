@@ -1,7 +1,7 @@
 # Load 2 test images and show them.
 ShowImage(0, 256, 320, "A.jpg")
 ShowImage(0, 600, 300, "B.jpg")
-ShowImage(0, 730, 400, "Marker.jpg")  # This is the same image as the marker.
+ShowImage(0, 740, 400, "Marker.jpg")  # This is the same image as the marker.
                                       # It should look exactly the same when it is replaced by itself.
 
 # Show the images to confirm they have been loaded.
