@@ -297,6 +297,7 @@ class ShowAllMarkersTest(unittest.TestCase):
 
         self.assertEqual(gui.added_image, gui.removed_image)  # Has removed the same image...
         self.assertNotEqual(image, gui.added_image)  # ...without touching the collection image.
+        self.assertIsNotNone(event.placeholder_images) # The marker image is kept in memory.
 
 
 class PrepareMarkersTest(unittest.TestCase):

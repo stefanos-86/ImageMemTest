@@ -148,15 +148,18 @@ class ShowAllMarkers(DelayedExperimentStep):
     def __init__(self, for_how_long, marker_image):
         super(ShowAllMarkers, self).__init__(for_how_long)
         self.placeholder_handles = []
-        self.placeholder_image = marker_image
+        self.placeholder_image_name = marker_image
+        self.placeholder_images = []  # Must keep a reference to the images somewhere.
+                                      # Tk does not keep it, and the images disappear otherwise.
 
     def register(self, back_to_scheduler):
         super(ShowAllMarkers, self).register(back_to_scheduler)
         for image in self.images.images:
             same_centre_x, same_centre_y = image.centre_position()
-            placeholder = self.images.create_image(self.placeholder_image, same_centre_x, same_centre_y)
+            placeholder = self.images.create_image(self.placeholder_image_name, same_centre_x, same_centre_y)
             placeholder_handle = self.gui.show_image(placeholder.top, placeholder.left, placeholder.tk_image)
             self.placeholder_handles.append(placeholder_handle)
+            self.placeholder_images.append(placeholder)
 
     def happen(self):
         for handle in self.placeholder_handles:
