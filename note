@@ -14,7 +14,7 @@ install.bat (che fa pip install, pip viene con l'installatore python di windows)
 
 REQUIREMENTS
 *- Scelta del colore di sfondo. Terna R, G, B; valori tra 0 e 255.
-- Quando le immagini appaiono una per una, scalare (NON traslare) di una percentuale per un certo tempo. Zoom fino alla percentuale (100% = come era prima), poi indietro.
+- [Sospesa: non indispensabile] Quando le immagini appaiono una per una, scalare (NON traslare) di una percentuale per un certo tempo. Zoom fino alla percentuale (100% = come era prima), poi indietro.
   NON è necessaria opzione “ingrandimento JPG”, purché le dimensioni del JPG possano essere impostate (su base empirica) all’avvio del programma;
 *- Scelta dei diversi esperimenti: a riga di comando va bene, a finestra di dialogo è meglio. http://tkinter.unpythonic.net/wiki/tkFileDialog
 *- Dare un'allerta di qualche tipo se le immagini sbordano.
@@ -30,12 +30,13 @@ X - Il programma si deve chiudere dopo l'ultimo evento. Altrimenti resta "sospes
 X - Portabile su Android? Su iPad? http://qpython.com/#product ?
 * - calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio) con precisione al secondo
 * - Demo di lunga durata per testare il cronometro.
-- Scalamento delle immagini: impostare un fattore di scala nell'esperimento per ingrandire tutte le immagini in un colpo solo.
+- [Sospesa: sono disposti a farlo a mano] Scalamento delle immagini: impostare un fattore di scala nell'esperimento per ingrandire tutte le immagini in un colpo solo.
 - Riportare nel manuale  the user can't use # in strings in the file (that's the comment reserved char).
     Do not forget that (0, 0) is the top left corner of the screen!
     I vari casi patologici delle immagini (una troppo vicina, equidistanze...). Segna da qualche parte (NON nel manuale) l'algoritmo ungherese.
 - Demo con esperimento completo.
-- All'inizio del passo 1 bisogna mostrare non tutte le immagini, ma dei marker nella posizione delle immagini.
+* - All'inizio del passo 1 bisogna mostrare non tutte le immagini, ma dei marker nella posizione delle immagini.
+- Contare la durata dell'esperimento dal primo spostamento del primo marker.
 
 Problemi SOTTO WINDOWS (Linux ha python 2.7.11+ Win?)
 * - Il file di output non compare A Dani è comparso.
