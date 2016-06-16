@@ -76,7 +76,7 @@ class GuiFacade:
 
 
 class MobileLabel(tk.Label):
-    def __init__(self, window, tk_image):
+    def __init__(self, window, tk_image, user_start_callback=None):
         #super(MobileLabel, self).__init__(window, image=tk_image) # Nope. tk.Label is old style class...
         tk.Label.__init__(self, window, image=tk_image)
 
@@ -89,7 +89,10 @@ class MobileLabel(tk.Label):
         self.size_x = tk_image.width()
         self.size_y = tk_image.height()
 
+        self.user_callback = user_start_callback
+
     def start_move(self, event):
+        self._run_user_action()
         self.x = event.x
         self.y = event.y
 
@@ -103,3 +106,7 @@ class MobileLabel(tk.Label):
     def centre_position(self):
         return (self.winfo_rootx() + self.size_x / 2,
                 self.winfo_rooty() + self.size_y / 2)
+
+    def _run_user_action(self):
+        if self.user_callback is not None:
+            self.user_callback

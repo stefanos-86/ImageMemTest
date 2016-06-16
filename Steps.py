@@ -167,18 +167,36 @@ class ShowAllMarkers(DelayedExperimentStep):
 
 
 class PrepareMarkers(DelayedExperimentStep):
-    def __init__(self, marker_image):
+    def __init__(self, marker_image, timing_option):
         super(PrepareMarkers, self).__init__(0)  # Immediate event.
         self.marker_image = marker_image
+        self.start_timer_immediately = None  # To be set by the below call.
+        self.decode_timing_option(timing_option)
 
     def happen(self):
         marker_handles = self.images.create_markers(self.marker_image)
         for handle in marker_handles:
-            gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image)
+            gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image) # TODO: pass the timer callback.
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
 
-        # The markers are ready: start counting how much time it takes to have them repositioned.
+        # The markers are ready: if the user wants to count from this moment, start the clock.
+        # The callback on the images may try to start it again, but the timer will only react on the 1st call.
+        if self.start_timer_immediately:
+            self._start_timer()
+
+    def _start_timer(self):
         self.recall_timer.start_once()
+
+    def decode_timing_option(self, timing_option):
+        immediate = "immediate timing"
+        on_drag = "timing from drag"
+
+        if timing_option != immediate and timing_option != on_drag:
+            raise Exception("Bad timing option " + timing_option +
+                            " (should be \"" + immediate + "\" or \"" + on_drag + "\").")
+
+        self.start_timer_immediately = timing_option == immediate
+
 
 
 class ComputeResult(DelayedExperimentStep):

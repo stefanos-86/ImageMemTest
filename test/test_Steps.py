@@ -301,12 +301,15 @@ class ShowAllMarkersTest(unittest.TestCase):
 
 
 class PrepareMarkersTest(unittest.TestCase):
+    def test_construction__bad_timing_option(self):
+        self.assertRaises(Exception, PrepareMarkers, "TestMarker.jpg", "rubbish")
+
     def test_happen(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
         collection.add_image("TestImage.jpg", 100, 100)
-        event = PrepareMarkers("TestMarker.jpg")
+        event = PrepareMarkers("TestMarker.jpg", "immediate timing")
         event.attach_images(collection)
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
@@ -320,7 +323,7 @@ class PrepareMarkersTest(unittest.TestCase):
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
         collection.add_image("TestImage.jpg", 100, 100)
-        event = PrepareMarkers("TestMarker.jpg")
+        event = PrepareMarkers("TestMarker.jpg", "immediate timing")
         event.attach_images(collection)
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
@@ -328,6 +331,20 @@ class PrepareMarkersTest(unittest.TestCase):
         event.happen()
 
         self.assertTrue(clock.started)
+
+    def test_happen__delayed_cronometer(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("TestMarker.jpg", "timing from drag")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.happen()
+
+        self.assertFalse(clock.started)
 
 
 class ComputeResultTest(unittest.TestCase):

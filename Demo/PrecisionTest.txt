@@ -5,7 +5,7 @@ ChangeBackgroundColor(255, 0, 0)  # Traffic light style signal to tell the user 
 
 ShowImage(0, 683, 736, "Marker.jpg")
 
-PrepareMarkers("Marker.jpg")
+PrepareMarkers("Marker.jpg", "immediate timing")
 Wait(1)  # Anything faster and the widget will be queried before it is displayed, giving a poision of (0, 0). TODO: synch properly!
 ComputeResult("RESULTS.txt")
 
