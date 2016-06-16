@@ -259,3 +259,17 @@ class TestRecallTimer(unittest.TestCase):
         match = re.match(expected, output_file.text)
 
         self.assertTrue(match)
+
+    def test_start_once__start_first_time(self):
+        rt = RecallTimer()
+        rt.start_once()
+        self.assertIsNotNone(rt.start_time)
+
+    def test_start_once__repeat(self):
+        rt = RecallTimer()
+        rt.start_once()
+        start_time = rt.start_time
+
+        rt.start_once()
+
+        self.assertEqual(start_time, rt.start_time)  # Unmodified.

@@ -143,7 +143,7 @@ class ImageCollection:
 
 
 class DecoratedDistance:
-    """ Simple data object to keep togheter the data of the results of interest. """
+    """ Simple data object to keep together the data of the results of interest. """
     def __init__(self, distance, image_centre, marker_centre, image_id):
         self.distance = distance
         self.image_centre = image_centre
@@ -189,6 +189,11 @@ class RecallTimer:
 
     def markers_placed(self):
         self.start_time = time.time()
+
+    def start_once(self):
+        """ Starts the timer only if not already started. """
+        if self.start_time is None:
+            self.start_time = time.time()
 
     def experiment_complete(self):
         self.end_time = time.time()
