@@ -60,7 +60,7 @@ class MockRecallTimer:
         self.started = False
         self.stopped = False
 
-    def markers_placed(self):
+    def start_once(self):
         self.started = True
 
     def experiment_complete(self):

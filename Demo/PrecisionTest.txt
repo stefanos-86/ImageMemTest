@@ -1,8 +1,12 @@
 # The image in this test is placed exactly where the marker would go in a screen of 1366 x 768 pixels (...the
 # size I have at hand to test). The result file must read a 0 distance.
 
+ChangeBackgroundColor(255, 0, 0)  # Traffic light style signal to tell the user he can close the program.
+
 ShowImage(0, 683, 736, "Marker.jpg")
 
 PrepareMarkers("Marker.jpg")
 Wait(1)  # Anything faster and the widget will be queried before it is displayed, giving a poision of (0, 0). TODO: synch properly!
 ComputeResult("RESULTS.txt")
+
+ChangeBackgroundColor(0, 255, 0)

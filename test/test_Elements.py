@@ -239,7 +239,7 @@ class TestDecoratedDistance(unittest.TestCase):
 class TestRecallTimer(unittest.TestCase):
     def test_duration_measure(self):
         rt = RecallTimer()
-        rt.markers_placed()
+        rt.start_once()
         time.sleep(1)
         rt.experiment_complete()
 
@@ -250,7 +250,7 @@ class TestRecallTimer(unittest.TestCase):
     def test_dump(self):
         output_file = MockFile()
         rt = RecallTimer()
-        rt.markers_placed()
+        rt.start_once()
         rt.experiment_complete()
 
         rt.dump(output_file)

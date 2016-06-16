@@ -187,9 +187,6 @@ class RecallTimer:
         self.start_time = None
         self.end_time = None
 
-    def markers_placed(self):
-        self.start_time = time.time()
-
     def start_once(self):
         """ Starts the timer only if not already started. """
         if self.start_time is None:

@@ -178,7 +178,7 @@ class PrepareMarkers(DelayedExperimentStep):
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
 
         # The markers are ready: start counting how much time it takes to have them repositioned.
-        self.recall_timer.markers_placed()
+        self.recall_timer.start_once()
 
 
 class ComputeResult(DelayedExperimentStep):
