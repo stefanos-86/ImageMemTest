@@ -21,6 +21,7 @@ class MockGui():
         self.added_image = None
         self.removed_image = None
         self.draggable_image = None
+        self.drag_callback = None
 
     def register_event(self, delay, callback):
         self.delay = delay
@@ -46,8 +47,9 @@ class MockGui():
     def remove_image(self, image_handle):
         self.removed_image = image_handle
 
-    def show_draggable_image(self, top, left, tk_image):
+    def show_draggable_image(self, top, left, tk_image, callback=None):
         self.draggable_image = tk_image
+        self.drag_callback = callback
         return tk_image
 
 
@@ -337,7 +339,7 @@ class PrepareMarkersTest(unittest.TestCase):
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
         collection.add_image("TestImage.jpg", 100, 100)
-        event = PrepareMarkers("TestMarker.jpg", "timing from drag")
+        event = PrepareMarkers("TestMarker.jpg", "time on marker movement")
         event.attach_images(collection)
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
@@ -345,6 +347,7 @@ class PrepareMarkersTest(unittest.TestCase):
         event.happen()
 
         self.assertFalse(clock.started)
+        self.assertEquals(clock.start_once, gui.drag_callback)
 
 
 class ComputeResultTest(unittest.TestCase):

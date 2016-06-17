@@ -176,7 +176,8 @@ class PrepareMarkers(DelayedExperimentStep):
     def happen(self):
         marker_handles = self.images.create_markers(self.marker_image)
         for handle in marker_handles:
-            gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image) # TODO: pass the timer callback.
+            gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image,
+                                                       self.recall_timer.start_once)
             self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
 
         # The markers are ready: if the user wants to count from this moment, start the clock.
@@ -189,7 +190,7 @@ class PrepareMarkers(DelayedExperimentStep):
 
     def decode_timing_option(self, timing_option):
         immediate = "immediate timing"
-        on_drag = "timing from drag"
+        on_drag = "time on marker movement"
 
         if timing_option != immediate and timing_option != on_drag:
             raise Exception("Bad timing option " + timing_option +

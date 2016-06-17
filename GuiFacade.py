@@ -69,8 +69,8 @@ class GuiFacade:
     def remove_image(self, image_handle):  # image_handle is the panel returned by show_image()
         image_handle.place_forget()
 
-    def show_draggable_image(self, top, left, tk_image):
-        panel = MobileLabel(self.window, tk_image)
+    def show_draggable_image(self, top, left, tk_image, user_start_callback=None):
+        panel = MobileLabel(self.window, tk_image, user_start_callback)
         panel.place(x=left, y=top)
         return panel
 
@@ -109,4 +109,4 @@ class MobileLabel(tk.Label):
 
     def _run_user_action(self):
         if self.user_callback is not None:
-            self.user_callback
+            self.user_callback()

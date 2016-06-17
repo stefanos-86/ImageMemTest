@@ -1,6 +1,6 @@
 ShowImage(0, 256, 320, "B.jpg")  # Setup - not really relevant for the demo.
 
-PrepareMarkers("Marker.jpg", "immediate timing") # Starts the cronometer.
+PrepareMarkers("Marker.jpg", "immediate timing") # Starts the chronometer.
 Wait(1 * 60 * 1000)                              # Waits 1 minute (1 min * 60 seconds * 1000 milliseconds)
                                                  # to pretend that the user is placing the marker.
 ComputeResult("RESULTS.txt")                     # Check that the duration in the file reads "60 seconds".

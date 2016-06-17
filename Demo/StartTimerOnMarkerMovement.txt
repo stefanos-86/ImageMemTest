@@ -1,0 +1,12 @@
+# This demo requires strong cooperation of the user.
+#
+# The user must check (with an external clock) how much time passes from the 1st instant he moves the marker to
+# the moment he presses a key to terminate the experiment.
+# Then he must compare it with the time recorded in the results file.
+#
+# Another test is to press a key (except Escape) without moving the marker: there should be an exception.
+
+ShowImage(0, 256, 320, "B.jpg")  # Setup - not really relevant for the demo.
+PrepareMarkers("Marker.jpg", "time on marker movement") # Starts the chronometer only when the user moves the markers.
+PressKeyToContinue("<Key>")
+ComputeResult("RESULTS.txt")
