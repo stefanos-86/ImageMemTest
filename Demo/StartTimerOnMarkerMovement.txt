@@ -10,3 +10,4 @@ ShowImage(0, 256, 320, "B.jpg")  # Setup - not really relevant for the demo.
 PrepareMarkers("Marker.jpg", "time on marker movement") # Starts the chronometer only when the user moves the markers.
 PressKeyToContinue("<Key>")
 ComputeResult("RESULTS.txt")
+ChangeBackgroundColor(0, 255, 0) # Green signal that you can close the program.
