@@ -31,10 +31,10 @@ X - Portabile su Android? Su iPad? http://qpython.com/#product ?
 * - calcolo del tempo di posizionamento dei cerchietti (diciamo: a decorrere dalla comparsa dei medesimi, fino al tasto invio) con precisione al secondo
 * - Demo di lunga durata per testare il cronometro.
 - [Sospesa: sono disposti a farlo a mano] Scalamento delle immagini: impostare un fattore di scala nell'esperimento per ingrandire tutte le immagini in un colpo solo.
-- Riportare nel manuale  the user can't use # in strings in the file (that's the comment reserved char).
+* - Riportare nel manuale  the user can't use # in strings in the file (that's the comment reserved char).
     Do not forget that (0, 0) is the top left corner of the screen!
     I vari casi patologici delle immagini (una troppo vicina, equidistanze...). Segna da qualche parte (NON nel manuale) l'algoritmo ungherese.
-- Demo con esperimento completo.
+* - Demo con esperimento completo.
 * - All'inizio del passo 1 bisogna mostrare non tutte le immagini, ma dei marker nella posizione delle immagini.
 * - Contare la durata dell'esperimento dal primo spostamento del primo marker.
 
