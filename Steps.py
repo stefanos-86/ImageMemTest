@@ -166,6 +166,31 @@ class ShowAllMarkers(DelayedExperimentStep):
             self.gui.remove_image(handle)
 
 
+class ShowInstructions(OnKeyExperimentStep):
+    def __init__(self, key_to_continue, instruction_image_file):
+        super(ShowInstructions, self).__init__(key_to_continue)
+        self.instruction_image = None  # To keep the image in memory, or it won't be displayed.
+        self.instruction_image_gui_handle = None
+        self.instruction_image_file = instruction_image_file
+
+    def register(self, back_to_scheduler):
+        super(ShowInstructions, self).register(back_to_scheduler)  # To have the key binding.
+        centre_x, centre_y =self._screen_centre()
+        self.instruction_image = self.images.create_image(self.instruction_image_file, centre_x, centre_y)
+        self.instruction_image_gui_handle = self.gui.show_image(self.instruction_image.top, self.instruction_image.left,
+                                                                self.instruction_image.tk_image)
+
+    def happen(self):
+        self._remove_key_binding()
+        self.gui.remove_image(self.instruction_image_gui_handle)
+
+    def _screen_centre(self):
+        centre_x, centre_y = self.gui.screen_size()
+        centre_x /= 2
+        centre_y /= 2
+        return centre_x, centre_y
+
+
 class PrepareMarkers(DelayedExperimentStep):
     def __init__(self, marker_image, timing_option):
         super(PrepareMarkers, self).__init__(0)  # Immediate event.

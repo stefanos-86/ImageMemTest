@@ -205,7 +205,6 @@ class WaitTest(unittest.TestCase):
 
 
 class ShowImageTest(unittest.TestCase):
-
     def test_attach_gui__invalid_image(self):
         event = ShowImage(1, 2, 3, "TestImage.jpg")
         gui = MockGui()
@@ -300,6 +299,36 @@ class ShowAllMarkersTest(unittest.TestCase):
         self.assertEqual(gui.added_image, gui.removed_image)  # Has removed the same image...
         self.assertNotEqual(image, gui.added_image)  # ...without touching the collection image.
         self.assertIsNotNone(event.placeholder_images) # The marker image is kept in memory.
+
+
+class ShowInstructionsTest(unittest.TestCase):
+    def test_register(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        event = ShowInstructions("k", "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+
+        self.assertEquals("k", gui.key)
+        self.assertEquals(mock_callback, gui.callback)
+
+        self.assertEquals(0, len(collection.images))
+
+    def test_happen(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        event = ShowInstructions("k", "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.register(mock_callback)
+
+        event.happen()
+
+        self.assertEquals("k", gui.freed_key)
+        self.assertEqual(gui.added_image, gui.removed_image)
+
 
 
 class PrepareMarkersTest(unittest.TestCase):
