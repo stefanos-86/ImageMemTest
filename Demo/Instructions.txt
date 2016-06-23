@@ -1,0 +1,10 @@
+ShowInstructions("<Key>", "DemoInstructions.jpg")
+
+# Fake an experiment after the instructions
+ChangeBackgroundColor(0, 0, 255)                    # Blue just to show that the key has been taken into account.
+ShowImage(5000, 256, 320, "B.jpg")
+PrepareMarkers("Marker.jpg", "immediate timing")
+PressKeyToContinue("<Key>")
+ComputeResult("RESULTS.txt")
+
+ShowInstructions("<Key>", "EndOfExperiment.jpg")
