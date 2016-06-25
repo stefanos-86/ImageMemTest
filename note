@@ -37,7 +37,20 @@ X - Portabile su Android? Su iPad? http://qpython.com/#product ?
 * - Demo con esperimento completo.
 * - All'inizio del passo 1 bisogna mostrare non tutte le immagini, ma dei marker nella posizione delle immagini.
 * - Contare la durata dell'esperimento dal primo spostamento del primo marker.
-- immagini fuori esperimento (per mostrare le istruzioni al tizio).
+*- immagini fuori esperimento (per mostrare le istruzioni al tizio).
+- Distanze nel sistema internazionale (misure metriche, millimetri).
+- Supportare più esperimenti: l'utente mette in input il nome del soggetto (o altri dati) e tutti gli esperimenti sono inseriti nello stesso file, separati dal nome (o altri dati).
+  Alternativa economica: se il file esiste già, il programma numera. Results_01, Results_02...
+- CRITICO!!! 
+   I quadrati fissi: vedere la presentazione inviata.
+   All'inizio, tutte le immagini come marker.
+   Poi un'immagine compare, ma tutte le altre devono restare come marker.
+   Poi di nuovo tutti marker.
+   Poi la seconda immagine.
+- Vorrebbero dire al computer dove sono i quadrati, piuttosto che le immagini. Tutti in un colpo.
+  La >configurazione dei quadrati< è un punto chiave dell'esperimento. Si chiama proprio "configurazione"!
+  Volendo potrebbe pure andare ad associare le immagini in modo randomico (putchè non riusa lo stesso quadrato per 2 immagini), tanto per "quale immagine con 
+  quale quadrato" che per la durata dell'esperimento.
 
 Problemi SOTTO WINDOWS (Linux ha python 2.7.11+ Win?)
 * - Il file di output non compare A Dani è comparso.
