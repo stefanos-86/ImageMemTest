@@ -1,0 +1,10 @@
+ShowConfiguration(2000, "Marker.jpg")
+ShowImage(2000, 600, 300, "A.jpg")
+Wait(2000)
+ShowImage(2000, 800, 500, "B.jpg")
+Wait(2000)
+EraseConfiguration()
+
+PrepareMarkers("Marker.jpg", "immediate timing")
+PressKeyToContinue("<Key>")
+

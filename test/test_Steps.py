@@ -284,6 +284,24 @@ class ShowConfigurationTest(unittest.TestCase):
 
         self.assertNotEquals(image.tk_image, gui.added_image)  # Can't be more precise - how to compare tkimages?
         self.assertEquals(1, len(collection.images))  # The collection is not modified.
+        self.assertEquals(1, len(collection.configuration_images)) # The configuration is not lost.
+
+
+class EraseConfigurationTest(unittest.TestCase):
+    def test_happen(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        collection.configuration_images.append(image)  # Little abuse: should use the marker.
+
+        event = EraseConfiguration()
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.register(mock_callback)
+        event.happen()
+
+        self.assertEquals(0, len(collection.configuration_images))
 
 
 class ShowInstructionsTest(unittest.TestCase):

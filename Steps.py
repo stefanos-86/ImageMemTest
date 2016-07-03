@@ -163,6 +163,17 @@ class ShowConfiguration(DelayedExperimentStep):
         pass
 
 
+class EraseConfiguration(DelayedExperimentStep):
+    def __init__(self):
+        super(EraseConfiguration, self).__init__(0) # Immediate!
+
+    def happen(self):
+        for configuration_handle in self.images.configuration_handles:
+            self.gui.remove_image(configuration_handle)
+        self.images.configuration_images = []
+        self.images.configuration_handles = []
+
+
 class ShowInstructions(OnKeyExperimentStep):
     def __init__(self, key_to_continue, instruction_image_file):
         super(ShowInstructions, self).__init__(key_to_continue)
