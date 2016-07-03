@@ -41,7 +41,7 @@ X - Portabile su Android? Su iPad? http://qpython.com/#product ?
 - Distanze nel sistema internazionale (misure metriche, millimetri).
 - Supportare più esperimenti: l'utente mette in input il nome del soggetto (o altri dati) e tutti gli esperimenti sono inseriti nello stesso file, separati dal nome (o altri dati).
   Alternativa economica: se il file esiste già, il programma numera. Results_01, Results_02...
-- CRITICO!!! 
+*- CRITICO!!! 
    I quadrati fissi: vedere la presentazione inviata.
    All'inizio, tutte le immagini come marker.
    Poi un'immagine compare, ma tutte le altre devono restare come marker.
