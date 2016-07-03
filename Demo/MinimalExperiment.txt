@@ -1,7 +1,0 @@
-ShowConfiguration(2000, "Marker.jpg")
-
-ShowImage(1000, 556, 320, "A.jpg")
-
-PrepareMarkers("Marker.jpg", "time on marker movement")
-PressKeyToContinue("<Key>")
-ComputeResult("RESULTS.txt")
