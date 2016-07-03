@@ -271,7 +271,7 @@ class ShowAllImagesTest(unittest.TestCase):
         self.assertEquals(image.tk_image, gui.removed_image)
 
 
-class ShowAllMarkersTest(unittest.TestCase):
+class ShowConfigurationTest(unittest.TestCase):
     def test_register(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")

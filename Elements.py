@@ -58,7 +58,9 @@ class ImageCollection:
         self.max_x = max_x
         self.max_y = max_y
         self.base_path = base_path  # Here is where we can find the images.
+
         self.images = []  # The actual collection of images.
+
         self.gui_markers = [] # Opaque handles to the markers, to be provided by the GUI.
         self.marker_images = [] # Actual images - to be stored here to ensure they don't disappear.
 
