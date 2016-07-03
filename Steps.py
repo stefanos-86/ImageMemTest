@@ -161,9 +161,7 @@ class ShowAllMarkers(DelayedExperimentStep):
             self.placeholder_handles.append(placeholder_handle)
             self.placeholder_images.append(placeholder)
 
-    def happen(self):
-        for handle in self.placeholder_handles:
-            self.gui.remove_image(handle)
+    # Nothing in happen(): the coniguration must stay on for the duration of the experiment.
 
 
 class ShowInstructions(OnKeyExperimentStep):
