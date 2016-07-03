@@ -8,7 +8,7 @@ ShowImage(0, 740, 400, "Marker.jpg")  # This is the same image as the marker.
 ShowAllImages(2000)
 
 # Replace them with markers.
-ShowAllMarkers(2000, "Marker.jpg")
+ShowConfiguration(2000, "Marker.jpg")
 
 #ESC to exit at the end.
 

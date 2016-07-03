@@ -1,4 +1,4 @@
-ShowAllMarkers(2000, "Marker.jpg")
+ShowConfiguration(2000, "Marker.jpg")
 
 ShowImage(1000, 556, 320, "A.jpg")
 

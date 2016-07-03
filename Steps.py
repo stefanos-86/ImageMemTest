@@ -144,16 +144,16 @@ class ShowAllImages(DelayedExperimentStep):
             self.gui.remove_image(image)
 
 
-class ShowAllMarkers(DelayedExperimentStep):
+class ShowConfiguration(DelayedExperimentStep):
     def __init__(self, for_how_long, marker_image):
-        super(ShowAllMarkers, self).__init__(for_how_long)
+        super(ShowConfiguration, self).__init__(for_how_long)
         self.placeholder_handles = []
         self.placeholder_image_name = marker_image
         self.placeholder_images = []  # Must keep a reference to the images somewhere.
                                       # Tk does not keep it, and the images disappear otherwise.
 
     def register(self, back_to_scheduler):
-        super(ShowAllMarkers, self).register(back_to_scheduler)
+        super(ShowConfiguration, self).register(back_to_scheduler)
         for image in self.images.images:
             same_centre_x, same_centre_y = image.centre_position()
             placeholder = self.images.create_image(self.placeholder_image_name, same_centre_x, same_centre_y)

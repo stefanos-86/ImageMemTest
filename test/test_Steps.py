@@ -276,7 +276,7 @@ class ShowAllMarkersTest(unittest.TestCase):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         image = collection.add_image("TestImage.jpg", 100, 100)
-        event = ShowAllMarkers(52, "TestMarker.jpg")
+        event = ShowConfiguration(52, "TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
 
