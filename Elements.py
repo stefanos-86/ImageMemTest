@@ -64,6 +64,9 @@ class ImageCollection:
         self.gui_markers = [] # Opaque handles to the markers, to be provided by the GUI.
         self.marker_images = [] # Actual images - to be stored here to ensure they don't disappear.
 
+        self.configuration_images = []
+        self.configuration_handles = []
+
     def add_image(self, name, centre_x, centre_y):
         new_image = self.create_image(name, centre_x, centre_y)
         self.images.append(new_image)

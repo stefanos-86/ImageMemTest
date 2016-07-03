@@ -147,10 +147,7 @@ class ShowAllImages(DelayedExperimentStep):
 class ShowConfiguration(DelayedExperimentStep):
     def __init__(self, for_how_long, marker_image):
         super(ShowConfiguration, self).__init__(for_how_long)
-        self.placeholder_handles = []
         self.placeholder_image_name = marker_image
-        self.placeholder_images = []  # Must keep a reference to the images somewhere.
-                                      # Tk does not keep it, and the images disappear otherwise.
 
     def register(self, back_to_scheduler):
         super(ShowConfiguration, self).register(back_to_scheduler)
@@ -158,10 +155,12 @@ class ShowConfiguration(DelayedExperimentStep):
             same_centre_x, same_centre_y = image.centre_position()
             placeholder = self.images.create_image(self.placeholder_image_name, same_centre_x, same_centre_y)
             placeholder_handle = self.gui.show_image(placeholder.top, placeholder.left, placeholder.tk_image)
-            self.placeholder_handles.append(placeholder_handle)
-            self.placeholder_images.append(placeholder)
+            self.images.configuration_handles.append(placeholder_handle)
+            self.images.configuration_images.append(placeholder)
 
     # Nothing in happen(): the coniguration must stay on for the duration of the experiment.
+    def happen(self):
+        pass
 
 
 class ShowInstructions(OnKeyExperimentStep):
