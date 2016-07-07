@@ -4,6 +4,7 @@ Wait(2000)
 ShowImage(2000, 800, 500, "B.jpg")
 Wait(2000)
 EraseConfiguration()
+PressKeyToContinue("<Key>")
 
 PrepareMarkers("Marker.jpg", "immediate timing")
 PressKeyToContinue("<Key>")

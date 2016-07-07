@@ -39,6 +39,7 @@ X - Portabile su Android? Su iPad? http://qpython.com/#product ?
 * - Contare la durata dell'esperimento dal primo spostamento del primo marker.
 *- immagini fuori esperimento (per mostrare le istruzioni al tizio).
 - Distanze nel sistema internazionale (misure metriche, millimetri).
+    http://code.activestate.com/recipes/552745-tkmath-convert-between-pixels-inches-cm-and-mm/
 - Supportare più esperimenti: l'utente mette in input il nome del soggetto (o altri dati) e tutti gli esperimenti sono inseriti nello stesso file, separati dal nome (o altri dati).
   Alternativa economica: se il file esiste già, il programma numera. Results_01, Results_02...
 *- CRITICO!!! 
