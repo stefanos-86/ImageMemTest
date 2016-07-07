@@ -26,6 +26,11 @@ class ExperimentStep(object):
     def attach_recall_timer(self, recall_timer):
         self.recall_timer = recall_timer
 
+    # Temporary pending the refactoring of all the steps.
+    def wait_method(self, back_to_scheduler):
+        pass
+
+
 
 class DelayedExperimentStep(ExperimentStep):
     """ This event has to be scheduled after a certain time. """
@@ -259,21 +264,25 @@ class Scheduler:
         self.event_end = len(events)
 
         self.gui = gui
-        self.gui.register_event(0, self.schedule_event)  # Schedule immediately the 1st event of the list.
+        self.gui.register_event(0, self.start_step)  # Schedule immediately the 1st event of the list.
 
-    def schedule_event(self):
+    def start_step(self):
+        """Start the current step and register the pause."""
         if self.event_iterator >= self.event_end:
             return  # Do nothing, we are at the end of the script.
 
-        self._current_event().register(self.do_event)  # The event should not be called directly.
-                                                       # Its trigger must re-call the scheduler.
+        self._current_event().register(self.complete_step)  # TODO: break in "start" and "wait_method" after steps are refactored
 
-    def do_event(self, event_from_gui=None):  # Event_from_gui is received in case of key presses.
+        self._current_event().wait_method(self.complete_step) # The event should not be called directly.
+                                                         # Its trigger must re-call the scheduler.
+
+    def complete_step(self, event_from_gui=None):  # Event_from_gui is received in case of key presses.
+        """ Calls the step "finalization" and start the next event. """
         self._current_event().happen()  # Perform the scheduled action.
 
         self.event_iterator += 1        # Advance to the next.
 
-        self.schedule_event()           # Put another one in the pipe.
+        self.start_step()           # Put another one in the pipe.
 
 
     def _current_event(self):

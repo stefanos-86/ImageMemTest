@@ -428,9 +428,9 @@ class SchedulerTest(unittest.TestCase):
         scheduler = Scheduler(events, gui)
 
         self.assertEquals(0, gui.delay)
-        self.assertEquals(scheduler.schedule_event, gui.callback)
+        self.assertEquals(scheduler.start_step, gui.callback)
 
-    def test_schedule_event(self):
+    def test_start_step(self):
         gui = MockGui()
         key = "r"
         event = PressKeyToContinue(key)
@@ -438,29 +438,29 @@ class SchedulerTest(unittest.TestCase):
         events = [event]
         scheduler = Scheduler(events, gui)
 
-        scheduler.schedule_event()
+        scheduler.start_step()
 
-        self.assertEqual(gui.callback, scheduler.do_event)  # When the event fires, the scheduler must be invoked to do
+        self.assertEqual(gui.callback, scheduler.complete_step)  # When the event fires, the scheduler must be invoked to do
                                                             # some bookkeeping.
         self.assertEqual(key, gui.key)  # The event did its registration.
 
-    def test_schedule_event__end_of_events(self):
+    def test_start_step__end_of_events(self):
         gui = MockGui()
         event = PressKeyToContinue("<Key>")
         event.attach_gui(gui)
         events = [event]
 
         scheduler = Scheduler(events, gui)
-        scheduler.schedule_event()  # Use the only available event.
+        scheduler.start_step()  # Use the only available event.
 
-        scheduler.do_event()
+        scheduler.complete_step()
 
         gui.callback = None  # Reset gui
-        scheduler.schedule_event()
+        scheduler.start_step()
 
         self.assertIsNone(gui.callback) # No changes from the previous scheduling.
 
-    def test_do_event(self):
+    def test_complete_step(self):
         gui = MockGui()
         event1 = PressKeyToContinue("a")
         event2 = PressKeyToContinue("b")
@@ -469,8 +469,8 @@ class SchedulerTest(unittest.TestCase):
         events = [event1, event2]
 
         scheduler = Scheduler(events, gui)
-        scheduler.schedule_event()
+        scheduler.start_step()
 
-        scheduler.do_event()
+        scheduler.complete_step()
         self.assertEquals("a", gui.freed_key)  # Side effect of the event 1: it did run.
         self.assertEquals("b", gui.key)  # The next event has been registered.

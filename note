@@ -1,16 +1,3 @@
-drag and drop
-http://stackoverflow.com/questions/6740855/board-drawing-code-to-move-an-oval/6789351#6789351
-
-
-Per fare una relase:
-- copia tutto su windows
-- disattiva avast e pipreqs /pathToProject (per rifare requirements.txt)
-- copia il necessario dentro uno zip (e.g. escludi gli unit test e i pyc).
-
-Per installare -> 
-installare python (occhio all'opzione per mettere python nel path)
-install.bat (che fa pip install, pip viene con l'installatore python di windows)
-
 
 REQUIREMENTS
 *- Scelta del colore di sfondo. Terna R, G, B; valori tra 0 e 255.
