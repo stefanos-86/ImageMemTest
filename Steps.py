@@ -36,7 +36,10 @@ class ExperimentStep(object):
         Wait some time, wait a key press... see the subclasses.
         Override to customize the step. By default, calls the scheduler again immediately.
         Do not touch back_to_scheduler - it is the callback do "yeld" to have end() called."""
-        back_to_scheduler()  # TODO: this will make a number with the stack... It shold probaly enqueue the call in the gui...
+        self.gui.register_event(0, back_to_scheduler)  # Tells the GUI main loop to move to the next step immediately.
+                                                       # A direct call (back_to_scheduler()) would not terminate the
+                                                       # method until something in the envent train yelds to the GUI.
+                                                       # The stack would grow until then...
 
     def end(self):
         """ Called after the wait method triggers.
