@@ -26,8 +26,21 @@ class ExperimentStep(object):
     def attach_recall_timer(self, recall_timer):
         self.recall_timer = recall_timer
 
-    # Temporary pending the refactoring of all the steps.
+    def start(self):
+        """ Called at the beginning of the step.
+        Override to customize the step."""
+        pass
+
     def wait_method(self, back_to_scheduler):
+        """ Tells the scheduler what to do in between start and end.
+        Wait some time, wait a key press... see the subclasses.
+        Override to customize the step. By default, calls the scheduler again immediately.
+        Do not touch back_to_scheduler - it is the callback do "yeld" to have end() called."""
+        back_to_scheduler()  # TODO: this will make a number with the stack... It shold probaly enqueue the call in the gui...
+
+    def end(self):
+        """ Called after the wait method triggers.
+        Override to customize the step."""
         pass
 
 
@@ -42,7 +55,7 @@ class DelayedExperimentStep(ExperimentStep):
 
         self.delay = delay_milliseconds
 
-    def register(self, back_to_scheduler):
+    def wait_method(self, back_to_scheduler):
         self.gui.register_event(self.delay, back_to_scheduler)
 
 
@@ -66,18 +79,19 @@ class OnKeyExperimentStep(ExperimentStep):
             assert len(key) == 1, "Normal key must be one symbol (like \"a\") -> [" + key + "]"
         assert key != " ", "Use \"<space>\", not a literal blank char."
 
-    def register(self, back_to_scheduler):
+    def wait_method(self, back_to_scheduler):
         self.gui.bind_key(self.key, back_to_scheduler)
 
     def _remove_key_binding(self):
-        """ Some events may need to remove the key binding at the end of happen(). """
+        """ Some steps may need to remove the key binding at the end. """
         self.gui.free_key(self.key)
 
 
-class ChangeBackgroundColor(DelayedExperimentStep):
+
+class ChangeBackgroundColor(ExperimentStep):
     """ Orders the gui to change the background color. """
     def __init__(self,r, g, b):
-        super(ChangeBackgroundColor, self).__init__(0)  # 0 delay: this is immediate.
+        super(ChangeBackgroundColor, self).__init__()
 
         assert isinstance(r, (int, long))and isinstance(g, (int, long)) and isinstance(b, (int, long)), \
                                                                        "R, g or b must be integers."
@@ -86,7 +100,7 @@ class ChangeBackgroundColor(DelayedExperimentStep):
 
         self.rgb_triplet = (r, g, b)
 
-    def happen(self):
+    def start(self):
         r, g, b = self.rgb_triplet
         self.gui.background_color(r, g, b)
 
@@ -97,7 +111,7 @@ class PressKeyToContinue(OnKeyExperimentStep):
         super(PressKeyToContinue, self).__init__(key_to_wait)
         # Key validated by the superclass.
 
-    def happen(self):
+    def end(self):
         self._remove_key_binding()
 
 
@@ -106,8 +120,7 @@ class Wait(DelayedExperimentStep):
     def __init__(self, wait_milliseconds):
         super(Wait, self).__init__(wait_milliseconds)
 
-    def happen(self):
-        pass  # Do nothing. We just had to wait.
+    # Do nothing: let the superclass do the work.
 
 
 class ShowImage(DelayedExperimentStep):
@@ -123,12 +136,10 @@ class ShowImage(DelayedExperimentStep):
         super(ShowImage, self).attach_images(image_collection)
         self.image = image_collection.add_image(self.image_name, self.centre_x, self.centre_y)
 
-    def register(self, back_to_scheduler):
-        super(ShowImage, self).register(back_to_scheduler)  # Normal registration to call happen() at the right time.
-        # The event starts now: show the image immediately.
+    def start(self):
         self.image_gui_handle = self.gui.show_image(self.image.top, self.image.left, self.image.tk_image)
 
-    def happen(self):
+    def end(self):
         self.gui.remove_image(self.image_gui_handle)
 
 
@@ -137,14 +148,12 @@ class ShowAllImages(DelayedExperimentStep):
         super(ShowAllImages, self).__init__(for_how_long)
         self.handles = []
 
-    def register(self, back_to_scheduler):
-        super(ShowAllImages, self).register(back_to_scheduler)
-        # The event starts now: loop to show all images.
+    def start(self):
         for image in self.images.images:
             new_handle = self.gui.show_image(image.top, image.left, image.tk_image)
             self.handles.append(new_handle)
 
-    def happen(self):
+    def end(self):
         for image in self.handles:
             self.gui.remove_image(image)
 
@@ -154,8 +163,7 @@ class ShowConfiguration(DelayedExperimentStep):
         super(ShowConfiguration, self).__init__(for_how_long)
         self.placeholder_image_name = marker_image
 
-    def register(self, back_to_scheduler):
-        super(ShowConfiguration, self).register(back_to_scheduler)
+    def start(self):
         for image in self.images.images:
             same_centre_x, same_centre_y = image.centre_position()
             placeholder = self.images.create_image(self.placeholder_image_name, same_centre_x, same_centre_y)
@@ -163,16 +171,14 @@ class ShowConfiguration(DelayedExperimentStep):
             self.images.configuration_handles.append(placeholder_handle)
             self.images.configuration_images.append(placeholder)
 
-    # Nothing in happen(): the coniguration must stay on for the duration of the experiment.
-    def happen(self):
-        pass
+    # Nothing in end(): the configuration must stay on for the duration of the experiment.
 
 
-class EraseConfiguration(DelayedExperimentStep):
+class EraseConfiguration(ExperimentStep):
     def __init__(self):
-        super(EraseConfiguration, self).__init__(0) # Immediate!
+        super(EraseConfiguration, self).__init__()
 
-    def happen(self):
+    def start(self):
         for configuration_handle in self.images.configuration_handles:
             self.gui.remove_image(configuration_handle)
         self.images.configuration_images = []
@@ -186,14 +192,13 @@ class ShowInstructions(OnKeyExperimentStep):
         self.instruction_image_gui_handle = None
         self.instruction_image_file = instruction_image_file
 
-    def register(self, back_to_scheduler):
-        super(ShowInstructions, self).register(back_to_scheduler)  # To have the key binding.
-        centre_x, centre_y =self._screen_centre()
+    def start(self):
+        centre_x, centre_y = self._screen_centre()
         self.instruction_image = self.images.create_image(self.instruction_image_file, centre_x, centre_y)
         self.instruction_image_gui_handle = self.gui.show_image(self.instruction_image.top, self.instruction_image.left,
                                                                 self.instruction_image.tk_image)
 
-    def happen(self):
+    def end(self):
         self._remove_key_binding()
         self.gui.remove_image(self.instruction_image_gui_handle)
 
@@ -204,14 +209,14 @@ class ShowInstructions(OnKeyExperimentStep):
         return centre_x, centre_y
 
 
-class PrepareMarkers(DelayedExperimentStep):
+class PrepareMarkers(ExperimentStep):
     def __init__(self, marker_image, timing_option):
-        super(PrepareMarkers, self).__init__(0)  # Immediate event.
+        super(PrepareMarkers, self).__init__()
         self.marker_image = marker_image
         self.start_timer_immediately = None  # To be set by the below call.
         self.decode_timing_option(timing_option)
 
-    def happen(self):
+    def start(self):
         marker_handles = self.images.create_markers(self.marker_image)
         for handle in marker_handles:
             gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image,
@@ -237,13 +242,12 @@ class PrepareMarkers(DelayedExperimentStep):
         self.start_timer_immediately = timing_option == immediate
 
 
-
-class ComputeResult(DelayedExperimentStep):
+class ComputeResult(ExperimentStep):
     def __init__(self, result_file):
-        super(ComputeResult, self).__init__(0)  # Immediate.
+        super(ComputeResult, self).__init__()
         self.output_file = result_file
 
-    def happen(self):
+    def start(self):
         self.recall_timer.experiment_complete()
 
         distances = self.images.find_distances()
@@ -271,14 +275,13 @@ class Scheduler:
         if self.event_iterator >= self.event_end:
             return  # Do nothing, we are at the end of the script.
 
-        self._current_event().register(self.complete_step)  # TODO: break in "start" and "wait_method" after steps are refactored
-
+        self._current_event().start()
         self._current_event().wait_method(self.complete_step) # The event should not be called directly.
                                                          # Its trigger must re-call the scheduler.
 
     def complete_step(self, event_from_gui=None):  # Event_from_gui is received in case of key presses.
         """ Calls the step "finalization" and start the next event. """
-        self._current_event().happen()  # Perform the scheduled action.
+        self._current_event().end()  # Completes the scheduled action.
 
         self.event_iterator += 1        # Advance to the next.
 

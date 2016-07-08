@@ -102,14 +102,14 @@ class DelayedEventTest(unittest.TestCase):
     def test_construction__float_delay(self):
         self.assertRaises(Exception, DelayedExperimentStep, 1.5)
 
-    def test_register(self):
+    def test_wait_method(self):
         delay = 123
         gui = MockGui()
 
         event = DelayedExperimentStep(delay)
         event.attach_gui(gui)
 
-        event.register(mock_callback)
+        event.wait_method(mock_callback)
 
         self.assertEquals(delay, gui.delay)
         self.assertEquals(mock_callback, gui.callback)
@@ -142,13 +142,13 @@ class OnKeyEventTest(unittest.TestCase):
         key = "<rubbish>"
         self.assertRaises(Exception, OnKeyExperimentStep, key)
 
-    def test_register(self):
+    def test_wait_method(self):
         key = "4"
         gui = MockGui()
         event = OnKeyExperimentStep(key)
         event.attach_gui(gui)
 
-        event.register(mock_callback)
+        event.wait_method(mock_callback)
 
         self.assertEquals(key, gui.key)
         self.assertEquals(mock_callback, gui.callback)
@@ -164,24 +164,24 @@ class ChangeBackgroundColorTest(unittest.TestCase):
         self.assertRaises(Exception, ChangeBackgroundColor, 256, 2, 3)
         self.assertRaises(Exception, ChangeBackgroundColor, "NaN", 2, 3)
 
-    def test_happen(self):
+    def test_start(self):
         gui = MockGui()
         event = ChangeBackgroundColor(1,2,3)
         event.attach_gui(gui)
 
-        event.happen()
+        event.start()
 
         self.assertEqual((1, 2, 3), gui.bg_color)
 
 
 class PressKeyToContinueTest(unittest.TestCase):
-    def test_happen(self):
+    def test_end(self):
         key = "r"
         event = PressKeyToContinue(key)
         gui = MockGui()
         event.attach_gui(gui)
 
-        event.happen()
+        event.end()
 
         self.assertEquals(key, gui.freed_key)
 
@@ -194,15 +194,6 @@ class WaitTest(unittest.TestCase):
 
         self.assertEqual(wait_duration, event.delay)
 
-    def test_happen(self):
-        wait_duration = 123
-        event = Wait(wait_duration)
-        gui = MockGui()
-        event.attach_gui(gui)
-
-        event.happen()
-        # No assertion possible. happen() is a no-op.
-
 
 class ShowImageTest(unittest.TestCase):
     def test_attach_gui__invalid_image(self):
@@ -212,40 +203,30 @@ class ShowImageTest(unittest.TestCase):
 
     # No other validation cases: it is delegated to the image.
 
-    def test_register__shows_the_image(self):
+    def test_start__shows_the_image(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
         gui = MockGui()
         event.attach_images(ImageCollection(gui, "."))
         event.attach_gui(gui)
 
-        event.register(mock_callback)
+        event.start()
 
         self.assertEqual(event.image.tk_image, gui.added_image)
 
-    def test_register__normal_delay(self):
+    def test_end(self):
         event = ShowImage(1, 200, 300, "TestImage.jpg")
         gui = MockGui()
         event.attach_images(ImageCollection(gui, "."))
         event.attach_gui(gui)
+        event.start()  # Emplace the gui handle to the image.
 
-        event.register(mock_callback)
-
-        self.assertEqual(1, gui.delay)
-
-    def test_happen(self):
-        event = ShowImage(1, 200, 300, "TestImage.jpg")
-        gui = MockGui()
-        event.attach_images(ImageCollection(gui, "."))
-        event.attach_gui(gui)
-        event.register(mock_callback)  # Emplace the gui handle to the image.
-
-        event.happen()
+        event.end()
 
         self.assertEqual(event.image.tk_image, gui.removed_image)
 
 
 class ShowAllImagesTest(unittest.TestCase):
-    def test_register(self):
+    def test_start(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         image = collection.add_image("TestImage.jpg", 100, 100)
@@ -253,26 +234,26 @@ class ShowAllImagesTest(unittest.TestCase):
         event.attach_images(collection)
         event.attach_gui(gui)
 
-        event.register(mock_callback)
+        event.start()
 
         self.assertEquals(image.tk_image, gui.added_image)
 
-    def test_happen(self):
+    def test_end(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         image = collection.add_image("TestImage.jpg", 100, 100)
         event = ShowAllImages(152)
         event.attach_images(collection)
         event.attach_gui(gui)
-        event.register(mock_callback)
+        event.start()
 
-        event.happen()
+        event.end()
 
         self.assertEquals(image.tk_image, gui.removed_image)
 
 
 class ShowConfigurationTest(unittest.TestCase):
-    def test_register(self):
+    def test_start(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         image = collection.add_image("TestImage.jpg", 100, 100)
@@ -280,7 +261,7 @@ class ShowConfigurationTest(unittest.TestCase):
         event.attach_images(collection)
         event.attach_gui(gui)
 
-        event.register(mock_callback)
+        event.start()
 
         self.assertNotEquals(image.tk_image, gui.added_image)  # Can't be more precise - how to compare tkimages?
         self.assertEquals(1, len(collection.images))  # The collection is not modified.
@@ -288,7 +269,7 @@ class ShowConfigurationTest(unittest.TestCase):
 
 
 class EraseConfigurationTest(unittest.TestCase):
-    def test_happen(self):
+    def test_start(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         image = collection.add_image("TestImage.jpg", 100, 100)
@@ -298,47 +279,42 @@ class EraseConfigurationTest(unittest.TestCase):
         event.attach_images(collection)
         event.attach_gui(gui)
 
-        event.register(mock_callback)
-        event.happen()
+        event.start()
 
         self.assertEquals(0, len(collection.configuration_images))
 
 
 class ShowInstructionsTest(unittest.TestCase):
-    def test_register(self):
+    def test_start(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         event = ShowInstructions("k", "TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
 
-        event.register(mock_callback)
-
-        self.assertEquals("k", gui.key)
-        self.assertEquals(mock_callback, gui.callback)
+        event.start()
 
         self.assertEquals(0, len(collection.images))
 
-    def test_happen(self):
+    def test_end(self):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         event = ShowInstructions("k", "TestMarker.jpg")
         event.attach_images(collection)
         event.attach_gui(gui)
-        event.register(mock_callback)
+        event.start()
 
-        event.happen()
+        event.end()
 
         self.assertEquals("k", gui.freed_key)
         self.assertEqual(gui.added_image, gui.removed_image)
-
 
 
 class PrepareMarkersTest(unittest.TestCase):
     def test_construction__bad_timing_option(self):
         self.assertRaises(Exception, PrepareMarkers, "TestMarker.jpg", "rubbish")
 
-    def test_happen(self):
+    def test_start(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -348,11 +324,11 @@ class PrepareMarkersTest(unittest.TestCase):
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
 
-        event.happen()
+        event.start()
 
         self.assertIsNotNone(gui.draggable_image)
 
-    def test_happen__starts_cronometer(self):
+    def test_start__starts_cronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -362,11 +338,11 @@ class PrepareMarkersTest(unittest.TestCase):
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
 
-        event.happen()
+        event.start()
 
         self.assertTrue(clock.started)
 
-    def test_happen__delayed_cronometer(self):
+    def test_start__delayed_cronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -376,14 +352,14 @@ class PrepareMarkersTest(unittest.TestCase):
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
 
-        event.happen()
+        event.start()
 
         self.assertFalse(clock.started)
         self.assertEquals(clock.start_once, gui.drag_callback)
 
 
 class ComputeResultTest(unittest.TestCase):
-    def test_happen(self):
+    def test_start(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -397,12 +373,12 @@ class ComputeResultTest(unittest.TestCase):
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
 
-        event.happen()
+        event.start()
 
         self.assertIsNotNone(open(expected_file, "r"))  # This event writes on a file, but is not master of the file format.
                                              # Assuring that the file exists is good enough.
 
-    def test_happen__stop_recall_cronometer(self):
+    def test_start__stop_recall_cronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -415,7 +391,7 @@ class ComputeResultTest(unittest.TestCase):
         event.attach_images(collection)
         event.attach_gui(gui)
         event.attach_recall_timer(clock)
-        event.happen()
+        event.start()
 
         self.assertTrue(clock.stopped)
 
