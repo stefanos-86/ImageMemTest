@@ -332,7 +332,7 @@ class PrepareMarkersTest(unittest.TestCase):
 
         self.assertIsNotNone(gui.draggable_image)
 
-    def test_start__starts_cronometer(self):
+    def test_start__starts_chronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -346,7 +346,7 @@ class PrepareMarkersTest(unittest.TestCase):
 
         self.assertTrue(clock.started)
 
-    def test_start__delayed_cronometer(self):
+    def test_start__delayed_chronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
@@ -383,7 +383,7 @@ class ComputeResultTest(unittest.TestCase):
                                                         # Assuring that the file exists is good enough.
         self.assertEqual("Result saved in ./TestOutput.txt", gui.last_user_message)
 
-    def test_start__stop_recall_cronometer(self):
+    def test_start__stop_recall_chronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
         collection = ImageCollection(gui, ".")
