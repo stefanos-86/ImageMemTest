@@ -1,10 +1,10 @@
 # Here we have the classes to deal with the scheduling of commands in the program.
 # Constructors can be invoked by the end users (to program the experiments),
 # therefore the parameter validation must be merciless.
-
-import os
-
-from Elements import ExperimentImage
+#
+# From the user point of view, a command is an experiment step.
+# From the program point of view, it is a GUI event (and scheduled as such).
+# The 1st meaning is preferred.
 
 
 class ExperimentStep(object):
