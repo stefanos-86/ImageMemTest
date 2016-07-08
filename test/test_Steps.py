@@ -22,6 +22,7 @@ class MockGui():
         self.removed_image = None
         self.draggable_image = None
         self.drag_callback = None
+        self.last_user_message = None
 
     def register_event(self, delay, callback):
         self.delay = delay
@@ -51,6 +52,9 @@ class MockGui():
         self.draggable_image = tk_image
         self.drag_callback = callback
         return tk_image
+
+    def user_message(self, text):
+        self.last_user_message = text
 
 
 class MockMarker:
@@ -376,7 +380,8 @@ class ComputeResultTest(unittest.TestCase):
         event.start()
 
         self.assertIsNotNone(open(expected_file, "r"))  # This event writes on a file, but is not master of the file format.
-                                             # Assuring that the file exists is good enough.
+                                                        # Assuring that the file exists is good enough.
+        self.assertEqual("Result saved in ./TestOutput.txt", gui.last_user_message)
 
     def test_start__stop_recall_cronometer(self):
         gui = MockGui()

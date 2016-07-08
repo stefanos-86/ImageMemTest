@@ -260,6 +260,8 @@ class ComputeResult(ExperimentStep):
                 result.dump(result_file)
             self.recall_timer.dump(result_file)
 
+        self.gui.user_message("Result saved in " + str(self.output_file))
+
 
 class Scheduler:
     """ The scheduler has the list of all the steps to do.

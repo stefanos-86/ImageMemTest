@@ -55,7 +55,9 @@ class GuiFacade:
                                    # The main window does not get back the focus when the file dialog closes.
                                    # In Linux, this would not be needed.
         return filename
-        
+
+    def user_message(self, text):
+        tkMessageBox.showinfo(message=text)
 
     def screen_size(self):
         return (self.window.winfo_screenwidth(),
