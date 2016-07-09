@@ -27,7 +27,7 @@ def compress_folder():
     zipf = zipfile.ZipFile('ImageMemoryTest.zip', 'w', zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(release_subfolder()):
         for file_to_add in files:
-            zipf.write(os.path.join(root, file_to_add))
+            zipf.write(os.path.join(root, file_to_add), os.path.basename(file_to_add))
     zipf.close()
     print "Compressed archive"
 
