@@ -25,7 +25,7 @@ def make_new_folder():
 
 def compress_folder():
     zipf = zipfile.ZipFile('ImageMemoryTest.zip', 'w', zipfile.ZIP_DEFLATED)
-    compress_recursive(release_subfolder(), "" , zipf)
+    compress_recursive(release_subfolder(), os.path.basename(release_subfolder()) , zipf)
     zipf.close()
     print "Compressed archive"
 
