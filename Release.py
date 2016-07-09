@@ -25,11 +25,21 @@ def make_new_folder():
 
 def compress_folder():
     zipf = zipfile.ZipFile('ImageMemoryTest.zip', 'w', zipfile.ZIP_DEFLATED)
-    for root, dirs, files in os.walk(release_subfolder()):
-        for file_to_add in files:
-            zipf.write(os.path.join(root, file_to_add), os.path.basename(file_to_add))
+    compress_recursive(release_subfolder(), "" , zipf)
     zipf.close()
     print "Compressed archive"
+
+
+def compress_recursive(subfolder, higher_leveles, zipf):
+    for file_to_add in os.listdir(subfolder):
+        relative_path = os.path.join(higher_leveles, file_to_add)
+
+        if os.path.isdir(file_to_add):
+            compress_recursive(file_to_add, relative_path, zipf)
+        else:
+            zipf.write(relative_path)
+            print "Compress " + str(relative_path)
+
 
 
 def copy_files():
