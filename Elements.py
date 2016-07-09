@@ -218,3 +218,32 @@ class RecallTimer:
 
     def _to_date(self, unix_time):
         return datetime.datetime.fromtimestamp(unix_time).strftime('%Y-%m-%d %H:%M:%S')
+
+
+class FileSelector:
+    """ Technical utility to find a "good" file for the output. """
+    def select_next_file(self, desired_file):
+        possible_path = os.path.abspath(desired_file)
+
+        if os.path.exists(possible_path):
+            filename, extension = os.path.splitext(possible_path)
+            counted_filename = self._bump_file_number(filename)
+
+            counted_filename = counted_filename + extension
+            possible_path = counted_filename
+
+        return possible_path
+
+    def _bump_file_number(self, file_path):
+        number_in_file = "0" # Start from here.
+        name_without_number = file_path  # There may not be a number originally.
+
+        underscore = file_path.rfind("_")
+        if underscore != -1:
+            original_number = file_path[underscore + 1:]
+            if str(original_number).isdigit():
+                name_without_number = file_path[:underscore]
+                number_in_file = str(1 + int(original_number))
+            # Else, it must be a name like some_thing.txt, with an underscore inside. Assume it has no number.
+
+        return name_without_number + "_" + number_in_file

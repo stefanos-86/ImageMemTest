@@ -3,6 +3,7 @@ import unittest
 import sys
 import time
 import re
+import os
 
 sys.path.append("./..")
 
@@ -10,6 +11,7 @@ from Elements import ExperimentImage
 from Elements import ImageCollection
 from Elements import DecoratedDistance
 from Elements import RecallTimer
+from Elements import FileSelector
 
 
 from GuiFacade import GuiFacade
@@ -273,3 +275,25 @@ class TestRecallTimer(unittest.TestCase):
         rt.start_once()
 
         self.assertEqual(start_time, rt.start_time)  # Unmodified.
+
+
+
+class FileSelectorTest(unittest.TestCase):
+    def test_select_next_file__new_file(self):
+        desired_file = "./newFile"  # The file must NOT exists.
+        fs = FileSelector()
+        result = fs.select_next_file(desired_file)
+        self.assertEquals(os.path.abspath(desired_file), result)
+
+    def test_select_next_file__file_already_exists(self):
+        desired_file = "./test_Elements.py"  # This file exists and does not end with a number.
+        fs = FileSelector()
+        result = fs.select_next_file(desired_file)
+        self.assertEquals(os.path.abspath("./test_Elements_0.py"), result)
+
+    def test_select_next_file__bump_number(self):
+        desired_file = "./fileWithNumber_12.txt"  # There is a real file in the disk with this name.
+        fs = FileSelector()
+        result = fs.select_next_file(desired_file)
+        self.assertEquals(os.path.abspath("./fileWithNumber_13.txt"), result)
+
