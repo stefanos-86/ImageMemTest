@@ -230,7 +230,9 @@ class FileSelector:
             counted_filename = self._bump_file_number(filename)
 
             counted_filename = counted_filename + extension
-            possible_path = counted_filename
+
+            # What if the new file already exists? Retry to select it.
+            possible_path = self.select_next_file(counted_filename);
 
         return possible_path
 
