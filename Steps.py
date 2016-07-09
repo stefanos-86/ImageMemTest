@@ -6,6 +6,7 @@
 # From the program point of view, it is a GUI event (and scheduled as such).
 # The 1st meaning is preferred.
 
+from Elements import FileSelector
 
 class ExperimentStep(object):
     """ Base of all the steps (GUI events), and also the no-op action."""
@@ -248,7 +249,8 @@ class PrepareMarkers(ExperimentStep):
 class ComputeResult(ExperimentStep):
     def __init__(self, result_file):
         super(ComputeResult, self).__init__()
-        self.output_file = result_file
+        fs = FileSelector() # In case the file already exists, it will append a number to the name.
+        self.output_file = fs.select_next_file(result_file)
 
     def start(self):
         self.recall_timer.experiment_complete()

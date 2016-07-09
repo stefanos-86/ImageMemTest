@@ -3,6 +3,8 @@ import unittest
 import sys
 sys.path.append("./..")
 
+import os
+
 from Steps import *
 from Elements import ImageCollection
 
@@ -372,6 +374,8 @@ class ComputeResultTest(unittest.TestCase):
         collection.gui_markers.append(MockMarker())
         expected_file = "./TestOutput.txt"
 
+        os.remove(expected_file)  # In case of leftoevers from previous tests.
+
         event = ComputeResult(expected_file)
         event.attach_images(collection)
         event.attach_gui(gui)
@@ -381,7 +385,9 @@ class ComputeResultTest(unittest.TestCase):
 
         self.assertIsNotNone(open(expected_file, "r"))  # This event writes on a file, but is not master of the file format.
                                                         # Assuring that the file exists is good enough.
-        self.assertEqual("Result saved in ./TestOutput.txt", gui.last_user_message)
+
+        expected_full_path = os.path.abspath(expected_file)
+        self.assertEqual("Result saved in " + expected_full_path, gui.last_user_message)
 
     def test_start__stop_recall_chronometer(self):
         gui = MockGui()
