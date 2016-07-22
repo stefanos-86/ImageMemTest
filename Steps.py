@@ -249,20 +249,30 @@ class PrepareMarkers(ExperimentStep):
 class ComputeResult(ExperimentStep):
     def __init__(self, result_file):
         super(ComputeResult, self).__init__()
-        fs = FileSelector() # In case the file already exists, it will append a number to the name.
-        self.output_file = fs.select_next_file(result_file)
+        self.desired_output_file_name = result_file
 
     def start(self):
         self.recall_timer.experiment_complete()
-
         distances = self.images.find_distances()
-        with open(self.output_file, "w") as result_file:
+
+        output_file_name = None
+        if self.desired_output_file_name == "<SaveAs>":
+            output_file_name = self.gui.select_file_save()
+        else:
+            output_file_name = self.desired_output_file_name
+
+
+        fs = FileSelector()  # In case the file already exists, it will append a number to the name.
+                             # Even if the user asks to overwrite in the "save as" case.
+        output_file = fs.select_next_file(output_file_name)
+
+        with open(output_file, "w") as result_file:
             distances[0].header(result_file)  # There must be at least one result, no array overflow.
             for result in distances:
                 result.dump(result_file)
             self.recall_timer.dump(result_file)
 
-        self.gui.user_message("Result saved in " + str(self.output_file))
+        self.gui.user_message("Result saved in " + str(output_file))
 
 
 class Scheduler:

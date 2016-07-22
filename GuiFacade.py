@@ -49,11 +49,16 @@ class GuiFacade:
     def free_key(self, key):
         self.window.unbind(key)
 
-    def select_file(self):
+    def select_file_open(self):
         filename = tkFileDialog.askopenfilename()
         self.window.focus_force()  # MS Windows problem.
                                    # The main window does not get back the focus when the file dialog closes.
                                    # In Linux, this would not be needed.
+        return filename
+
+    def select_file_save(self):
+        filename = tkFileDialog.asksaveasfilename()
+        self.window.focus_force()
         return filename
 
     def user_message(self, text):
