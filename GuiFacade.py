@@ -20,7 +20,7 @@ class GuiFacade:
 
         self.bind_key("<Escape>", self.quit_on_esc)
 
-        #tk.Tk.report_callback_exception = self._show_error
+        tk.Tk.report_callback_exception = self._show_error
 
     def _show_error(self, *args):
         captured_exception, text, traceback_object = args
@@ -78,6 +78,13 @@ class GuiFacade:
 
     def show_draggable_image(self, top, left, tk_image, user_start_callback=None):
         panel = MobileLabel(self.window, tk_image, user_start_callback)
+        panel.place(x=left, y=top)
+        return panel
+
+    def show_color_block_image(self, top, left, tk_image):
+        panel = tk.Frame(self.window, background="black",
+                         width=tk_image.width(),
+                         height=tk_image.height())
         panel.place(x=left, y=top)
         return panel
 
