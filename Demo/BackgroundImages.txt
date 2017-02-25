@@ -1,0 +1,5 @@
+ShowImage(1000, 600, 300, "A.jpg")
+ShowImage(1000, 800, 500, "B.jpg")
+AllImagesAsBackground()
+PressKeyToContinue("<Key>")
+RemoveBackgroundImages()

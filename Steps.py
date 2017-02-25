@@ -147,7 +147,7 @@ class ShowImage(DelayedExperimentStep):
         self.gui.remove_image(self.image_gui_handle)
 
 
-class ShowAllImages(DelayedExperimentStep):
+class ShowAllImages(DelayedExperimentStep):  # TODO: reimplement in terms of background images
     def __init__(self, for_how_long):
         super(ShowAllImages, self).__init__(for_how_long)
         self.handles = []
@@ -160,6 +160,29 @@ class ShowAllImages(DelayedExperimentStep):
     def end(self):
         for image in self.handles:
             self.gui.remove_image(image)
+
+
+class AllImagesAsBackground(ExperimentStep):
+    def __init__(self):
+        super(AllImagesAsBackground, self).__init__()
+
+    def start(self):
+        for image in self.images.images:
+            new_handle = self.gui.show_image(image.top, image.left, image.tk_image)
+            self.images.background_handles.append(new_handle)
+
+    # Do nothing on end. Keep the images where they are.
+
+
+class RemoveBackgroundImages(ExperimentStep):
+    def __init__(self):
+        super(RemoveBackgroundImages, self).__init__()
+
+    def start(self):
+        for image in self.images.background_handles:
+            self.gui.remove_image(image)
+        self.images.background_handles = []
+
 
 
 class ShowConfiguration(DelayedExperimentStep):

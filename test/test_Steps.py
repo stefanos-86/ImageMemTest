@@ -258,6 +258,37 @@ class ShowAllImagesTest(unittest.TestCase):
         self.assertEquals(image.tk_image, gui.removed_image)
 
 
+class AllImagesAsBackgroundTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = AllImagesAsBackground()
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEquals(image.tk_image, gui.added_image)
+        self.assertIsNotNone(collection.background_handles[0])
+
+
+class RemoveBackgroundImagesTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        collection.background_handles.append(image)  # Abuse, should use an handle.
+        event = RemoveBackgroundImages()
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEquals(image, gui.removed_image)
+        self.assertEqual([], collection.background_handles)
+
+
 class ShowConfigurationTest(unittest.TestCase):
     def test_start(self):
         gui = MockGui()

@@ -67,6 +67,8 @@ class ImageCollection:
         self.configuration_images = []
         self.configuration_handles = []
 
+        self.background_handles = []
+
     def add_image(self, name, centre_x, centre_y):
         new_image = self.create_image(name, centre_x, centre_y)
         self.images.append(new_image)
