@@ -146,6 +146,19 @@ class ShowImage(DelayedExperimentStep):
     def end(self):
         self.gui.remove_image(self.image_gui_handle)
 
+class MaskImage(DelayedExperimentStep):
+    def __init__(self, how_long_milliseconds, filename):
+        super(MaskImage, self).__init__(how_long_milliseconds)
+        self.image_name = filename
+        self.mask_handle = None
+
+    def start(self):
+        image_to_obsucre = self.images.recall_by_name(self.image_name)
+        self.mask_handle = self.gui.show_color_block_image(image_to_obsucre)
+
+    def end(self):
+        self.gui.remove_image(self.mask_handle)
+
 
 class ShowAllImages(DelayedExperimentStep):
     def __init__(self, for_how_long):
@@ -184,7 +197,6 @@ class RemoveBackgroundImages(ExperimentStep):
         for image in self.images.background_handles:
             self.gui.remove_image(image)
         self.images.background_handles = []
-
 
 
 class ShowConfiguration(DelayedExperimentStep):

@@ -47,6 +47,9 @@ class MockGui():
         self.added_image = tk_image
         return tk_image
 
+    def show_color_block_image(self, tk_image):
+        return self.show_image(0, 0, tk_image)
+
     def remove_image(self, image_handle):
         self.removed_image = image_handle
 
@@ -229,6 +232,33 @@ class ShowImageTest(unittest.TestCase):
         event.end()
 
         self.assertEqual(event.image.tk_image, gui.removed_image)
+
+
+class MaskImageTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        event = MaskImage(1, "TestImage.jpg")
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertIsNotNone(event.mask_handle)
+
+    def test_emd(self):
+        gui = MockGui()
+        event = MaskImage(1, "TestImage.jpg")
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.start()
+
+        event.end()
+
+        self.assertEqual(event.mask_handle, gui.removed_image)
 
 
 class ShowAllImagesTest(unittest.TestCase):

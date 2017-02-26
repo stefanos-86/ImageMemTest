@@ -127,7 +127,6 @@ class ImageCollection:
             self.gui_markers.remove(marker)  # Avoid pathological cases like all the marker on a single image.
         return result
 
-
     def recall_by_name(self, name):
         full_image_name = self._full_image_path(name)
         for image in self.images:
