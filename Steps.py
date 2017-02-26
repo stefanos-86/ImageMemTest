@@ -154,7 +154,9 @@ class MaskImage(DelayedExperimentStep):
 
     def start(self):
         image_to_obsucre = self.images.recall_by_name(self.image_name)
-        self.mask_handle = self.gui.show_color_block_image(image_to_obsucre)
+        self.mask_handle = self.gui.show_color_block_image(image_to_obsucre.left,
+                                                           image_to_obsucre.top,
+                                                            image_to_obsucre.tk_image)
 
     def end(self):
         self.gui.remove_image(self.mask_handle)

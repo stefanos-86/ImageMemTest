@@ -47,8 +47,8 @@ class MockGui():
         self.added_image = tk_image
         return tk_image
 
-    def show_color_block_image(self, tk_image):
-        return self.show_image(0, 0, tk_image)
+    def show_color_block_image(self, left, top, tk_image):
+        return self.show_image(left, top, tk_image)
 
     def remove_image(self, image_handle):
         self.removed_image = image_handle
