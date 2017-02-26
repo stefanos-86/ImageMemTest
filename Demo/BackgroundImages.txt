@@ -10,4 +10,8 @@ PressKeyToContinue("<Key>")
 # Covers the 1st image for a second, then removes all the images after another second.
 HideBackgroundImage(1000, "A.jpg")
 Wait(1000)
+HideBackgroundImage(1000, "B.jpg")
+Wait(1000)
+HideBackgroundImage(1000, "A.jpg")
+Wait(1000)
 RemoveBackgroundImages()

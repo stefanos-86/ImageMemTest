@@ -234,31 +234,35 @@ class ShowImageTest(unittest.TestCase):
         self.assertEqual(event.image.tk_image, gui.removed_image)
 
 
-class MaskImageTest(unittest.TestCase):
+class HideBackgroundImageTest(unittest.TestCase):
     def test_start(self):
         gui = MockGui()
-        event = MaskImage(1, "TestImage.jpg")
+        event = HideBackgroundImage(1, "TestImage.jpg")
         collection = ImageCollection(gui, ".")
-        collection.add_image("TestImage.jpg", 100, 100)
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        collection.background_handles_by_name["./TestImage.jpg"] = image  # As of used on background.
         event.attach_images(collection)
         event.attach_gui(gui)
 
         event.start()
 
-        self.assertIsNotNone(event.mask_handle)
+        self.assertIsNotNone(event.hidden_image)
+        self.assertEqual(event.hidden_image, gui.removed_image)
 
-    def test_emd(self):
+    def test_end(self):
         gui = MockGui()
-        event = MaskImage(1, "TestImage.jpg")
+        event = HideBackgroundImage(1, "TestImage.jpg")
         collection = ImageCollection(gui, ".")
-        collection.add_image("TestImage.jpg", 100, 100)
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        collection.background_handles_by_name["./TestImage.jpg"] = image  # As of used on background.
         event.attach_images(collection)
         event.attach_gui(gui)
         event.start()
 
         event.end()
 
-        self.assertEqual(event.mask_handle, gui.removed_image)
+        self.assertEqual(event.hidden_image.tk_image, gui.added_image)
+
 
 
 class ShowAllImagesTest(unittest.TestCase):
@@ -300,7 +304,7 @@ class AllImagesAsBackgroundTest(unittest.TestCase):
         event.start()
 
         self.assertEquals(image.tk_image, gui.added_image)
-        self.assertIsNotNone(collection.background_handles[0])
+        self.assertIsNotNone(collection.background_handles_by_name["./TestImage.jpg"])
 
 
 class RemoveBackgroundImagesTest(unittest.TestCase):
@@ -308,7 +312,7 @@ class RemoveBackgroundImagesTest(unittest.TestCase):
         gui = MockGui()
         collection = ImageCollection(gui, ".")
         image = collection.add_image("TestImage.jpg", 100, 100)
-        collection.background_handles.append(image)  # Abuse, should use an handle.
+        collection.background_handles_by_name["./TestImage.jpg"] = image  # Abuse, should use an handle.
         event = RemoveBackgroundImages()
         event.attach_images(collection)
         event.attach_gui(gui)
@@ -316,7 +320,7 @@ class RemoveBackgroundImagesTest(unittest.TestCase):
         event.start()
 
         self.assertEquals(image, gui.removed_image)
-        self.assertEqual([], collection.background_handles)
+        self.assertEqual({}, collection.background_handles_by_name)
 
 
 class ShowConfigurationTest(unittest.TestCase):
