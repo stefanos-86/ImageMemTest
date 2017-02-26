@@ -146,20 +146,20 @@ class ShowImage(DelayedExperimentStep):
     def end(self):
         self.gui.remove_image(self.image_gui_handle)
 
-class MaskImage(DelayedExperimentStep):
+
+class HideBackgroundImage(DelayedExperimentStep):
     def __init__(self, how_long_milliseconds, filename):
-        super(MaskImage, self).__init__(how_long_milliseconds)
+        super(HideBackgroundImage, self).__init__(how_long_milliseconds)
         self.image_name = filename
-        self.mask_handle = None
+        self.hidden_image = None
 
     def start(self):
-        image_to_obsucre = self.images.recall_by_name(self.image_name)
-        self.mask_handle = self.gui.show_color_block_image(image_to_obsucre.left,
-                                                           image_to_obsucre.top,
-                                                            image_to_obsucre.tk_image)
+        self.hidden_image = self.images.recall_by_name(self.image_name)
+        self.gui.remove_image(self.images.background_handles_by_name[self.hidden_image.id])
 
     def end(self):
-        self.gui.remove_image(self.mask_handle)
+        new_widget = self.gui.show_image(self.hidden_image.top, self.hidden_image.left, self.hidden_image.tk_image)
+        self.images.background_handles_by_name[self.hidden_image.id] = new_widget
 
 
 class ShowAllImages(DelayedExperimentStep):
@@ -186,7 +186,7 @@ class AllImagesAsBackground(ExperimentStep):
     def start(self):
         for image in self.images.images:
             new_handle = self.gui.show_image(image.top, image.left, image.tk_image)
-            self.images.background_handles.append(new_handle)
+            self.images.background_handles_by_name[image.id] = new_handle
 
     # Do nothing on end. Keep the images where they are.
 
@@ -196,9 +196,9 @@ class RemoveBackgroundImages(ExperimentStep):
         super(RemoveBackgroundImages, self).__init__()
 
     def start(self):
-        for image in self.images.background_handles:
+        for image_name, image in self.images.background_handles_by_name.iteritems():
             self.gui.remove_image(image)
-        self.images.background_handles = []
+        self.images.background_handles_by_name = {}
 
 
 class ShowConfiguration(DelayedExperimentStep):
