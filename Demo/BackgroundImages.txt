@@ -1,7 +1,12 @@
-ShowImage(1000, 600, 300, "A.jpg")
-ShowImage(1000, 800, 500, "B.jpg")
+# Declare the images. The 0 times ensures they are not displayed.
+ShowImage(0, 600, 300, "A.jpg")
+ShowImage(0, 800, 500, "B.jpg")
+
+# Show all the images, the wait for the user.
 AllImagesAsBackground()
 PressKeyToContinue("<Key>")
+
+# Covers the 1st image for a second, then removes all the images after another second.
 MaskImage(1000, "A.jpg")
-PressKeyToContinue("<Key>")
+Wait(1000)
 RemoveBackgroundImages()
