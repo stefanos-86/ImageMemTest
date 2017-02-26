@@ -202,6 +202,21 @@ class TestImageCollection(unittest.TestCase):
         distances = images.find_distances()
         self.assertAlmostEquals(1.414213562 * 900, distances[0].distance, 3) # The screen is square.
 
+    def test_recall_image(self):
+        images = ImageCollection(MockGui(), ".")
+        test_name = "TestImage.jpg"
+        test_image = images.add_image(test_name, 96, 96)
+
+        result = images.recall_by_name(test_name)
+
+        self.assertEqual(result, test_image)
+
+    def test_recall_image__invalid(self):
+        images = ImageCollection(MockGui(), ".")
+        test_image = images.add_image("TestImage.jpg", 96, 96)
+
+        self.assertRaises(Exception, images.recall_by_name, "AnotherImage")
+
 
 class MockFile:
     def __init__(self):

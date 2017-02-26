@@ -103,8 +103,8 @@ class ImageCollection:
         return images
 
     def create_image(self, name, centre_x, centre_y):
-        """ Factory method for the images - ensure vailidity with respect to the screen. """
-        full_path = os.path.join(self.base_path, name)
+        """ Factory method for the images - ensure validity with respect to the screen. """
+        full_path = self._full_image_path(name)
         new_image = ExperimentImage(centre_x, centre_y, full_path)
         new_image.validate(self.max_x, self.max_y)
         return new_image
@@ -127,6 +127,16 @@ class ImageCollection:
             self.gui_markers.remove(marker)  # Avoid pathological cases like all the marker on a single image.
         return result
 
+
+    def recall_by_name(self, name):
+        full_image_name = self._full_image_path(name)
+        for image in self.images:
+            if image.id ==  full_image_name:
+                return image
+        raise Exception("Image " + str(name) + " not declared.")
+
+    def _full_image_path(self, name):
+        return os.path.join(self.base_path, name)
 
     def _find_closest_marker(self, image):
         min_distance = 1000000.0  # Assuming no one has a 1 000 000 pixel wide screen. TODO: find <climits>...

@@ -82,7 +82,7 @@ class GuiFacade:
         return panel
 
     def show_color_block_image(self, top, left, tk_image):
-        panel = tk.Frame(self.window, background="black",
+        panel = tk.Frame(self.window, background="black", # TODO: may need to be the screen background.
                          width=tk_image.width(),
                          height=tk_image.height())
         panel.place(x=left, y=top)
