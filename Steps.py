@@ -282,7 +282,12 @@ class PrepareMarkers(ExperimentStep):
         self.decode_timing_option(timing_option)
 
     def start(self):
-        marker_handles = self.images.create_markers(self.marker_image)
+        marker_handles = None
+        if self.marker_image == "<with images>":
+            marker_handles = self.images.create_markers_from_images()
+        else:
+            marker_handles = self.images.create_markers(self.marker_image)
+
         for handle in marker_handles:
             gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image,
                                                        self.recall_timer.start_once)
@@ -305,6 +310,7 @@ class PrepareMarkers(ExperimentStep):
                             " (should be \"" + immediate + "\" or \"" + on_drag + "\").")
 
         self.start_timer_immediately = timing_option == immediate
+
 
 
 class ComputeResult(ExperimentStep):

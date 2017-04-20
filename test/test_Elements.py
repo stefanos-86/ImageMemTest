@@ -135,6 +135,18 @@ class TestImageCollection(unittest.TestCase):
         self.assertEquals(2, len(markers))
         self.assertEquals(2, len(images.marker_images))
 
+    def test_create_markers_from_images(self):
+        images = ImageCollection(MockGui(), ".")
+        images.add_image("TestImage.jpg", 100, 100)
+        images.add_image("TestImage.jpg", 100, 100)
+
+        markers = images.create_markers_from_images()
+
+        self.assertIsNotNone(markers)
+        self.assertEquals(2, len(markers))
+        self.assertEquals(2, len(images.marker_images))
+
+
     def test_find_distances__no_markers(self):
         images = ImageCollection(MockGui(), ".")
         self.assertRaises(Exception, images.find_distances)

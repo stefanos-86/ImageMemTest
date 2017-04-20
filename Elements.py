@@ -103,9 +103,52 @@ class ImageCollection:
         self.marker_images = images
         return images
 
+    def create_markers_from_images(self):
+        # Vertical alignement is dicatated by the tallest image.
+        # Its centre must be half of its height above the screen bottom to ensure that it fits.
+        # All the other markers will be centered the same way.
+        taller_image_y = self._max_image_heigth()
+        marker_row_centre_y = self.max_y - taller_image_y/2
+
+        # Horizontal alignement: the marker block is as wide as the sum off all the widths of all the images.
+        # The remaining space is half left, half right of it.
+        # The left half plus half the width of the 1st image is the centre (x) of the 1st image.
+        # The second image is half the width of the 1st plus half its witdth on the right.
+        # Same for the third etc.
+        image_block_width = self._total_images_width()
+        centre_x = (self.max_x - image_block_width) / 2
+
+        for image in self.images:
+            width, dont_care = image.size()
+            centre_x += width / 2
+
+            new_marker = self._create_image_using_full_path(image.id, centre_x, marker_row_centre_y)
+            self.marker_images.append(new_marker)
+            centre_x += width / 2
+
+        return self.marker_images
+
+    def _max_image_heigth(self):
+        max_image_y = 0
+        for image in self.images:
+            dont_care, height = image.size()
+            if height > max_image_y:
+                max_image_y = height
+        return max_image_y
+
+    def _total_images_width(self):
+        total = 0
+        for image in self.images:
+            width, dont_care= image.size()
+            total += width
+        return total
+
     def create_image(self, name, centre_x, centre_y):
-        """ Factory method for the images - ensure validity with respect to the screen. """
         full_path = self._full_image_path(name)
+        return self._create_image_using_full_path(full_path, centre_x, centre_y)
+
+    def _create_image_using_full_path(self, full_path, centre_x, centre_y):
+        """ Factory method for the images - ensure validity with respect to the screen. """
         new_image = ExperimentImage(centre_x, centre_y, full_path)
         new_image.validate(self.max_x, self.max_y)
         return new_image

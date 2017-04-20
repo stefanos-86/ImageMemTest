@@ -8,3 +8,12 @@ AllImagesAsBackground()
 PressKeyToContinue("<Key>")
 
 CoverImage(1000, "A.jpg", "A_cover.jpg")
+
+RemoveBackgroundImages()
+
+
+
+# End of experiment - markers and data collection.
+PrepareMarkers("<with images>", "immediate timing")
+PressKeyToContinue("<Return>")
+ComputeResult("RESULTS_from_images.txt")

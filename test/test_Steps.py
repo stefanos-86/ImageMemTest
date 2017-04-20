@@ -438,6 +438,20 @@ class PrepareMarkersTest(unittest.TestCase):
 
         self.assertIsNotNone(gui.draggable_image)
 
+    def test_start__with_images(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("<with images>", "immediate timing")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.start()
+
+        self.assertIsNotNone(gui.draggable_image)
+
     def test_start__starts_chronometer(self):
         gui = MockGui()
         clock = MockRecallTimer()
