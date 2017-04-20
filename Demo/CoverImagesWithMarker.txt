@@ -7,4 +7,4 @@ ShowImage(0, 800, 500, "B.jpg")
 AllImagesAsBackground()
 PressKeyToContinue("<Key>")
 
-CoverImage(1000, "A.jpg", "Marker.jpg")
+CoverImage(1000, "A.jpg", "A_cover.jpg")

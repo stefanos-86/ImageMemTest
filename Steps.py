@@ -217,7 +217,6 @@ class CoverImage(DelayedExperimentStep):
         self.covering_image_gui_handle = self.gui.show_image(self.covering_image.top,
                                                              self.covering_image.left,
                                                              self.covering_image.tk_image)
-        # TODO: scalare e centrare il copritore
 
     def end(self):
         self.gui.remove_image(self.covering_image_gui_handle)

@@ -69,7 +69,7 @@ class GuiFacade:
                 self.window.winfo_screenheight())
 
     def show_image(self, top, left, tk_image):
-        panel = tk.Label(self.window, image=tk_image)
+        panel = tk.Label(self.window, image=tk_image, borderwidth=0)
         panel.place(x=left, y=top)
         return panel  # To be used as an opaque reference by the caller.
 
