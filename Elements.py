@@ -67,6 +67,7 @@ class ImageCollection:
         self.configuration_images = []
         self.configuration_handles = []
 
+        # Used as "parking memory" in commands. Must be there to pass the images between commands.
         self.background_handles_by_name = {}
 
     def add_image(self, name, centre_x, centre_y):

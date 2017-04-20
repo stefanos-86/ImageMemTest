@@ -1,0 +1,10 @@
+# Declare the images. The 0 times ensures they are not displayed.
+ChangeBackgroundColor(0, 0, 255)
+ShowImage(0, 600, 300, "A.jpg")
+ShowImage(0, 800, 500, "B.jpg")
+
+# Show all the images, the wait for the user.
+AllImagesAsBackground()
+PressKeyToContinue("<Key>")
+
+CoverImage(1000, "A.jpg", "Marker.jpg")

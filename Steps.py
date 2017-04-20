@@ -201,6 +201,29 @@ class RemoveBackgroundImages(ExperimentStep):
         self.images.background_handles_by_name = {}
 
 
+class CoverImage(DelayedExperimentStep):
+    def __init__(self, how_long_milliseconds, image_to_hide, covering_image):
+        super(CoverImage, self).__init__(how_long_milliseconds)
+        self.covering_image_gui_handle = None
+        self.covering_image = None
+        self.covering_image_name = covering_image
+        self.image_to_hide_name = image_to_hide
+
+    def start(self):
+        image_to_cover = self.images.recall_by_name(self.image_to_hide_name)
+        same_centre_x, same_centre_y = image_to_cover.centre_position()
+        # Put another image on top of it.
+        self.covering_image = self.images.create_image(self.covering_image_name, same_centre_x, same_centre_y)
+        self.covering_image_gui_handle = self.gui.show_image(self.covering_image.top,
+                                                             self.covering_image.left,
+                                                             self.covering_image.tk_image)
+        # TODO: scalare e centrare il copritore
+
+    def end(self):
+        self.gui.remove_image(self.covering_image_gui_handle)
+
+
+
 class ShowConfiguration(DelayedExperimentStep):
     def __init__(self, for_how_long, marker_image):
         super(ShowConfiguration, self).__init__(for_how_long)
