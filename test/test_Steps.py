@@ -381,6 +381,45 @@ class ShowInstructionsTest(unittest.TestCase):
         self.assertEqual(gui.added_image, gui.removed_image)
 
 
+class CoverImagetest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = CoverImage(10, "TestImage.jpg", "TestMarker.jpg")  # Use the marker as a cover.
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEquals(1, len(collection.images))  # Did not add the marker.
+        self.assertEquals(event.covering_image_gui_handle, gui.added_image)
+
+    def test_start__wrong_image_to_cover(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = CoverImage(10, "DoesNotExists.jpg", "TestMarker.jpg")  # Use the marker as a cover.
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        self.assertRaises(Exception, event.start)
+
+
+    def test_end(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = CoverImage(10, "TestImage.jpg", "TestMarker.jpg")  # Use the marker as a cover.
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+        event.end()
+
+        self.assertEqual(gui.added_image, gui.removed_image)
+
+
 class PrepareMarkersTest(unittest.TestCase):
     def test_construction__bad_timing_option(self):
         self.assertRaises(Exception, PrepareMarkers, "TestMarker.jpg", "rubbish")
