@@ -1,0 +1,452 @@
+import unittest
+
+import sys
+sys.path.append("./..")
+
+from Steps import *
+from Elements import ImageCollection
+
+
+def mock_callback():
+    pass
+
+
+class MockGui():
+    def __init__(self):
+        self.delay = None
+        self.callback = None
+        self.key = None
+        self.bg_color = None
+        self.freed_key = None
+        self.added_image = None
+        self.removed_image = None
+        self.draggable_image = None
+        self.drag_callback = None
+
+    def register_event(self, delay, callback):
+        self.delay = delay
+        self.callback = callback
+
+    def bind_key(self, key, callback):
+        self.key = key
+        self.callback = callback
+
+    def background_color(self, r, g, b):
+        self.bg_color = (r, g, b)
+
+    def free_key(self, key):
+        self.freed_key = key
+
+    def screen_size(self):
+        return (1000, 1000)
+
+    def show_image(self, top, left, tk_image):
+        self.added_image = tk_image
+        return tk_image
+
+    def remove_image(self, image_handle):
+        self.removed_image = image_handle
+
+    def show_draggable_image(self, top, left, tk_image, callback=None):
+        self.draggable_image = tk_image
+        self.drag_callback = callback
+        return tk_image
+
+
+class MockMarker:
+    def centre_position(self):
+        return (0, 0)
+
+class MockRecallTimer:
+    def __init__(self):
+        self.started = False
+        self.stopped = False
+
+    def start_once(self):
+        self.started = True
+
+    def experiment_complete(self):
+        self.stopped = True
+
+    def dump(self, output_file):
+        pass
+
+
+class EventTest(unittest.TestCase):
+    def test_attach_gui(self):
+        mock_gui = MockGui
+        event = ExperimentStep()
+        event.attach_gui(mock_gui)
+        self.assertEquals(mock_gui, event.gui)
+
+    def test_attach_recall_timer(self):
+        timer = MockRecallTimer()
+        event = ExperimentStep()
+        event.attach_recall_timer(timer)
+        self.assertEquals(timer, event.recall_timer)
+
+
+class DelayedEventTest(unittest.TestCase):
+    def test_construction(self):
+        delay = 123
+        event = DelayedExperimentStep(delay)
+        self.assertEquals(delay, event.delay)
+
+    def test_construnction__nonsensical_delay(self):
+        delay = "Not a number."
+        self.assertRaises(Exception, DelayedExperimentStep, delay)
+
+    def test_construnction__negative_delay(self):
+        self.assertRaises(Exception, DelayedExperimentStep, -1)
+
+    def test_construction__float_delay(self):
+        self.assertRaises(Exception, DelayedExperimentStep, 1.5)
+
+    def test_wait_method(self):
+        delay = 123
+        gui = MockGui()
+
+        event = DelayedExperimentStep(delay)
+        event.attach_gui(gui)
+
+        event.wait_method(mock_callback)
+
+        self.assertEquals(delay, gui.delay)
+        self.assertEquals(mock_callback, gui.callback)
+
+
+class OnKeyEventTest(unittest.TestCase):
+    def test_construction(self):
+        key = "x"
+        event = OnKeyExperimentStep(key)
+        self.assertEquals(key, event.key)
+
+    def test_construction__special_binding(self):
+        key = "<Return>"
+        event = OnKeyExperimentStep(key)
+        self.assertEquals(key, event.key)
+
+    def test_construction__nonsensical_key(self):
+        key = 3874.83
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
+
+    def test_construction__too_many_keys(self):
+        key = "ab"
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
+
+    def test_construction__incorrect_space(self):
+        key = " "
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
+
+    def test_construction__unsupported_special_bind(self):
+        key = "<rubbish>"
+        self.assertRaises(Exception, OnKeyExperimentStep, key)
+
+    def test_wait_method(self):
+        key = "4"
+        gui = MockGui()
+        event = OnKeyExperimentStep(key)
+        event.attach_gui(gui)
+
+        event.wait_method(mock_callback)
+
+        self.assertEquals(key, gui.key)
+        self.assertEquals(mock_callback, gui.callback)
+
+
+class ChangeBackgroundColorTest(unittest.TestCase):
+    def test_construction(self):
+        event = ChangeBackgroundColor(1,2,3)
+        self.assertEquals((1, 2, 3), event.rgb_triplet)
+
+    def test_construction__invalid_rgb(self):
+        self.assertRaises(Exception, ChangeBackgroundColor, -1, 2, 3)
+        self.assertRaises(Exception, ChangeBackgroundColor, 256, 2, 3)
+        self.assertRaises(Exception, ChangeBackgroundColor, "NaN", 2, 3)
+
+    def test_start(self):
+        gui = MockGui()
+        event = ChangeBackgroundColor(1,2,3)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEqual((1, 2, 3), gui.bg_color)
+
+
+class PressKeyToContinueTest(unittest.TestCase):
+    def test_end(self):
+        key = "r"
+        event = PressKeyToContinue(key)
+        gui = MockGui()
+        event.attach_gui(gui)
+
+        event.end()
+
+        self.assertEquals(key, gui.freed_key)
+
+
+class WaitTest(unittest.TestCase):
+    def test_construction(self):
+        wait_duration = 123
+
+        event = Wait(wait_duration)
+
+        self.assertEqual(wait_duration, event.delay)
+
+
+class ShowImageTest(unittest.TestCase):
+    def test_attach_gui__invalid_image(self):
+        event = ShowImage(1, 2, 3, "TestImage.jpg")
+        gui = MockGui()
+        self.assertRaises(Exception, event.attach_images, ImageCollection(gui, "."))
+
+    # No other validation cases: it is delegated to the image.
+
+    def test_start__shows_the_image(self):
+        event = ShowImage(1, 200, 300, "TestImage.jpg")
+        gui = MockGui()
+        event.attach_images(ImageCollection(gui, "."))
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEqual(event.image.tk_image, gui.added_image)
+
+    def test_end(self):
+        event = ShowImage(1, 200, 300, "TestImage.jpg")
+        gui = MockGui()
+        event.attach_images(ImageCollection(gui, "."))
+        event.attach_gui(gui)
+        event.start()  # Emplace the gui handle to the image.
+
+        event.end()
+
+        self.assertEqual(event.image.tk_image, gui.removed_image)
+
+
+class ShowAllImagesTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = ShowAllImages(152)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEquals(image.tk_image, gui.added_image)
+
+    def test_end(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = ShowAllImages(152)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.start()
+
+        event.end()
+
+        self.assertEquals(image.tk_image, gui.removed_image)
+
+
+class ShowConfigurationTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        event = ShowConfiguration(52, "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertNotEquals(image.tk_image, gui.added_image)  # Can't be more precise - how to compare tkimages?
+        self.assertEquals(1, len(collection.images))  # The collection is not modified.
+        self.assertEquals(1, len(collection.configuration_images)) # The configuration is not lost.
+
+
+class EraseConfigurationTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        image = collection.add_image("TestImage.jpg", 100, 100)
+        collection.configuration_images.append(image)  # Little abuse: should use the marker.
+
+        event = EraseConfiguration()
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEquals(0, len(collection.configuration_images))
+
+
+class ShowInstructionsTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        event = ShowInstructions("k", "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+
+        event.start()
+
+        self.assertEquals(0, len(collection.images))
+
+    def test_end(self):
+        gui = MockGui()
+        collection = ImageCollection(gui, ".")
+        event = ShowInstructions("k", "TestMarker.jpg")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.start()
+
+        event.end()
+
+        self.assertEquals("k", gui.freed_key)
+        self.assertEqual(gui.added_image, gui.removed_image)
+
+
+class PrepareMarkersTest(unittest.TestCase):
+    def test_construction__bad_timing_option(self):
+        self.assertRaises(Exception, PrepareMarkers, "TestMarker.jpg", "rubbish")
+
+    def test_start(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("TestMarker.jpg", "immediate timing")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.start()
+
+        self.assertIsNotNone(gui.draggable_image)
+
+    def test_start__starts_cronometer(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("TestMarker.jpg", "immediate timing")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.start()
+
+        self.assertTrue(clock.started)
+
+    def test_start__delayed_cronometer(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        event = PrepareMarkers("TestMarker.jpg", "time on marker movement")
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.start()
+
+        self.assertFalse(clock.started)
+        self.assertEquals(clock.start_once, gui.drag_callback)
+
+
+class ComputeResultTest(unittest.TestCase):
+    def test_start(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        collection.create_markers("TestMarker.jpg")
+        collection.gui_markers.append(MockMarker())
+        expected_file = "./TestOutput.txt"
+
+        event = ComputeResult(expected_file)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+
+        event.start()
+
+        self.assertIsNotNone(open(expected_file, "r"))  # This event writes on a file, but is not master of the file format.
+                                             # Assuring that the file exists is good enough.
+
+    def test_start__stop_recall_cronometer(self):
+        gui = MockGui()
+        clock = MockRecallTimer()
+        collection = ImageCollection(gui, ".")
+        collection.add_image("TestImage.jpg", 100, 100)
+        collection.create_markers("TestMarker.jpg")
+        collection.gui_markers.append(MockMarker())
+        expected_file = "./TestOutput.txt"
+
+        event = ComputeResult(expected_file)
+        event.attach_images(collection)
+        event.attach_gui(gui)
+        event.attach_recall_timer(clock)
+        event.start()
+
+        self.assertTrue(clock.stopped)
+
+
+class SchedulerTest(unittest.TestCase):
+    def test_construction__enqueue_schedule_first_event(self):
+        gui = MockGui()
+        events = [ExperimentStep()]
+
+        scheduler = Scheduler(events, gui)
+
+        self.assertEquals(0, gui.delay)
+        self.assertEquals(scheduler.start_step, gui.callback)
+
+    def test_start_step(self):
+        gui = MockGui()
+        key = "r"
+        event = PressKeyToContinue(key)
+        event.attach_gui(gui)
+        events = [event]
+        scheduler = Scheduler(events, gui)
+
+        scheduler.start_step()
+
+        self.assertEqual(gui.callback, scheduler.complete_step)  # When the event fires, the scheduler must be invoked to do
+                                                            # some bookkeeping.
+        self.assertEqual(key, gui.key)  # The event did its registration.
+
+    def test_start_step__end_of_events(self):
+        gui = MockGui()
+        step = PressKeyToContinue("<Key>")
+        step.attach_gui(gui)
+        stepss = [step]
+
+        scheduler = Scheduler(stepss, gui)
+        scheduler.start_step()  # Use the only available event/step.
+
+        scheduler.complete_step()
+
+        gui.callback = None  # Reset gui
+        scheduler.start_step()
+
+        self.assertIsNone(gui.callback) # No changes from the previous scheduling.
+
+    def test_complete_step(self):
+        gui = MockGui()
+        step1 = PressKeyToContinue("a")
+        step2 = PressKeyToContinue("b")
+        step1.attach_gui(gui)
+        step2.attach_gui(gui)
+        steps = [step1, step2]
+
+        scheduler = Scheduler(steps, gui)
+        scheduler.start_step()
+
+        scheduler.complete_step()
+        self.assertEquals("a", gui.freed_key)  # Side effect of the event 1: it did run.
+        self.assertEquals("b", gui.key)  # The next event has been registered.

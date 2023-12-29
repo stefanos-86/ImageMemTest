@@ -1,0 +1,348 @@
+# Here we have the classes to deal with the scheduling of commands in the program.
+# Constructors can be invoked by the end users (to program the experiments),
+# therefore the parameter validation must be merciless.
+#
+# From the user point of view, a command is an experiment step.
+# From the program point of view, it is a GUI event (and scheduled as such).
+# The 1st meaning is preferred.
+
+from Elements import FileSelector
+
+class ExperimentStep(object):
+    """ Base of all the steps (GUI events), and also the no-op action."""
+    def __init__(self):
+        self.gui = None  # All the commands have to register with and manipulate the GUI.
+                         # But it can't be in the constructor signature because I don't want the client
+                         # to bother with such details.
+        self.images = None  # Similar to the gui, some actions need to interact with the whole image collection.
+        self.recall_timer = None  # Same principle, with the object to time the duration of the experiment
+                                  # (the time the user needs to recall the position of the images).
+
+    def attach_gui(self, gui):
+        self.gui = gui
+
+    def attach_images(self, image_collection):
+        self.images = image_collection
+
+    def attach_recall_timer(self, recall_timer):
+        self.recall_timer = recall_timer
+
+    def start(self):
+        """ Called at the beginning of the step.
+        Override to customize the step."""
+        pass
+
+    def wait_method(self, back_to_scheduler):
+        """ Tells the scheduler what to do in between start and end.
+        Wait some time, wait a key press... see the subclasses.
+        Override to customize the step. By default, calls the scheduler again immediately.
+        Do not touch back_to_scheduler - it is the callback do "yeld" to have end() called."""
+        self.gui.register_event(0, back_to_scheduler)  # Tells the GUI main loop to move to the next step immediately.
+                                                       # A direct call (back_to_scheduler()) would not terminate the
+                                                       # method until something in the envent train yelds to the GUI.
+                                                       # The stack would grow until then...
+
+    def end(self):
+        """ Called after the wait method triggers.
+        Override to customize the step."""
+        pass
+
+
+
+class DelayedExperimentStep(ExperimentStep):
+    """ This event has to be scheduled after a certain time. """
+    def __init__(self, delay_milliseconds):
+        super(DelayedExperimentStep, self).__init__()
+
+        assert isinstance(delay_milliseconds, (int, long)), "Delay must be integer -> " + str(delay_milliseconds)
+        assert delay_milliseconds >= 0, "Delay must be 0 or positive -> " + str(delay_milliseconds)
+
+        self.delay = delay_milliseconds
+
+    def wait_method(self, back_to_scheduler):
+        self.gui.register_event(self.delay, back_to_scheduler)
+
+
+class OnKeyExperimentStep(ExperimentStep):
+    """ This event waits for a key press. """
+    def __init__(self, key):
+        super(OnKeyExperimentStep, self).__init__()
+        self._validate_key(key)
+        self.key = key
+
+    def _validate_key(self, key):
+        supported_special_bindings = "<space> <Return> <Key>"
+
+        assert isinstance(key, basestring), "Key must be a string (like \"a\", with the quotes) -> " + str(key)
+
+        key_length = len(key)
+        if key_length > 1 and "<" in key:
+            assert key in supported_special_bindings, "Invalid special key -> [" + key + "]" \
+                                                       " - available: " + supported_special_bindings
+        else:
+            assert len(key) == 1, "Normal key must be one symbol (like \"a\") -> [" + key + "]"
+        assert key != " ", "Use \"<space>\", not a literal blank char."
+
+    def wait_method(self, back_to_scheduler):
+        self.gui.bind_key(self.key, back_to_scheduler)
+
+    def _remove_key_binding(self):
+        """ Some steps may need to remove the key binding at the end. """
+        self.gui.free_key(self.key)
+
+
+
+class ChangeBackgroundColor(ExperimentStep):
+    """ Orders the gui to change the background color. """
+    def __init__(self,r, g, b):
+        super(ChangeBackgroundColor, self).__init__()
+
+        assert isinstance(r, (int, long))and isinstance(g, (int, long)) and isinstance(b, (int, long)), \
+                                                                       "R, g or b must be integers."
+        assert r >= 0 and g >= 0 and b >= 0, "r, g and b must be 0 or positive."
+        assert r <= 255 and g <= 255 and b <= 255, "r, g or b can't be bigger than 255."
+
+        self.rgb_triplet = (r, g, b)
+
+    def start(self):
+        r, g, b = self.rgb_triplet
+        self.gui.background_color(r, g, b)
+
+
+class PressKeyToContinue(OnKeyExperimentStep):
+    """ Does nothing until the user press the specified key. """
+    def __init__(self, key_to_wait):
+        super(PressKeyToContinue, self).__init__(key_to_wait)
+        # Key validated by the superclass.
+
+    def end(self):
+        self._remove_key_binding()
+
+
+class Wait(DelayedExperimentStep):
+    """ Blocks the evnt processing until the time has passed. """
+    def __init__(self, wait_milliseconds):
+        super(Wait, self).__init__(wait_milliseconds)
+
+    # Do nothing: let the superclass do the work.
+
+
+class ShowImage(DelayedExperimentStep):
+    def __init__(self, how_long_milliseconds, centre_x_pixels, centre_y_pixels, filename):
+        super(ShowImage, self).__init__(how_long_milliseconds)
+        self.image_gui_handle = None
+        self.image = None
+        self.centre_x = centre_x_pixels
+        self.centre_y = centre_y_pixels
+        self.image_name = filename
+
+    def attach_images(self, image_collection):
+        super(ShowImage, self).attach_images(image_collection)
+        self.image = image_collection.add_image(self.image_name, self.centre_x, self.centre_y)
+
+    def start(self):
+        self.image_gui_handle = self.gui.show_image(self.image.top, self.image.left, self.image.tk_image)
+
+    def end(self):
+        self.gui.remove_image(self.image_gui_handle)
+
+class MaskImage(DelayedExperimentStep):
+    def __init__(self, how_long_milliseconds, filename):
+        super(MaskImage, self).__init__(how_long_milliseconds)
+        self.image_name = filename
+        self.hidden_image = None
+
+    def start(self):
+        self.hidden_image = self.images.recall_by_name(self.image_name)
+        self.gui.remove_image(self.hidden_image.tk_image)
+
+    def end(self):
+        self.gui.show_image(self.hidden_image.top, self.hidden_image.left, self.hidden_image.tk_image)
+
+
+class ShowAllImages(DelayedExperimentStep):
+    def __init__(self, for_how_long):
+        super(ShowAllImages, self).__init__(for_how_long)
+        self.show_images = AllImagesAsBackground()
+        self.erase_images = RemoveBackgroundImages()
+
+    def start(self):
+        self.show_images.attach_gui(self.gui)
+        self.show_images.attach_images(self.images)
+        self.show_images.start()
+
+    def end(self):
+        self.erase_images.attach_gui(self.gui)
+        self.erase_images.attach_images(self.images)
+        self.erase_images.start()
+
+
+class AllImagesAsBackground(ExperimentStep):
+    def __init__(self):
+        super(AllImagesAsBackground, self).__init__()
+
+    def start(self):
+        for image in self.images.images:
+            new_handle = self.gui.show_image(image.top, image.left, image.tk_image)
+            self.images.background_handles.append(new_handle)
+
+    # Do nothing on end. Keep the images where they are.
+
+
+class RemoveBackgroundImages(ExperimentStep):
+    def __init__(self):
+        super(RemoveBackgroundImages, self).__init__()
+
+    def start(self):
+        for image in self.images.background_handles:
+            self.gui.remove_image(image)
+        self.images.background_handles = []
+
+
+class ShowConfiguration(DelayedExperimentStep):
+    def __init__(self, for_how_long, marker_image):
+        super(ShowConfiguration, self).__init__(for_how_long)
+        self.placeholder_image_name = marker_image
+
+    def start(self):
+        for image in self.images.images:
+            same_centre_x, same_centre_y = image.centre_position()
+            placeholder = self.images.create_image(self.placeholder_image_name, same_centre_x, same_centre_y)
+            placeholder_handle = self.gui.show_image(placeholder.top, placeholder.left, placeholder.tk_image)
+            self.images.configuration_handles.append(placeholder_handle)
+            self.images.configuration_images.append(placeholder)
+
+    # Nothing in end(): the configuration must stay on for the duration of the experiment.
+
+
+class EraseConfiguration(ExperimentStep):
+    def __init__(self):
+        super(EraseConfiguration, self).__init__()
+
+    def start(self):
+        for configuration_handle in self.images.configuration_handles:
+            self.gui.remove_image(configuration_handle)
+        self.images.configuration_images = []
+        self.images.configuration_handles = []
+
+
+class ShowInstructions(OnKeyExperimentStep):
+    def __init__(self, key_to_continue, instruction_image_file):
+        super(ShowInstructions, self).__init__(key_to_continue)
+        self.instruction_image = None  # To keep the image in memory, or it won't be displayed.
+        self.instruction_image_gui_handle = None
+        self.instruction_image_file = instruction_image_file
+
+    def start(self):
+        centre_x, centre_y = self._screen_centre()
+        self.instruction_image = self.images.create_image(self.instruction_image_file, centre_x, centre_y)
+        self.instruction_image_gui_handle = self.gui.show_image(self.instruction_image.top, self.instruction_image.left,
+                                                                self.instruction_image.tk_image)
+
+    def end(self):
+        self._remove_key_binding()
+        self.gui.remove_image(self.instruction_image_gui_handle)
+
+    def _screen_centre(self):
+        centre_x, centre_y = self.gui.screen_size()
+        centre_x /= 2
+        centre_y /= 2
+        return centre_x, centre_y
+
+
+class PrepareMarkers(ExperimentStep):
+    def __init__(self, marker_image, timing_option):
+        super(PrepareMarkers, self).__init__()
+        self.marker_image = marker_image
+        self.start_timer_immediately = None  # To be set by the below call.
+        self.decode_timing_option(timing_option)
+
+    def start(self):
+        marker_handles = self.images.create_markers(self.marker_image)
+        for handle in marker_handles:
+            gui_handle = self.gui.show_draggable_image(handle.top, handle.left, handle.tk_image,
+                                                       self.recall_timer.start_once)
+            self.images.gui_markers.append(gui_handle)  # Store them for other events usage.
+
+        # The markers are ready: if the user wants to count from this moment, start the clock.
+        # The callback on the images may try to start it again, but the timer will only react on the 1st call.
+        if self.start_timer_immediately:
+            self._start_timer()
+
+    def _start_timer(self):
+        self.recall_timer.start_once()
+
+    def decode_timing_option(self, timing_option):
+        immediate = "immediate timing"
+        on_drag = "time on marker movement"
+
+        if timing_option != immediate and timing_option != on_drag:
+            raise Exception("Bad timing option " + timing_option +
+                            " (should be \"" + immediate + "\" or \"" + on_drag + "\").")
+
+        self.start_timer_immediately = timing_option == immediate
+
+
+class ComputeResult(ExperimentStep):
+    def __init__(self, result_file):
+        super(ComputeResult, self).__init__()
+        self.desired_output_file_name = result_file
+
+    def start(self):
+        self.recall_timer.experiment_complete()
+        distances = self.images.find_distances()
+
+        output_file_name = None
+        if self.desired_output_file_name == "<SaveAs>":
+            output_file_name = self.gui.select_file_save()
+        else:
+            output_file_name = self.desired_output_file_name
+
+
+        fs = FileSelector()  # In case the file already exists, it will append a number to the name.
+                             # Even if the user asks to overwrite in the "save as" case.
+        output_file = fs.select_next_file(output_file_name)
+
+        with open(output_file, "w") as result_file:
+            distances[0].header(result_file)  # There must be at least one result, no array overflow.
+            for result in distances:
+                result.dump(result_file)
+            self.recall_timer.dump(result_file)
+
+        self.gui.user_message("Result saved in " + str(output_file))
+
+
+class Scheduler:
+    """ The scheduler has the list of all the steps to do.
+        It registers with the GUI to be called on GUI events.
+        When it is called, it fires the next event in the list, registers again for callback etc. """
+    def __init__(self, events, gui):
+        self.events = events
+        self.event_iterator = 0
+        self.event_end = len(events)
+
+        self.gui = gui
+        self.gui.register_event(0, self.start_step)  # Schedule immediately the 1st event of the list.
+
+    def start_step(self):
+        """Start the current step and register the pause."""
+        if self.event_iterator >= self.event_end:
+            return  # Do nothing, we are at the end of the script.
+
+        self._current_event().start()
+        self._current_event().wait_method(self.complete_step) # The event should not be called directly.
+                                                         # Its trigger must re-call the scheduler.
+
+    def complete_step(self, event_from_gui=None):  # Event_from_gui is received in case of key presses.
+        """ Calls the step "finalization" and start the next event. """
+        self._current_event().end()  # Completes the scheduled action.
+
+        self.event_iterator += 1        # Advance to the next.
+
+        self.start_step()           # Put another one in the pipe.
+
+
+    def _current_event(self):
+        return self.events[self.event_iterator]
+
+

@@ -1,0 +1,2 @@
+  dist     image_centre    marker_centre image_id
+   141       (100, 100)           (0, 0) ./TestImage.jpg
