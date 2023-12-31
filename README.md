@@ -1,4 +1,4 @@
-# H1 ImageMemoryTest
+# ImageMemoryTest
 
 This software is a low-cost tool to create simple experiments that test memory recall.
 
@@ -22,19 +22,19 @@ Neither I nor the experimenters planned to share the code. It was deemed uninter
 Years later we created the repository mostly as our own archive... if a bit too late.
 Nevertheless, it may be of interest to other experimenters - thus we leave the repository public for everyone who may be curious.
 
-### H3 Usage
-Please refer to <insert link here>
+### Usage
+Please refer to [the user guide](https://github.com/stefanos-86/ImageMemTest/blob/main/Instructions.odt).
 
 *Be sure that the test files are trusted. The experiment files can contain arbitrary code.*
 This was, at the time, an acceptable risk. The software was to be used under controlled conditions
 (e. g. no sharing of experiment files, host computer kept under supervision of the experimenter...).
 
 _Be aware that the software may not correctly calculate the distance between the original image position and the test marker
-if the subject places the markers too far away from the expected position. In practice this turned out not to be a problem:
-"normal" paticipants can usually reconstruct the test configuration with sufficient accuracy._ See also <insert link here> (in Italian).
+if the subject places the markers too far away from the expected position._ In practice this turned out not to be a problem:
+"normal" paticipants can usually reconstruct the test configuration with sufficient accuracy. [See here](https://github.com/stefanos-86/ImageMemTest/blob/main/Casi%20Patologici.odt) for more details (in Italian).
 
 
-### H3 Techincal Details
+### Techincal Details
 
 This is old (as of 2023) code, based on Python 2.7.
 
@@ -43,7 +43,7 @@ and "forcing" the built-in Tkinter Python UI framework to display images as if t
 
 The tool is targeted to "novice" users (not to other developers or technicians). Nevertheless it must be programmable (within limits)
 to let them implement different kind of experiments or to vary the experiments parameters. A GUI would be too costly to implement,
-a whole domain language to complex to use.
+a whole domain language too complex to use.
 
 The compromise is to allow writing simple commands in text file.
 To further keep the implementation simple, those commands are... constructors. Each command corresponds to a class, it can be "fed" to eval()
@@ -53,11 +53,12 @@ what comes "free" from the Python interpreter).
 On the downside, this leaves the tool wide open for arbitrary code injections. The risk was (hopefully) minimal on the intended use case: single installation
 on a PC under complete control of the experimenter, no sharing of files, making the compromise acceptable.
 
-Other than that, there are classes to handle the test images, the markers, load files... They are "plain code", there are no "special tricks".
+Other than that, there are classes to handle the test images, the markers, load files... They are "plain code", there are no "special tricks". There are unit tests
+in the test folders but they were not run when uploading the code to GitHub. The main program was simply "smoke tested" but should still be functional.
 
 The Release script is not part of the tool. It quikly packages a zip file with all the code, than can then be sent to an experimenter.
 
-### H3 Published Works
+### Published Works
 The software, in spite of its basic nature, could be successfully used "in the field".
 
 The work that includes the experiments done with this software is published in the
